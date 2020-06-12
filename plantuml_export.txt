@@ -1,0 +1,115 @@
+@startuml
+
+title Classes - HomeBuh
+
+package GUI <<Rectangle>>
+{
+class Main_Window
+{
+}
+
+class User_Window
+{
+password
+}
+
+class Money_Repositary_Window
+{
+}
+
+class Report_Window
+{
+}
+
+class Planning_Window
+{
+}
+}
+
+class Chart_Builder
+{
++build_chart(Report)
+}
+
+class Report_Repository
+{
++save_file(Report)
+}
+
+class Report_Printer
+{
++print(Report)
+}
+
+class Report_Exporter
+{
++export(Report)
+}
+
+class Report
+{
+-report:Data
++build()
+}
+
+class Records_Operations
+{
++open_from_file()
++save_to_file()
++get_data()
+
+}
+
+class Balance_Calculator
+{
++month_balance():float
++year_balance():float
+}
+
+class Currency_Rate_Loader{}
+
+
+package Data_Base <<Rectangle>>
+{
+class Data
+{
++add(Record)
++delete(Record)
++change(Record)
++get():Record
+}
+
+class Record 
+{
++id: int {read_only}
++date: Date
++category: string
++description: string
++sum: float
++currency: Enum
+}
+}
+
+Main_Window *-down- Planning_Window
+Main_Window *-down- User_Window
+Main_Window *-down- Report_Window
+Main_Window *-down- Money_Repositary_Window
+
+User_Window o--down-  Records_Operations
+Report -left- Records_Operations
+
+Report_Window o--down- Report
+Report_Window o--down- Report_Exporter
+Report_Window o--down- Report_Repository
+Report_Window o--down- Chart_Builder
+Report_Window o--down- Report_Printer
+Money_Repositary_Window -down- Records_Operations
+Planning_Window --down- Records_Operations
+User_Window o-down- Balance_Calculator
+Money_Repositary_Window o-down- Currency_Rate_Loader
+
+Data "1" o-down-"many" Record 
+Records_Operations o-down- Data
+
+
+@enduml
