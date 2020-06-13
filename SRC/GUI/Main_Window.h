@@ -1,17 +1,18 @@
 #pragma once
 #include <QWidget>
 #include <QtWidgets>
-#include <SRC/GUI/User_Widget.h>
-#include <SRC/GUI/Money_Repositary_Widget.h>
-#include <SRC/GUI/Planning_Widget.h>
-#include <SRC/GUI/Report_Widget.h>
+#include "SRC/GUI/User_Widget.h"
+#include "SRC/GUI/Money_Repositary_Widget.h"
+#include "SRC/GUI/Planning_Widget.h"
+#include "SRC/GUI/Report_Widget.h"
+
 
 
 class Main_Window : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Main_Window(QWidget *parent = nullptr);
+    explicit Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report_Widget* Report,Planning_Widget* Planning);
 
 signals:
 
@@ -21,8 +22,6 @@ public slots:
     void slotReportShow();
     void slotPlanningShow();
 
-
-
 private:
     QPushButton* pBtnUser;
     QPushButton* pBtnMoney;
@@ -31,14 +30,10 @@ private:
 
     QLabel* pLblBalance;
 
-    Money_Repositary_Widget* pWdgMoney=nullptr;
-    Planning_Widget* pWdgPlanning=nullptr;
-    Report_Widget* pWdgReport=nullptr;
-    User_Widget* pWdgUser=nullptr;
-
-    QWidget* pWdgCurrent;
-    QHBoxLayout* pHblMain;
-
+    User_Widget* pWdgUser;
+    Money_Repositary_Widget* pWdgMoney;
+    Report_Widget* pWdgReport;
+    Planning_Widget* pWdgPlanning;
 };
 
 

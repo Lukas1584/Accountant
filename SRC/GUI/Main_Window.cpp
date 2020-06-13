@@ -1,7 +1,8 @@
 #include "Main_Window.h"
 #include <QObject>
 
-Main_Window::Main_Window(QWidget *parent) : QWidget(parent)
+Main_Window::Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report_Widget* Report,Planning_Widget* Planning)
+    : QWidget(), pWdgUser(User), pWdgMoney(Money), pWdgReport(Report),pWdgPlanning(Planning)
 {
 
     resize(1200,800);
@@ -12,10 +13,6 @@ Main_Window::Main_Window(QWidget *parent) : QWidget(parent)
 
     pLblBalance = new QLabel(tr("Текущий баланс"));
 
-    pWdgPlanning=new Planning_Widget();
-    pWdgUser=new User_Widget();
-    pWdgMoney=new Money_Repositary_Widget();
-    pWdgReport=new Report_Widget();
     slotUserShow();
 
     QObject::connect(pBtnMoney,SIGNAL(clicked()),SLOT(slotMoneyShow()));
@@ -34,7 +31,7 @@ Main_Window::Main_Window(QWidget *parent) : QWidget(parent)
     pVblLeftMenu->addStretch(1);
     pVblLeftMenu->addWidget(pLblBalance,0);
 
-    pHblMain=new QHBoxLayout();
+    QHBoxLayout* pHblMain=new QHBoxLayout();
     pHblMain->addLayout(pVblLeftMenu,1);
     pHblMain->addWidget(pWdgUser,5);
     pHblMain->addWidget(pWdgMoney,5);

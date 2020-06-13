@@ -1,5 +1,6 @@
 SOURCES += \
     Main.cpp \
+    SRC/Application_Builder.cpp \
     SRC/DataBase/Data.cpp \
     SRC/DataBase/Record.cpp \
     SRC/GUI/Main_Window.cpp \
@@ -9,6 +10,7 @@ SOURCES += \
     SRC/GUI/User_Widget.cpp
 
 HEADERS += \
+    SRC/Application_Builder.h \
     SRC/DataBase/Data.h \
     SRC/DataBase/Record.h \
     SRC/GUI/Main_Window.h \

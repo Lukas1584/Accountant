@@ -1,6 +1,4 @@
-#ifndef PLANNING_WIDGET_H
-#define PLANNING_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 class Planning_Widget : public QWidget
@@ -13,4 +11,3 @@ signals:
 
 };
 
-#endif // PLANNING_WIDGET_H
