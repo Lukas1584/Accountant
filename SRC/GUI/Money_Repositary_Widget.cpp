@@ -2,10 +2,20 @@
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QHeaderView>
+#include <QEvent>
+
 
 Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget(), pDataOperations(d)
 {
     pTable=new QTableWidget(3,6);
+    QStringList listHeader={tr("Дата"),tr("Тип"),tr("Категория"),tr("Описание"),tr("Сумма"),tr("Валюта")};
+    pTable->setHorizontalHeaderLabels(listHeader);
+    pTable->verticalHeader()->hide();
+    pTable->installEventFilter(this);
+
+
+
     QLineEdit* pLineEditDate=new QLineEdit;
     //pLineEditDate->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,QSizePolicy::Fixed,QSizePolicy::ToolButton));
     QComboBox* pCbxType=new QComboBox;
@@ -29,12 +39,33 @@ Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget()
     pVbx->addLayout(pHbxEdit);
     setLayout(pVbx);
 
-    for(int row=0; row!=pTable->rowCount(); ++row){
-        for(int column=0; column!=pTable->columnCount(); ++column) {
-            QTableWidgetItem *newItem = new QTableWidgetItem(tr("%1").arg((row+1)*(column+1)));
+    QStringList data=pDataOperations->getData();
+
+    pTable->setRowCount(data.size()/7);
+    auto rec=data.begin();
+    for(int row=0; row!=pTable->rowCount(); row++){
+        for(int column=0; column!=pTable->columnCount();column++,rec++){
+            QTableWidgetItem *newItem = new QTableWidgetItem();
+            newItem->setText(*rec);
             pTable->setItem(row, column, newItem);
         }
+
+
+
     }
+}
 
 
+
+
+bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
+    if(pEvent->type() == QEvent::Resize){
+        pTable->setColumnWidth(0, pTable->width() * 0.1);
+        pTable->setColumnWidth(1, pTable->width() * 0.1);
+        pTable->setColumnWidth(2, pTable->width() * 0.3);
+        pTable->setColumnWidth(3, pTable->width() * 0.3);
+        pTable->setColumnWidth(4, pTable->width() * 0.1);
+        pTable->setColumnWidth(5, pTable->width() * 0.1);
+    }
+    return false;
 }

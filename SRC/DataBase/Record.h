@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include <QString>
 #include <QDate>
 
 class Record
@@ -9,15 +9,15 @@ public:
     int id;
     QDate date;
     enum Type{
-        PROFIT, LOSS
-    };
-    std::string category;
-    std::string description;
+        PROFIT=1, LOSS
+    }type;
+    QString category;
+    QString description;
     float sum;
     enum Currency
     {
-        USD, BYR, RUB, EUR
-    };
+        USD=1, BYR, RUB, EUR
+    }currency;
 
 };
 

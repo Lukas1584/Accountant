@@ -4,6 +4,9 @@ Application_Builder::Application_Builder() : QObject()
 {
     pData=new Data;
 
+    pUserFileOperations=new User_File_Operations(pData);
+
+
     pDataOperations=new Data_Operations(pData);
 
     pWdgUser=new User_Widget;

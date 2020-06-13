@@ -8,6 +8,7 @@
 #include "SRC/GUI/User_Widget.h"
 
 #include "SRC/BusinessLogic/Data_Operations.h"
+#include "SRC/BusinessLogic/User_File_Operations.h"
 
 #include "SRC/DataBase/Data.h"
 
@@ -26,6 +27,7 @@ private:
 
     Data* pData;
 
+    User_File_Operations* pUserFileOperations;
     Data_Operations* pDataOperations;
 
     User_Widget* pWdgUser;

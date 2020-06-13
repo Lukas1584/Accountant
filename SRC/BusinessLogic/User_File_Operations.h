@@ -2,17 +2,15 @@
 #include <QObject>
 #include "SRC/DataBase/Data.h"
 #include "SRC/DataBase/Record.h"
-#include <QVector>
 
-
-class Data_Operations : public QObject
+class User_File_Operations : public QObject
 {
     Q_OBJECT
 public:
-    explicit Data_Operations(Data* d);
-    QStringList getData();
+    explicit User_File_Operations(Data* d);
 
 signals:
+
 
 private:
     Data* pData;
