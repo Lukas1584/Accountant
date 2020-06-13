@@ -3,7 +3,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 
-Money_Repositary_Widget::Money_Repositary_Widget(QWidget *parent) : QWidget(parent)
+Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget(), pDataOperations(d)
 {
     pTable=new QTableWidget(3,6);
     QLineEdit* pLineEditDate=new QLineEdit;

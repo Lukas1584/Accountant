@@ -6,7 +6,7 @@ class Record
 {
 
 public:
-    // int id;
+    int id;
     QDate date;
     enum Type{
         PROFIT, LOSS

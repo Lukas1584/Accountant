@@ -1,6 +1,7 @@
 SOURCES += \
     Main.cpp \
     SRC/Application_Builder.cpp \
+    SRC/BusinessLogic/Data_Operations.cpp \
     SRC/DataBase/Data.cpp \
     SRC/DataBase/Record.cpp \
     SRC/GUI/Main_Window.cpp \
@@ -11,6 +12,7 @@ SOURCES += \
 
 HEADERS += \
     SRC/Application_Builder.h \
+    SRC/BusinessLogic/Data_Operations.h \
     SRC/DataBase/Data.h \
     SRC/DataBase/Record.h \
     SRC/GUI/Main_Window.h \

@@ -7,6 +7,7 @@
 #include "SRC/GUI/Report_Widget.h"
 #include "SRC/GUI/User_Widget.h"
 
+#include "SRC/BusinessLogic/Data_Operations.h"
 
 #include "SRC/DataBase/Data.h"
 
@@ -24,6 +25,8 @@ signals:
 private:
 
     Data* pData;
+
+    Data_Operations* pDataOperations;
 
     User_Widget* pWdgUser;
     Money_Repositary_Widget* pWdgMoneyRepositary;
