@@ -1,4 +1,5 @@
 #include "User_Widget.h"
+#include <QtGui>
 
 
 User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperations(ufo)
@@ -39,7 +40,19 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
     setLayout(pHbx);
 }
 void User_Widget::btnNewUserClicked(){
-    QString login="Sergey";
-    QString password="01234";
+    wdgPassword=new Password_Widget();
+    wdgPassword->show();
+    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),this,SLOT(slotAddUser(QString,QString)));
+}
+
+void User_Widget::nameAlreadyExists(){
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::information(this,tr("Сообщение"),tr("Пользователь с таким именем уже существует"));
+    btnNewUserClicked();
+}
+
+void User_Widget::slotAddUser(QString login,QString password){
+    delete wdgPassword;
+    wdgPassword=nullptr;
     emit addUser(login,password);
 }

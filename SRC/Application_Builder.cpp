@@ -17,6 +17,5 @@ Application_Builder::Application_Builder() : QObject()
 
 
     pMainWindow=new Main_Window(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning);
-    pMainWindow->show();
-
+    QObject::connect(pUserFileOperations,SIGNAL(nameAlreadyExists()),pWdgUser,SLOT(nameAlreadyExists()));
 }

@@ -13,14 +13,16 @@ public:
     QStringList getUsersNames();
 
 public slots:
-    void userCreation(QString login, QString password);
-    void loadData(QString login, QString password);
+    void userCreation(const QString& login, const QString& password);
+    void loadData(const QString& login, const QString& password);
 
 signals:
-
+    void nameAlreadyExists();
 
 private:
     Data* pData;
+
+    bool userIsOnList(const QString& login);
 };
 
 

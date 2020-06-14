@@ -16,7 +16,26 @@ User_File_Operations::User_File_Operations(Data* d) : QObject(),pData(d)
     }
 }
 
-void User_File_Operations::userCreation(QString login, QString password){
+bool User_File_Operations::userIsOnList(const QString& login){
+    QFile settings("settings.ac");
+    settings.open(QIODevice::ReadOnly);
+    while(!settings.atEnd()){
+        QString str=settings.readLine();
+        if(login==str.remove(str.size()-1,str.size())){
+            settings.close();
+            return true;
+        }
+        settings.readLine();
+    }
+    settings.close();
+    return false;
+}
+
+void User_File_Operations::userCreation(const QString& login, const QString& password){
+    if(userIsOnList(login)){
+        emit nameAlreadyExists();
+        return;
+    }
     QFile settings("settings.ac");
     settings.open(QIODevice::WriteOnly|QIODevice::Append);
     QString toSave=login+'\n'+password+'\n';
@@ -42,7 +61,9 @@ QStringList User_File_Operations::getUsersNames(){
     return names;
 }
 
-void User_File_Operations::loadData(QString login, QString password){
+
+
+void User_File_Operations::loadData(const QString& login, const QString& password){
 
 
 

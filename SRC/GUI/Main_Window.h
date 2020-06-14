@@ -21,6 +21,7 @@ public slots:
     void slotUserShow();
     void slotReportShow();
     void slotPlanningShow();
+ //   void enabled(QString,QString);
 
 private:
     QPushButton* pBtnUser;

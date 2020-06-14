@@ -19,6 +19,7 @@ Main_Window::Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report
     QObject::connect(pBtnUser,SIGNAL(clicked()),SLOT(slotUserShow()));
     QObject::connect(pBtnReport,SIGNAL(clicked()),SLOT(slotReportShow()));
     QObject::connect(pBtnPlanning,SIGNAL(clicked()),SLOT(slotPlanningShow()));
+    //QObject::connect(pWdgUser,SIGNAL(addUser(QString,QString)),this,SLOT(enabled()));
 
 
     QVBoxLayout* pVblLeftMenu=new QVBoxLayout();
@@ -38,6 +39,7 @@ Main_Window::Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report
     pHblMain->addWidget(pWdgReport,5);
     pHblMain->addWidget(pWdgPlanning,5);
     setLayout(pHblMain);
+    show();
 
 }
 void Main_Window::slotMoneyShow(){
@@ -68,3 +70,6 @@ void Main_Window::slotPlanningShow(){
     pWdgPlanning->show();
     pWdgReport->hide();
 }
+//void Main_Window::enabled(QString,QString){
+//    this->setEnabled(false);
+//}

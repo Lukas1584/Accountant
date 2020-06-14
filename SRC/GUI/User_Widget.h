@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QtWidgets>
 #include "SRC/BusinessLogic/User_File_Operations.h"
+#include "Password_Widget.h"
 
 class User_Widget : public QWidget
 {
@@ -11,10 +12,17 @@ public:
 
 signals:
     void addUser(QString login,QString password);
+
+public slots:
+    void nameAlreadyExists();
+    void slotAddUser(QString,QString);
+
 private slots:
     void btnNewUserClicked();
 
+
 private:
+    Password_Widget* wdgPassword;
     User_File_Operations* pUserFileOperations;
     QPushButton* pBtnNewUser;
     QPushButton* pBtnLogIn;
