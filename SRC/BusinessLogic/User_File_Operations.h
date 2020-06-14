@@ -14,15 +14,17 @@ public:
 
 public slots:
     void userCreation(const QString& login, const QString& password);
-    void loadData(const QString& login, const QString& password);
+    void checkPassword(const QString& login, const QString& password);
 
 signals:
     void nameAlreadyExists();
+    void wrongPassword();
 
 private:
     Data* pData;
 
     bool userIsOnList(const QString& login);
+    void loadData(const QString& login);
 };
 
 

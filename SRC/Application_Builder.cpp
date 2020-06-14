@@ -18,4 +18,5 @@ Application_Builder::Application_Builder() : QObject()
 
     pMainWindow=new Main_Window(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning);
     QObject::connect(pUserFileOperations,SIGNAL(nameAlreadyExists()),pWdgUser,SLOT(nameAlreadyExists()));
+    QObject::connect(pWdgUser,SIGNAL(logIn(const QString,const QString)),pUserFileOperations,SLOT(checkPassword(const QString&,const QString&)));
 }

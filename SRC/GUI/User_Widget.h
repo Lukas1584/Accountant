@@ -11,7 +11,8 @@ public:
     explicit User_Widget(User_File_Operations* ufo);
 
 signals:
-    void addUser(QString login,QString password);
+    void addUser(QString,QString);
+    void logIn(QString,QString);
 
 public slots:
     void nameAlreadyExists();
@@ -19,6 +20,7 @@ public slots:
 
 private slots:
     void btnNewUserClicked();
+    void slotLogIn();
 
 
 private:
@@ -30,6 +32,14 @@ private:
 
     QLineEdit* pLedPassword;
     QComboBox* pCbxUserName;
+
+    QLabel* pLblUserName;
+    QLabel* pLblPassword;
+    QGridLayout* pGrdMain;
+
+
+    void setStartView();
+    void setWorkView();
 
 };
 

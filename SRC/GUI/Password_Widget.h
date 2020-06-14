@@ -6,6 +6,7 @@
 class Password_Widget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit Password_Widget(QWidget *parent = nullptr);
 
@@ -14,7 +15,7 @@ signals:
 
 private slots:
     void slotClickedOk();
-    void clickedCancel();
+    void slotClickedCancel();
 
 private:
     QPushButton* pBtnOK;
