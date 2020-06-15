@@ -65,3 +65,8 @@ void User_Widget::slotAddUser(QString login,QString password){
 void User_Widget::slotLogIn(){
     emit logIn(pCbxUserName->currentText(),pLedPassword->text());
 }
+void User_Widget::wrongPassword(){
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::information(this,tr("Сообщение"),tr("Неверный пароль!"));
+    pLedPassword->clear();
+}

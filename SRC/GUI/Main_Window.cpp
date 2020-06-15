@@ -8,11 +8,13 @@ Main_Window::Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report
     resize(1200,800);
     pBtnUser=new  QPushButton(tr("Пользователь"));
     pBtnMoney=new QPushButton(tr("Кошелек"));
+    pBtnMoney->setEnabled(false);
     pBtnReport=new QPushButton(tr("Отчет"));
+    pBtnReport->setEnabled(false);
     pBtnPlanning=new QPushButton(tr("Планирование"));
-
+    pBtnPlanning->setEnabled(false);
     pLblBalance = new QLabel(tr("Текущий баланс"));
-
+    pLblBalance->hide();
     slotUserShow();
 
     QObject::connect(pBtnMoney,SIGNAL(clicked()),SLOT(slotMoneyShow()));
@@ -70,6 +72,14 @@ void Main_Window::slotPlanningShow(){
     pWdgPlanning->show();
     pWdgReport->hide();
 }
+void Main_Window::dataIsLoaded(){
+    pBtnMoney->setEnabled(true);
+    pBtnReport->setEnabled(true);
+    pBtnPlanning->setEnabled(true);
+    pLblBalance->show();
+}
+
+
 //void Main_Window::enabled(QString,QString){
 //    this->setEnabled(false);
 //}

@@ -52,7 +52,8 @@ QStringList User_File_Operations::getUsersNames(){
     settings.open(QIODevice::ReadOnly);
     QStringList names;
     while(!settings.atEnd()){
-        names.push_back(settings.readLine());
+        QString userName=settings.readLine();
+        names.push_back(userName.remove(userName.size()-1,userName.size()));
         settings.readLine();
     }
     settings.close();
@@ -63,17 +64,24 @@ void User_File_Operations::checkPassword(const QString& login, const QString& pa
     QFile settings("settings.ac");
     settings.open(QIODevice::ReadOnly);
     while(!settings.atEnd()){
-        if(login==settings.readLine()){
+        QString userName=settings.readLine();
+        if(login==userName.remove(userName.size()-1,userName.size())){
             QString passwordFromFIle=settings.readLine();
             if(password==passwordFromFIle.remove(passwordFromFIle.size()-1,passwordFromFIle.size())){
                 loadData(login);
+                settings.close();
+                return;
             }
+            settings.close();
             emit wrongPassword();
+            return;
         }
     }
 }
+
 void User_File_Operations::loadData(const QString& login){
     qDebug("Загружаем данные из файла");
+    emit dataIsLoaded();
 }
 
 

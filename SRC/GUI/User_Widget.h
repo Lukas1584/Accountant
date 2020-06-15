@@ -17,6 +17,7 @@ signals:
 public slots:
     void nameAlreadyExists();
     void slotAddUser(QString,QString);
+    void wrongPassword();
 
 private slots:
     void btnNewUserClicked();

@@ -19,6 +19,7 @@ public slots:
 signals:
     void nameAlreadyExists();
     void wrongPassword();
+    void dataIsLoaded();
 
 private:
     Data* pData;
