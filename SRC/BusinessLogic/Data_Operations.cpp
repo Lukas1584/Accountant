@@ -10,12 +10,12 @@ QStringList Data_Operations::getData(){
     QStringList copyData;
     for(auto i:tmp){
         //copyData.push_back(QString(i.id));
-        copyData.push_back(QString(i.date.toString()));
+        copyData.push_back(QString(i.date.toString("dd.MM.yyyy")));
         if(i.type==Record::LOSS){
             copyData.push_back(tr("Убыток"));
         }
         else {
-            copyData.push_back(tr("Прибыль"));
+            copyData.push_back(tr("Доход"));
         }
         copyData.push_back(i.category);
         copyData.push_back(i.description);

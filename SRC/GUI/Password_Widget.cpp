@@ -48,5 +48,6 @@ void Password_Widget::slotClickedOk(){
 }
 
 void Password_Widget::slotClickedCancel(){
-   this->destroy();
+    emit enableMainWindow();
+    this->destroy();
 }

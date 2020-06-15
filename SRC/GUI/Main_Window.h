@@ -22,7 +22,9 @@ public slots:
     void slotReportShow();
     void slotPlanningShow();
     void dataIsLoaded();
- //   void enabled(QString,QString);
+    void disableMainWindow();
+    void enableMainWindow();
+
 
 private:
     QPushButton* pBtnUser;

@@ -21,7 +21,19 @@ signals:
 private:
     Data_Operations* pDataOperations;
     QTableWidget* pTable;
+
     QPushButton* pBtnSave;
+    QPushButton* pBtnAdd;
+    QPushButton* pBtnEdit;
+    QPushButton* pBtnDelete;
+
+
+    QLineEdit* pLineEditDate;
+    QComboBox* pCbxType;
+    QComboBox* pCbxCategory;
+    QComboBox* pCbxDescription;
+    QLineEdit* pLineEditSum;
+    QComboBox* pCbxCurrency;
 
 };
 

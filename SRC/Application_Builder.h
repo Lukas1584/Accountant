@@ -12,8 +12,6 @@
 
 #include "SRC/DataBase/Data.h"
 
-
-
 class Application_Builder : public QObject
 {
     Q_OBJECT
@@ -21,7 +19,6 @@ public:
     explicit Application_Builder();
 
 signals:
-
 
 private:
 
@@ -36,7 +33,4 @@ private:
     Planning_Widget* pWdgPlanning;
 
     Main_Window* pMainWindow;
-
 };
-
-
