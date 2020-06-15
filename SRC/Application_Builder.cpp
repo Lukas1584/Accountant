@@ -4,6 +4,7 @@ Application_Builder::Application_Builder() : QObject()
 {
     pData=new Data;
 
+
     pUserFileOperations=new User_File_Operations(pData);
 
     pDataOperations=new Data_Operations(pData);
@@ -20,5 +21,7 @@ Application_Builder::Application_Builder() : QObject()
     QObject::connect(pUserFileOperations,SIGNAL(nameAlreadyExists()),pWdgUser,SLOT(nameAlreadyExists()));
     QObject::connect(pWdgUser,SIGNAL(logIn(const QString,const QString)),pUserFileOperations,SLOT(checkPassword(const QString&,const QString&)));
     QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pMainWindow,SLOT(dataIsLoaded()));
+    QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgMoneyRepositary,SLOT(dataIsLoaded()));
     QObject::connect(pUserFileOperations,SIGNAL(wrongPassword()),pWdgUser,SLOT(wrongPassword()));
+    QObject::connect(pWdgMoneyRepositary,SIGNAL(saveData()),pUserFileOperations,SLOT(saveData()));
 }

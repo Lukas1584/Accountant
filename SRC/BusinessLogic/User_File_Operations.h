@@ -15,6 +15,7 @@ public:
 public slots:
     void userCreation(const QString& login, const QString& password);
     void checkPassword(const QString& login, const QString& password);
+    void saveData();
 
 signals:
     void nameAlreadyExists();
@@ -23,7 +24,7 @@ signals:
 
 private:
     Data* pData;
-
+    QString dataFileName;
     bool userIsOnList(const QString& login);
     void loadData(const QString& login);
 };

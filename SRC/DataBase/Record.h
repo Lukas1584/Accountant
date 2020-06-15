@@ -2,8 +2,7 @@
 #include <QString>
 #include <QDate>
 
-class Record
-{
+class Record{
 
 public:
     int id;
@@ -14,11 +13,12 @@ public:
     QString category;
     QString description;
     float sum;
-    enum Currency
-    {
+    enum Currency{
         USD=1, BYR, RUB, EUR
     }currency;
 
+    friend QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
+    friend QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);
 };
 
 

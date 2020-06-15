@@ -14,6 +14,10 @@ Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget()
     pTable->verticalHeader()->hide();
     pTable->installEventFilter(this);
 
+    pBtnSave=new QPushButton(tr("Сохранить"));
+
+    QObject::connect(pBtnSave,SIGNAL(clicked()),this,SLOT(save()));
+
 
 
     QLineEdit* pLineEditDate=new QLineEdit;
@@ -31,6 +35,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget()
     pHbxEdit->addWidget(pCbxDescription,3);
     pHbxEdit->addWidget(pLineEditSum,1);
     pHbxEdit->addWidget(pCbxCurrency,1);
+    pHbxEdit->addWidget(pBtnSave,1);
 
 
 
@@ -39,20 +44,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget()
     pVbx->addLayout(pHbxEdit);
     setLayout(pVbx);
 
-    QStringList data=pDataOperations->getData();
 
-    pTable->setRowCount(data.size()/7);
-    auto rec=data.begin();
-    for(int row=0; row!=pTable->rowCount(); row++){
-        for(int column=0; column!=pTable->columnCount();column++,rec++){
-            QTableWidgetItem *newItem = new QTableWidgetItem();
-            newItem->setText(*rec);
-            pTable->setItem(row, column, newItem);
-        }
-
-
-
-    }
 }
 
 
@@ -68,4 +60,22 @@ bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
         pTable->setColumnWidth(5, pTable->width() * 0.1);
     }
     return false;
+}
+
+void Money_Repositary_Widget::save(){
+    emit saveData();
+}
+
+void Money_Repositary_Widget::dataIsLoaded(){
+
+    QStringList data=pDataOperations->getData();
+    pTable->setRowCount(data.size()/7);
+    auto rec=data.begin();
+    for(int row=0; row!=pTable->rowCount(); row++){
+        for(int column=0; column!=pTable->columnCount();column++,rec++){
+            QTableWidgetItem* newItem = new QTableWidgetItem();
+            newItem->setText(*rec);
+            pTable->setItem(row, column, newItem);
+        }
+    }
 }
