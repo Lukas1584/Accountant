@@ -17,22 +17,8 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
     pGrdMain=new QGridLayout;
 
     QObject::connect(pBtnNewUser,SIGNAL(clicked()),this,SLOT(btnNewUserClicked()));
-    QObject::connect(this,SIGNAL(addUser(const QString,const QString)),pUserFileOperations,SLOT(userCreation(const QString&,const QString&)));
     QObject::connect(pBtnLogIn,SIGNAL(clicked()),this,SLOT(slotLogIn()));
     QObject::connect(pBtnChangeUser,SIGNAL(clicked()),this,SLOT(changeUser()));
-
-    setStartView();
-}
-
-void User_Widget::setStartView(){
-    pCbxUserName->addItems(pUserFileOperations->getUsersNames());
-
-    pBtnNewUser->setEnabled(true);
-    pBtnLogIn->setEnabled(true);
-    pBtnDeleteUser->setEnabled(true);
-    pCbxUserName->setEnabled(true);
-    pLedPassword->setEnabled(true);
-    pBtnChangeUser->setEnabled(false);
 
     pGrdMain->addWidget(pLblUserName,1,1,Qt::AlignRight);
     pGrdMain->addWidget(pLblPassword,2,1,Qt::AlignRight);
@@ -47,22 +33,34 @@ void User_Widget::setStartView(){
     pGrdMain->setRowStretch(5,12);
     pGrdMain->setColumnStretch(0,1);
     pGrdMain->setRowStretch(0,4);
-
     setLayout(pGrdMain);
+
+    setStartView();
 }
 
+void User_Widget::setStartView(){
+    pCbxUserName->clear();
+    pCbxUserName->addItems(pUserFileOperations->getUsersNames());
+    pBtnNewUser->setEnabled(true);
+    pBtnLogIn->setEnabled(true);
+    pBtnDeleteUser->setEnabled(true);
+    pCbxUserName->setEnabled(true);
+    pLedPassword->setEnabled(true);
+    pBtnChangeUser->setEnabled(false);
+}
 
 void User_Widget::btnNewUserClicked(){
     wdgPassword=new Password_Widget();
     wdgPassword->show();
-    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),this,SLOT(slotAddUser(QString,QString)));
-    QObject::connect(wdgPassword,SIGNAL(enableMainWindow()),this,SLOT(enableMainWindowFromPassword()));
+    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),SLOT(slotAddUser(QString,QString)));
+    QObject::connect(wdgPassword,SIGNAL(enableMainWindow()),SLOT(enableMainWindowFromPassword()));
     emit disableMainWindow();
 }
 
 void User_Widget::nameAlreadyExists(){
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this,tr("Сообщение"),tr("Пользователь с таким именем уже существует"));
+    Q_UNUSED(reply);
     btnNewUserClicked();
 }
 
@@ -73,6 +71,7 @@ void User_Widget::slotAddUser(QString login,QString password){
     emit enableMainWindow();
     pCbxUserName->clear();
     pCbxUserName->addItems(pUserFileOperations->getUsersNames());
+    setWorkView();
 }
 
 void User_Widget::slotLogIn(){
@@ -82,6 +81,7 @@ void User_Widget::slotLogIn(){
 void User_Widget::wrongPassword(){
     QMessageBox::StandardButton reply;
     reply = QMessageBox::information(this,tr("Сообщение"),tr("Неверный пароль!"));
+    Q_UNUSED(reply);
     pLedPassword->clear();
 }
 

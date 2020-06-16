@@ -2,7 +2,9 @@
 #include <QObject>
 #include "SRC/DataBase/Data.h"
 #include "SRC/DataBase/Record.h"
+#include "SRC/BusinessLogic/User.h"
 #include <QFile>
+#include <QDataStream>
 
 
 class User_File_Operations : public QObject
@@ -25,7 +27,7 @@ signals:
 private:
     Data* pData;
     QString dataFileName;
-    bool userIsOnList(const QString& login);
+    bool userIsOnList(const User& user);
     void loadData(const QString& login);
 };
 

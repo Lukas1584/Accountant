@@ -16,9 +16,7 @@ public:
     enum Currency{
         USD=1, BYR, RUB, EUR
     }currency;
-
-    friend QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
-    friend QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);
 };
 
-
+QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
+QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);

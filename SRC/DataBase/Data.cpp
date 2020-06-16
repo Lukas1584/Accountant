@@ -28,3 +28,7 @@ QDataStream& operator<<(QDataStream& dataStream, Data* rhs){
     }
     return dataStream;
 }
+
+void Data::clear(){
+    data.clear();
+}

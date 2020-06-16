@@ -24,7 +24,6 @@ public slots:
     void enableMainWindowFromPassword();
     void setWorkView();
 
-
 private slots:
     void btnNewUserClicked();
     void slotLogIn();
@@ -39,7 +38,6 @@ private:
     QPushButton* pBtnDeleteUser;
     QPushButton* pBtnChangeUser;
 
-
     QLineEdit* pLedPassword;
     QComboBox* pCbxUserName;
 
@@ -48,7 +46,6 @@ private:
     QGridLayout* pGrdMain;
 
     void setStartView();
-
 };
 
 

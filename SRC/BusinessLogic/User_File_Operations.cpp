@@ -1,5 +1,4 @@
 #include "User_File_Operations.h"
-#include <QDataStream>
 
 User_File_Operations::User_File_Operations(Data* d) : QObject(),pData(d)
 {
@@ -16,72 +15,98 @@ User_File_Operations::User_File_Operations(Data* d) : QObject(),pData(d)
 //    }
 }
 
-bool User_File_Operations::userIsOnList(const QString& login){
+bool User_File_Operations::userIsOnList(const User& user){
     QFile settings("settings.ac");
-    settings.open(QIODevice::ReadOnly); //проверка на ошибки
-    while(!settings.atEnd()){
-        QString str=settings.readLine();
-        if(login==str.remove(str.size()-1,str.size())){
-            settings.close();
-            return true;
+    if(settings.open(QIODevice::ReadOnly)){
+        QDataStream stream(&settings);
+        stream.setVersion(QDataStream::Qt_5_15);
+        while(!settings.atEnd()){
+            User readedUser;
+            stream>>readedUser;
+            if(stream.status()!= QDataStream::Ok)
+            {
+                qDebug("Ошибка чтения файла");
+            }
+            if(user.login==readedUser.login){
+                settings.close();
+                return true;
+            }
         }
-        settings.readLine();
     }
     settings.close();
     return false;
 }
 
 void User_File_Operations::userCreation(const QString& login, const QString& password){
-    if(userIsOnList(login)){
+    User user(login,password);
+    if(userIsOnList(user)){
         emit nameAlreadyExists();
         return;
     }
     QFile settings("settings.ac");
-    settings.open(QIODevice::WriteOnly|QIODevice::Append); //проверка на ошибки
-    QString toSave=login+'\n'+password+'\n';
-    settings.write(toSave.toUtf8().constData());
-    settings.close();
-    dataFileName=login+".dat";
-    QFile newUser(dataFileName);
-    newUser.open(QIODevice::WriteOnly); //проверка на ошибки
-    newUser.close(); //направить поток дальше на выполнение программы
+    if(settings.open(QIODevice::WriteOnly|QIODevice::Append)){
+        QDataStream stream(&settings);
+        stream.setVersion(QDataStream::Qt_5_15);
+        stream<<user;
+        if(stream.status()!= QDataStream::Ok)
+        {
+            qDebug("Ошибка чтения файла");
+        }
+        settings.close();
+
+        dataFileName=user.login+".dat";
+        QFile newUser(dataFileName);
+        newUser.open(QIODevice::WriteOnly);
+        newUser.close();
+    }
 }
 
 QStringList User_File_Operations::getUsersNames(){
     QFile settings("settings.ac");
-    settings.open(QIODevice::ReadOnly); //проверка на ошибки
     QStringList names;
-    while(!settings.atEnd()){
-        QString userName=settings.readLine();
-        names.push_back(userName.remove(userName.size()-1,userName.size()));
-        settings.readLine();
+    if(settings.open(QIODevice::ReadOnly)){
+        QDataStream stream(&settings);
+        stream.setVersion(QDataStream::Qt_5_15);
+        while(!settings.atEnd()){
+            User userReaded;
+            stream>>userReaded;
+            if(stream.status()!= QDataStream::Ok)
+            {
+                qDebug("Ошибка чтения файла");
+            }
+            names.push_back(userReaded.login);
+        }
     }
     settings.close();
     return names;
 }
 
 void User_File_Operations::checkPassword(const QString& login, const QString& password){
+    User userChecking(login,password);
     QFile settings("settings.ac");
-    settings.open(QIODevice::ReadOnly); //проверка на ошибки
-    while(!settings.atEnd()){
-        QString userName=settings.readLine();
-        if(login==userName.remove(userName.size()-1,userName.size())){
-            QString passwordFromFIle=settings.readLine();
-            if(password==passwordFromFIle.remove(passwordFromFIle.size()-1,passwordFromFIle.size())){
-                loadData(login);
+    if(settings.open(QIODevice::ReadOnly)){
+        QDataStream stream(&settings);
+        stream.setVersion(QDataStream::Qt_5_15);
+        while(!settings.atEnd()){
+            User userReaded;
+            stream>>userReaded;
+            if(stream.status()!= QDataStream::Ok)
+            {
+                qDebug("Ошибка чтения файла");
+            }
+            if(userChecking==userReaded){
+                loadData(userChecking.login);
                 settings.close();
                 return;
             }
-            settings.close();
-            emit wrongPassword();
-            return;
         }
+        settings.close();
+        emit wrongPassword();
+        return;
     }
 }
 
 void User_File_Operations::loadData(const QString& login){
-//    if(pData) delete pData;
-//    pData=new Data;
     dataFileName=login+".dat";
     QFile data(dataFileName);
     if(data.open(QIODevice::ReadOnly))
@@ -112,4 +137,7 @@ void User_File_Operations::saveData(){
    data.close();
 }
 
+void User_File_Operations::clearData(){
+    pData->clear();
+}
 
