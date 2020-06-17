@@ -16,9 +16,10 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
     pLblPassword=new QLabel(tr("Введите пароль:"));
     pGrdMain=new QGridLayout;
 
-    QObject::connect(pBtnNewUser,SIGNAL(clicked()),this,SLOT(btnNewUserClicked()));
-    QObject::connect(pBtnLogIn,SIGNAL(clicked()),this,SLOT(slotLogIn()));
-    QObject::connect(pBtnChangeUser,SIGNAL(clicked()),this,SLOT(changeUser()));
+
+    QObject::connect(pBtnNewUser,SIGNAL(clicked()),SLOT(btnNewUserClicked()));
+    QObject::connect(pBtnLogIn,SIGNAL(clicked()),SLOT(logIn()));
+    QObject::connect(pBtnChangeUser,SIGNAL(clicked()),SLOT(changeUser()));
 
     pGrdMain->addWidget(pLblUserName,1,1,Qt::AlignRight);
     pGrdMain->addWidget(pLblPassword,2,1,Qt::AlignRight);
@@ -50,11 +51,11 @@ void User_Widget::setStartView(){
 }
 
 void User_Widget::btnNewUserClicked(){
+    emit disableMainWindow();
     wdgPassword=new Password_Widget();
     wdgPassword->show();
-    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),SLOT(slotAddUser(QString,QString)));
-    QObject::connect(wdgPassword,SIGNAL(enableMainWindow()),SLOT(enableMainWindowFromPassword()));
-    emit disableMainWindow();
+    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),SLOT(addUser(QString,QString)));
+    QObject::connect(wdgPassword,SIGNAL(clickedCancel()),SIGNAL(enableMainWindow()));
 }
 
 void User_Widget::nameAlreadyExists(){
@@ -64,18 +65,20 @@ void User_Widget::nameAlreadyExists(){
     btnNewUserClicked();
 }
 
-void User_Widget::slotAddUser(QString login,QString password){
+void User_Widget::addUser(QString login,QString password){
     delete wdgPassword;
     wdgPassword=nullptr;
-    emit addUser(login,password);
-    emit enableMainWindow();
-    pCbxUserName->clear();
-    pCbxUserName->addItems(pUserFileOperations->getUsersNames());
-    setWorkView();
+    if(pUserFileOperations->isUserCreated(login,password)){
+        pCbxUserName->clear();
+        pCbxUserName->addItems(pUserFileOperations->getUsersNames());
+        setWorkView();
+        emit enableMainWindow();
+    }
+    else nameAlreadyExists();
 }
 
-void User_Widget::slotLogIn(){
-    emit logIn(pCbxUserName->currentText(),pLedPassword->text());
+void User_Widget::logIn(){
+    pUserFileOperations->loadData(pCbxUserName->currentText(),pLedPassword->text());
 }
 
 void User_Widget::wrongPassword(){
@@ -83,10 +86,6 @@ void User_Widget::wrongPassword(){
     reply = QMessageBox::information(this,tr("Сообщение"),tr("Неверный пароль!"));
     Q_UNUSED(reply);
     pLedPassword->clear();
-}
-
-void User_Widget::enableMainWindowFromPassword(){
-    emit enableMainWindow();
 }
 
 void User_Widget::setWorkView(){
@@ -99,6 +98,6 @@ void User_Widget::setWorkView(){
 }
 
 void User_Widget::changeUser(){
-    emit clearData();
+    pUserFileOperations->clearData();
     setStartView();
 }

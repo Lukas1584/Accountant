@@ -8,26 +8,21 @@ class User_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit User_Widget(User_File_Operations* ufo);
+    User_Widget(User_File_Operations* ufo);
 
 signals:
-    void addUser(QString,QString);
-    void logIn(QString,QString);
     void disableMainWindow();
     void enableMainWindow();
-    void clearData();
 
 public slots:
-    void nameAlreadyExists();
-    void slotAddUser(QString,QString);
     void wrongPassword();
-    void enableMainWindowFromPassword();
     void setWorkView();
 
 private slots:
     void btnNewUserClicked();
-    void slotLogIn();
+    void logIn();
     void changeUser();
+    void addUser(QString,QString);
 
 private:
     Password_Widget* wdgPassword;
@@ -46,6 +41,8 @@ private:
     QGridLayout* pGrdMain;
 
     void setStartView();
+
+    void nameAlreadyExists();
 };
 
 

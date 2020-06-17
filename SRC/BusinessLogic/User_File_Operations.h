@@ -11,24 +11,27 @@ class User_File_Operations : public QObject
 {
     Q_OBJECT
 public:
-    explicit User_File_Operations(Data* d);
+    User_File_Operations(Data* d);
+    void clearData();
+    void loadData(const QString& login, const QString& password);
+    bool isUserCreated(const QString& login, const QString& password);
     QStringList getUsersNames();
 
 public slots:
-    void userCreation(const QString& login, const QString& password);
-    void checkPassword(const QString& login, const QString& password);
     void saveData();
 
 signals:
-    void nameAlreadyExists();
-    void wrongPassword();
     void dataIsLoaded();
+    void wrongPassword();
 
 private:
     Data* pData;
     QString dataFileName;
+    QString settingsFileName;
+    QStringList usersList;
     bool userIsOnList(const User& user);
-    void loadData(const QString& login);
+    bool checkPassword(const User& userChecking);
+    void loadUsersList();
 };
 
 

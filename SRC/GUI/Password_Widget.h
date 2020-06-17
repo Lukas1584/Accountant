@@ -12,7 +12,7 @@ public:
 
 signals:
     void clickedOk(QString,QString);
-    void enableMainWindow();
+    void clickedCancel();
 
 private slots:
     void slotClickedOk();

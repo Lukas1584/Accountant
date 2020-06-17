@@ -77,8 +77,8 @@ void Main_Window::dataIsLoaded(){
     pBtnPlanning->setEnabled(true);
     pLblBalance->show();
     slotMoneyShow();
-
 }
+
 void Main_Window::disableMainWindow(){
     setEnabled(false);
 }
@@ -86,4 +86,5 @@ void Main_Window::disableMainWindow(){
 void Main_Window::enableMainWindow(){
     setEnabled(true);
 }
+
 

@@ -2,6 +2,11 @@
 
 User_File_Operations::User_File_Operations(Data* d) : QObject(),pData(d)
 {
+    settingsFileName="settings.ac";
+    loadUsersList();
+
+
+
 //    for(int i=0;i<10;i++){
 //        Record rec;
 //        rec.id=i;
@@ -15,55 +20,42 @@ User_File_Operations::User_File_Operations(Data* d) : QObject(),pData(d)
 //    }
 }
 
-bool User_File_Operations::userIsOnList(const User& user){
-    QFile settings("settings.ac");
-    if(settings.open(QIODevice::ReadOnly)){
-        QDataStream stream(&settings);
-        stream.setVersion(QDataStream::Qt_5_15);
-        while(!settings.atEnd()){
-            User readedUser;
-            stream>>readedUser;
-            if(stream.status()!= QDataStream::Ok)
-            {
-                qDebug("Ошибка чтения файла");
-            }
-            if(user.login==readedUser.login){
-                settings.close();
-                return true;
-            }
-        }
-    }
-    settings.close();
-    return false;
-}
 
-void User_File_Operations::userCreation(const QString& login, const QString& password){
+bool User_File_Operations::isUserCreated(const QString& login, const QString& password){
     User user(login,password);
     if(userIsOnList(user)){
-        emit nameAlreadyExists();
-        return;
+        return false;
     }
-    QFile settings("settings.ac");
+    QFile settings(settingsFileName);
     if(settings.open(QIODevice::WriteOnly|QIODevice::Append)){
         QDataStream stream(&settings);
         stream.setVersion(QDataStream::Qt_5_15);
         stream<<user;
-        if(stream.status()!= QDataStream::Ok)
-        {
-            qDebug("Ошибка чтения файла");
-        }
         settings.close();
 
         dataFileName=user.login+".dat";
         QFile newUser(dataFileName);
         newUser.open(QIODevice::WriteOnly);
         newUser.close();
+        loadUsersList();
+        emit dataIsLoaded();
+        return true;
     }
+    return false;
 }
 
-QStringList User_File_Operations::getUsersNames(){
-    QFile settings("settings.ac");
-    QStringList names;
+bool User_File_Operations::userIsOnList(const User& user){
+    for(auto i:usersList){
+        if(user.login==i){
+            return true;
+        }
+    }
+    return false;
+}
+
+void User_File_Operations::loadUsersList(){
+    usersList.clear();
+    QFile settings(settingsFileName);
     if(settings.open(QIODevice::ReadOnly)){
         QDataStream stream(&settings);
         stream.setVersion(QDataStream::Qt_5_15);
@@ -74,16 +66,18 @@ QStringList User_File_Operations::getUsersNames(){
             {
                 qDebug("Ошибка чтения файла");
             }
-            names.push_back(userReaded.login);
+            usersList.push_back(userReaded.login);
         }
     }
     settings.close();
-    return names;
 }
 
-void User_File_Operations::checkPassword(const QString& login, const QString& password){
-    User userChecking(login,password);
-    QFile settings("settings.ac");
+QStringList User_File_Operations::getUsersNames(){
+    return usersList;
+}
+
+bool User_File_Operations::checkPassword(const User& userChecking){
+    QFile settings(settingsFileName);
     if(settings.open(QIODevice::ReadOnly)){
         QDataStream stream(&settings);
         stream.setVersion(QDataStream::Qt_5_15);
@@ -95,32 +89,33 @@ void User_File_Operations::checkPassword(const QString& login, const QString& pa
                 qDebug("Ошибка чтения файла");
             }
             if(userChecking==userReaded){
-                loadData(userChecking.login);
                 settings.close();
-                return;
+                return true;
             }
         }
         settings.close();
-        emit wrongPassword();
-        return;
     }
+    return false;
 }
 
-void User_File_Operations::loadData(const QString& login){
-    dataFileName=login+".dat";
-    QFile data(dataFileName);
-    if(data.open(QIODevice::ReadOnly))
-    {
-        QDataStream stream(&data);
-        stream.setVersion(QDataStream::Qt_5_15);
-        stream>>pData;
-        if(stream.status()!= QDataStream::Ok)
-        {
-            qDebug("Ошибка чтения файла");
+void User_File_Operations::loadData(const QString& login, const QString& password){
+    User user(login,password);
+    if(checkPassword(user)){
+        dataFileName=user.login+".dat";
+        QFile data(dataFileName);
+        if(data.open(QIODevice::ReadOnly)){
+            QDataStream stream(&data);
+            stream.setVersion(QDataStream::Qt_5_15);
+            stream>>pData;
+            if(stream.status()!= QDataStream::Ok)
+            {
+                qDebug("Ошибка чтения файла");
+            }
+            data.close();
         }
-    data.close();
+        emit dataIsLoaded();
     }
-    emit dataIsLoaded();
+    else emit wrongPassword();
 }
 
 void User_File_Operations::saveData(){

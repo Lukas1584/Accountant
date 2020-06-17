@@ -13,6 +13,7 @@ public:
 
 private slots:
     void save();
+    void addRecord();
 public slots:
     void dataIsLoaded();
 signals:

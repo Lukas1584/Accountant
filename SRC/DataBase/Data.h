@@ -16,6 +16,7 @@ public:
     Data();
     void add(Record& record);
     std::vector<Record> getData();
+    void clear();
 
     friend QDataStream& operator>>(QDataStream& dataStream, Data* rhs);
     friend QDataStream& operator<<(QDataStream& dataStream, Data* rhs);

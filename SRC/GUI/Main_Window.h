@@ -12,19 +12,20 @@ class Main_Window : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report_Widget* Report,Planning_Widget* Planning);
+    Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report_Widget* Report,Planning_Widget* Planning);
 
 signals:
 
 public slots:
-    void slotMoneyShow();
-    void slotUserShow();
-    void slotReportShow();
-    void slotPlanningShow();
     void dataIsLoaded();
     void disableMainWindow();
     void enableMainWindow();
 
+private slots:
+    void slotMoneyShow();
+    void slotUserShow();
+    void slotReportShow();
+    void slotPlanningShow();
 
 private:
     QPushButton* pBtnUser;
