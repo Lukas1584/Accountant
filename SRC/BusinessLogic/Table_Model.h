@@ -7,7 +7,7 @@ class Table_Model : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    Table_Model(Data* data);
+    Table_Model(Data* data, QObject *parent = 0);
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -21,7 +21,6 @@ private:
 
 
 /*
-
 virtual bool
 dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override
 
@@ -33,6 +32,5 @@ index(int row, int column, const QModelIndex &parent = QModelIndex()) const over
 
 virtual QModelIndex
 sibling(int row, int column, const QModelIndex &idx) const override
-
 
 */

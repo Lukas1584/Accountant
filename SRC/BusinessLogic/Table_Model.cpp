@@ -19,8 +19,9 @@ int Table_Model::columnCount(const QModelIndex &parent) const
 
 QVariant Table_Model::data(const QModelIndex &index, int role) const
 {
-    Q_UNUSED(role);
-    return pData->at(index.column(),index.row());
+    if (role == Qt::DisplayRole)
+        return pData->at(index.column(),index.row());
+    else return QVariant();
 }
 
 QVariant Table_Model::headerData(int section, Qt::Orientation orientation, int role) const{

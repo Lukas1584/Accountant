@@ -67,7 +67,7 @@ bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
     if(pEvent->type() == QEvent::Resize){
         pTable->setColumnWidth(0, pTable->width() * 0.1);
         pTable->setColumnWidth(1, pTable->width() * 0.1);
-        pTable->setColumnWidth(2, pTable->width() * 0.3);
+        pTable->setColumnWidth(2, pTable->width() * 0.295);
         pTable->setColumnWidth(3, pTable->width() * 0.3);
         pTable->setColumnWidth(4, pTable->width() * 0.1);
         pTable->setColumnWidth(5, pTable->width() * 0.1);
