@@ -7,16 +7,18 @@
 #include "SRC/GUI/Report_Widget.h"
 #include "SRC/GUI/User_Widget.h"
 
-#include "SRC/BusinessLogic/Data_Operations.h"
 #include "SRC/BusinessLogic/User_File_Operations.h"
+#include "SRC/BusinessLogic/Table_Model.h"
 
 #include "SRC/DataBase/Data.h"
+
 
 class Application_Builder : public QObject
 {
     Q_OBJECT
 public:
     explicit Application_Builder();
+    ~Application_Builder();
 
 signals:
 
@@ -25,7 +27,7 @@ private:
     Data* pData;
 
     User_File_Operations* pUserFileOperations;
-    Data_Operations* pDataOperations;
+    Table_Model* pModel;
 
     User_Widget* pWdgUser;
     Money_Repositary_Widget* pWdgMoneyRepositary;

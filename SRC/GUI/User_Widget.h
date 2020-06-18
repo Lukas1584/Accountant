@@ -32,6 +32,7 @@ private:
     QPushButton* pBtnLogIn;
     QPushButton* pBtnDeleteUser;
     QPushButton* pBtnChangeUser;
+    QPushButton* pBtnChangePassword;
 
     QLineEdit* pLedPassword;
     QComboBox* pCbxUserName;

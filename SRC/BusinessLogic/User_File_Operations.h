@@ -32,6 +32,9 @@ private:
     bool userIsOnList(const User& user);
     bool checkPassword(const User& userChecking);
     void loadUsersList();
+
+
+    void addDataTemp();
 };
 
 

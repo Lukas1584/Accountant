@@ -32,3 +32,15 @@ QDataStream& operator<<(QDataStream& dataStream, Data* rhs){
 void Data::clear(){
     data.clear();
 }
+
+int Data::rows(){
+    return data.size();
+}
+
+int Data::columns(){
+    return data[0].columns();
+}
+
+QVariant Data::at(int column,int row){
+    return QVariant(data[row].convert(column));
+}

@@ -1,7 +1,6 @@
 #pragma once
 #include <QObject>
-#include "SRC/DataBase/Data.h"
-#include "SRC/DataBase/Record.h"
+#include "SRC/BusinessLogic/Table_Model.h"
 #include <QVector>
 
 
@@ -9,13 +8,14 @@ class Data_Operations : public QObject
 {
     Q_OBJECT
 public:
-    explicit Data_Operations(Data* d);
-    QStringList getData();
+    Data_Operations(Table_Model* model);
+//    QStringList getData();
+
 
 signals:
 
 private:
-    Data* pData;
+    Table_Model* pModel;
 };
 
 

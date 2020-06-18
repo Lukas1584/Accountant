@@ -7,14 +7,13 @@
 #include <QVector>
 
 
-Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget(), pDataOperations(d)
+Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : QWidget(), pModel(model)
 {
-    pTable=new QTableWidget(3,7);
-    pTable->setColumnHidden(0,true);
+    pTable=new QTableView;
+    pTable->setModel(pModel);
 
-    QStringList listHeader={tr("id"),tr("Дата"),tr("Тип"),tr("Категория"),tr("Описание"),tr("Сумма"),tr("Валюта")};
-    pTable->setHorizontalHeaderLabels(listHeader);
-    pTable->verticalHeader()->hide();
+    //QStringList listHeader={tr("id"),tr("Дата"),tr("Тип"),tr("Категория"),tr("Описание"),tr("Сумма"),tr("Валюта")};
+
     pTable->installEventFilter(this);
 
     pBtnSave=new QPushButton(tr("Сохранить"));
@@ -22,7 +21,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Data_Operations* d) : QWidget()
     pBtnEdit=new QPushButton(tr("Редактировать"));
     pBtnDelete=new QPushButton(tr("Удалить"));
 
-    QObject::connect(pBtnSave,SIGNAL(clicked()),this,SLOT(save()));
+    QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(save()));
     QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
 
     pLineEditDate=new QLineEdit;
@@ -66,12 +65,12 @@ bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
     Q_UNUSED(pObject);
     Q_UNUSED(pEvent);
     if(pEvent->type() == QEvent::Resize){
+        pTable->setColumnWidth(0, pTable->width() * 0.1);
         pTable->setColumnWidth(1, pTable->width() * 0.1);
-        pTable->setColumnWidth(2, pTable->width() * 0.1);
+        pTable->setColumnWidth(2, pTable->width() * 0.3);
         pTable->setColumnWidth(3, pTable->width() * 0.3);
-        pTable->setColumnWidth(4, pTable->width() * 0.3);
+        pTable->setColumnWidth(4, pTable->width() * 0.1);
         pTable->setColumnWidth(5, pTable->width() * 0.1);
-        pTable->setColumnWidth(6, pTable->width() * 0.1);
     }
     return false;
 }
@@ -80,27 +79,8 @@ void Money_Repositary_Widget::save(){
     emit saveData();
 }
 
-void Money_Repositary_Widget::dataIsLoaded(){
-    QStringList data=pDataOperations->getData();
-    pTable->setRowCount(data.size()/8);
-    auto rec=data.begin();
-    for(int row=0; row!=pTable->rowCount(); row++){
-        for(int column=0; column!=pTable->columnCount();column++,rec++){
-            QTableWidgetItem* newItem = new QTableWidgetItem();
-            newItem->setText(*rec);
-            pTable->setItem(row, column, newItem);
-        }
-    }
-}
 
 void Money_Repositary_Widget::addRecord(){
-    QVector<QString> record(7);
-    //record.push_back();
-    record.push_back(pLineEditDate->text());
-    record.push_back(pCbxType->currentText());
-    record.push_back(pCbxCategory->currentText());
-    record.push_back(pCbxDescription->currentText());
-    record.push_back(pLineEditSum->text());
-    record.push_back(pCbxCurrency->currentText());
+
 
 }

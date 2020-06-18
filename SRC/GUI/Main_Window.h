@@ -12,7 +12,7 @@ class Main_Window : public QWidget
 {
     Q_OBJECT
 public:
-    Main_Window(User_Widget* User,Money_Repositary_Widget* Money,Report_Widget* Report,Planning_Widget* Planning);
+    Main_Window(QWidget* User,QWidget* Money,QWidget* Report,QWidget* Planning);
 
 signals:
 
@@ -35,10 +35,10 @@ private:
 
     QLabel* pLblBalance;
 
-    User_Widget* pWdgUser;
-    Money_Repositary_Widget* pWdgMoney;
-    Report_Widget* pWdgReport;
-    Planning_Widget* pWdgPlanning;
+    QWidget* pWdgUser;
+    QWidget* pWdgMoney;
+    QWidget* pWdgReport;
+    QWidget* pWdgPlanning;
 };
 
 

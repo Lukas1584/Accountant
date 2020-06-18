@@ -4,9 +4,9 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
 {
     pBtnNewUser=new QPushButton(tr("Регистрация"));
     pBtnLogIn=new QPushButton(tr("Войти"));
-
     pBtnDeleteUser=new QPushButton(tr("Удалить пользователя"));
     pBtnChangeUser=new QPushButton(tr("Выйти/Сменить пользователя"));
+    pBtnChangePassword=new QPushButton(tr("Сменить пароль"));
 
     pCbxUserName=new QComboBox;
     pLedPassword=new QLineEdit;
@@ -28,7 +28,8 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
     pGrdMain->addWidget(pBtnNewUser,1,3);
     pGrdMain->addWidget(pBtnLogIn,2,3);
     pGrdMain->addWidget(pBtnChangeUser,4,2);
-    pGrdMain->addWidget(pBtnDeleteUser,4,3);
+    pGrdMain->addWidget(pBtnDeleteUser,4,1);
+    pGrdMain->addWidget(pBtnChangePassword,4,3);
     pGrdMain->setRowStretch(3,1);
     pGrdMain->setColumnStretch(4,3);
     pGrdMain->setRowStretch(5,12);
@@ -48,6 +49,7 @@ void User_Widget::setStartView(){
     pCbxUserName->setEnabled(true);
     pLedPassword->setEnabled(true);
     pBtnChangeUser->setEnabled(false);
+    pBtnChangePassword->setEnabled(false);
 }
 
 void User_Widget::btnNewUserClicked(){
@@ -95,6 +97,7 @@ void User_Widget::setWorkView(){
     pBtnDeleteUser->setEnabled(false);
     pCbxUserName->setEnabled(false);
     pLedPassword->setEnabled(false);
+    pBtnChangePassword->setEnabled(true);
 }
 
 void User_Widget::changeUser(){

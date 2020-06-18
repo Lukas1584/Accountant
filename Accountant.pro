@@ -2,6 +2,7 @@ SOURCES += \
     Main.cpp \
     SRC/Application_Builder.cpp \
     SRC/BusinessLogic/Data_Operations.cpp \
+    SRC/BusinessLogic/Table_Model.cpp \
     SRC/BusinessLogic/User.cpp \
     SRC/BusinessLogic/User_File_Operations.cpp \
     SRC/DataBase/Data.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
 HEADERS += \
     SRC/Application_Builder.h \
     SRC/BusinessLogic/Data_Operations.h \
+    SRC/BusinessLogic/Table_Model.h \
     SRC/BusinessLogic/User.h \
     SRC/BusinessLogic/User_File_Operations.h \
     SRC/DataBase/Data.h \
@@ -28,3 +30,4 @@ HEADERS += \
     SRC/GUI/User_Widget.h
 
 QT += widgets
+QT += core
