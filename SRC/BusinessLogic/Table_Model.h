@@ -8,33 +8,16 @@ class Table_Model : public QAbstractTableModel
     Q_OBJECT
 public:
     Table_Model(Data* data, QObject *parent = 0);
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-    bool insertRows(int row,int count=1, const QModelIndex& parent=QModelIndex());
-    bool removeRows(int row,int count=1, const QModelIndex& parent=QModelIndex());
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    int rowCount(const QModelIndex &parent) const override ;
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    bool insertRows(int row,int count=1, const QModelIndex& parent=QModelIndex()) override;
+    bool removeRows(int row,int count=1, const QModelIndex& parent=QModelIndex()) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 signals:
 
 private:
     Data *pData;
 };
-
-
-/*
-virtual bool
-dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override
-
-virtual Qt::ItemFlags
-flags(const QModelIndex &index) const override
-
-virtual QModelIndex
-index(int row, int column, const QModelIndex &parent = QModelIndex()) const override
-
-virtual QModelIndex
-sibling(int row, int column, const QModelIndex &idx) const override
-
-*/

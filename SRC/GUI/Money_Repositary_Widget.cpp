@@ -6,18 +6,20 @@ Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : Q
     pTable->setModel(pModel);
     pTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-
     pTable->installEventFilter(this);
 
-    pBtnSave=new QPushButton(tr("Сохранить"));
-    pBtnAdd=new QPushButton(tr("Добавить"));
-    pBtnEdit=new QPushButton(tr("Редактировать"));
-    pBtnDelete=new QPushButton(tr("Удалить"));
+    pBtnSave=new QPushButton(tr("Сохранить кошелек"));
+    pBtnAdd=new QPushButton(tr("Добавить запись"));
+    pBtnEdit=new QPushButton(tr("Редактировать запись"));
+    pBtnDelete=new QPushButton(tr("Удалить запись"));
+    pBtnCnacel=new QPushButton(tr("Отмена"));
+    setWorkView();
 
     QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(save()));
     QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
     QObject::connect(pBtnDelete,SIGNAL(clicked()),SLOT(deleteRecord()));
     QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
+    QObject::connect(pBtnCnacel,SIGNAL(clicked()),SLOT(cancelEditRecord()));
 
     pLineEditDate=new QLineEdit;
     pCbxType=new QComboBox;
@@ -31,7 +33,6 @@ Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : Q
     ///временно
     pCbxCategory->addItems({tr("Временная категория"),tr("Категория временная")});
     pCbxDescription->addItems({tr("Временное описание"),tr("Описание временное")});
-
 
     QHBoxLayout* pHbxEdit=new QHBoxLayout;
     pHbxEdit->addWidget(pLineEditDate,1);
@@ -47,10 +48,11 @@ Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : Q
 
     QVBoxLayout* pVbxButtons=new QVBoxLayout;
     pVbxButtons->addStretch(1);
-    pVbxButtons->addWidget(pBtnDelete);
-    pVbxButtons->addSpacing(10);
-    pVbxButtons->addWidget(pBtnEdit);
     pVbxButtons->addWidget(pBtnSave);
+    pVbxButtons->addSpacing(10);
+    pVbxButtons->addWidget(pBtnDelete);
+    pVbxButtons->addWidget(pBtnEdit);
+    pVbxButtons->addWidget(pBtnCnacel);
     pVbxButtons->addSpacing(10);
     pVbxButtons->addWidget(pBtnAdd);
 
@@ -80,14 +82,22 @@ void Money_Repositary_Widget::save(){
 }
 
 void Money_Repositary_Widget::addRecord(){
-    int row=pModel->rowCount();
-    pModel->insertRows(row,1);
+    int row;
+    if(isEdit){
+        row=pTable->selectionModel()->currentIndex().row();
+    }
+    else{
+        row=pModel->rowCount();
+        pModel->insertRows(row,1);
+    }
     pModel->setData(pModel->index(row,0),pLineEditDate->text());
     pModel->setData(pModel->index(row,1),pCbxType->currentText());
     pModel->setData(pModel->index(row,2),pCbxCategory->currentText());
     pModel->setData(pModel->index(row,3),pCbxDescription->currentText());
     pModel->setData(pModel->index(row,4),pLineEditSum->text());
     pModel->setData(pModel->index(row,5),pCbxCurrency->currentText());
+    setWorkView();
+    isEdit=false;
 }
 
 void Money_Repositary_Widget::deleteRecord(){
@@ -95,6 +105,16 @@ void Money_Repositary_Widget::deleteRecord(){
 }
 
 void Money_Repositary_Widget::editRecord(){
+    isEdit=true;
+    setEditView();
+}
+
+void Money_Repositary_Widget::setEditView(){
+    pBtnCnacel->setEnabled(true);
+    pBtnSave->setEnabled(false);
+    pBtnEdit->setEnabled(false);
+    pBtnDelete->setEnabled(false);
+    pBtnAdd->setText(tr("Сохранить изменения"));
     int row=pTable->selectionModel()->currentIndex().row();
     pLineEditDate->setText(pModel->data(pModel->index(row,0)).toString());
     pCbxType->setCurrentText(pModel->data(pModel->index(row,1)).toString());
@@ -102,4 +122,17 @@ void Money_Repositary_Widget::editRecord(){
     pCbxDescription->setCurrentText(pModel->data(pModel->index(row,3)).toString());
     pLineEditSum->setText(pModel->data(pModel->index(row,4)).toString());
     pCbxCurrency->setCurrentText(pModel->data(pModel->index(row,5)).toString());
+}
+
+void Money_Repositary_Widget::setWorkView(){
+    pBtnCnacel->setEnabled(false);
+    pBtnSave->setEnabled(true);
+    pBtnEdit->setEnabled(true);
+    pBtnDelete->setEnabled(true);
+    pBtnAdd->setText(tr("Добавить запись"));
+}
+
+void Money_Repositary_Widget::cancelEditRecord(){
+    isEdit=false;
+    setWorkView();
 }

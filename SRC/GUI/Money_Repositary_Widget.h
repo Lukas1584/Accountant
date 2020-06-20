@@ -18,6 +18,7 @@ private slots:
     void addRecord();
     void deleteRecord();
     void editRecord();
+    void cancelEditRecord();
 public slots:
 
 signals:
@@ -31,6 +32,7 @@ private:
     QPushButton* pBtnAdd;
     QPushButton* pBtnEdit;
     QPushButton* pBtnDelete;
+    QPushButton* pBtnCnacel;
 
     QLineEdit* pLineEditDate;
     QComboBox* pCbxType;
@@ -38,6 +40,11 @@ private:
     QComboBox* pCbxDescription;
     QLineEdit* pLineEditSum;
     QComboBox* pCbxCurrency;
+
+    bool isEdit=true;
+
+    void setEditView();
+    void setWorkView();
 };
 
 

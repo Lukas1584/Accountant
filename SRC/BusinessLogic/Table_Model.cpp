@@ -68,12 +68,12 @@ bool Table_Model::removeRows(int row,int count, const QModelIndex& parent){
     return true;
 }
 
-
 bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (index.isValid() && role == Qt::EditRole)
     {
         pData->setData(index.row(),index.column(),value);
+        emit dataChanged(index,index);
         return true;
     }
     return false;
