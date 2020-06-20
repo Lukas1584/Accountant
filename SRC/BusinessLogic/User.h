@@ -10,7 +10,6 @@ public:
     bool operator==(const User& rhs) const;
     QString login;
     QString password;
-
 };
 
 QDataStream& operator>>(QDataStream& stream,User& user);

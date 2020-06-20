@@ -1,5 +1,5 @@
 #pragma once
-#include <QWidget>
+#include <QtWidgets>
 
 class Report_Widget : public QWidget
 {

@@ -97,8 +97,7 @@ void User_File_Operations::loadData(const QString& login, const QString& passwor
                 qDebug("Ошибка чтения файла");
             }
             data.close();
-            //addDataTemp(); ///////////////////////////////////////////////////////
-        }
+         }
         emit dataIsLoaded();
     }
     else emit wrongPassword();
@@ -122,15 +121,3 @@ void User_File_Operations::clearData(){
     pData->clear();
 }
 
-//void User_File_Operations::addDataTemp(){
-//    for(int i=0;i<10;i++){
-//        Record rec;
-//        rec.date=QDate(QDate::currentDate());
-//        rec.category="Тестовая категория";
-//        rec.description="Тестовая запись";
-//        rec.sum=10*(i+1);
-//        rec.type=Record::PROFIT;
-//        rec.currency=Record::BYR;
-//        pData->add(rec);
-//    }
-//}

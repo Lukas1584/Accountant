@@ -14,6 +14,9 @@ public:
     void clear();
     int rows();
     int columns();
+    void remove(int row);
+    void insertRows(int row,int count=1);
+    void setData(int row,int column,QVariant value);
 
     friend QDataStream& operator>>(QDataStream& dataStream, Data* rhs);
     friend QDataStream& operator<<(QDataStream& dataStream, Data* rhs);

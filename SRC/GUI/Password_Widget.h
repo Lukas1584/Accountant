@@ -1,6 +1,4 @@
 #pragma once
-#include <QObject>
-#include <QWidget>
 #include <QtWidgets>
 
 class Password_Widget : public QWidget

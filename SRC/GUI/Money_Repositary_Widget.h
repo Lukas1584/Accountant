@@ -1,20 +1,23 @@
 #pragma once
-#include <QWidget>
-#include <QTableView>
-#include "SRC/BusinessLogic/Table_Model.h"
 #include <QtWidgets>
-#include <QAbstractTableModel>
+//#include <QTableView>
+//#include <QAbstractTableModel>
+//#include <QHeaderView>
+//#include <QEvent>
+//#include <QVector>
 
 class Money_Repositary_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Money_Repositary_Widget(QAbstractTableModel* model);
+    Money_Repositary_Widget(QAbstractTableModel* model);
     bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private slots:
     void save();
     void addRecord();
+    void deleteRecord();
+    void editRecord();
 public slots:
 
 signals:
@@ -29,14 +32,12 @@ private:
     QPushButton* pBtnEdit;
     QPushButton* pBtnDelete;
 
-
     QLineEdit* pLineEditDate;
     QComboBox* pCbxType;
     QComboBox* pCbxCategory;
     QComboBox* pCbxDescription;
     QLineEdit* pLineEditSum;
     QComboBox* pCbxCurrency;
-
 };
 
 

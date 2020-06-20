@@ -1,5 +1,5 @@
 #pragma once
-#include <QWidget>
+#include <QtWidgets>
 
 class Planning_Widget : public QWidget
 {

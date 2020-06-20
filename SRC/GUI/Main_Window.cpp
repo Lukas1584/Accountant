@@ -1,5 +1,4 @@
 #include "Main_Window.h"
-#include <QObject>
 
 Main_Window::Main_Window(QWidget* User,QWidget* Money,QWidget* Report,QWidget* Planning)
     : QWidget(), pWdgUser(User), pWdgMoney(Money), pWdgReport(Report),pWdgPlanning(Planning)

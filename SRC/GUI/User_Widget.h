@@ -1,5 +1,4 @@
 #pragma once
-#include <QWidget>
 #include <QtWidgets>
 #include "SRC/BusinessLogic/User_File_Operations.h"
 #include "Password_Widget.h"

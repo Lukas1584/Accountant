@@ -1,9 +1,7 @@
 #include "Data.h"
 
-Data::Data()
-{
+Data::Data(){}
 
-}
 void Data::add(Record& record){
     data.push_back(record);
 }
@@ -43,4 +41,19 @@ int Data::columns(){
 
 QVariant Data::at(int column,int row){
     return QVariant(data[row].convert(column));
+}
+
+void Data::remove(int row){
+    data.erase(data.begin()+row);
+}
+
+void Data::insertRows(int row,int count){
+    Record rec;
+    for (int i=0;i<count;i++)
+        data.insert(data.begin()+row,rec);
+}
+
+void Data::setData(int row,int column,QVariant value){
+    data[row].setData(column,value);
+
 }

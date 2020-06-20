@@ -56,9 +56,53 @@ QVariant Record::convert(int column){
         return QVariant();
     }
 }
+
 int Record::columns()
 {
     return 6;
 }
 
-
+void Record::setData(int column,QVariant value){
+    switch (column){
+    case 0:
+        date=value.toDate();
+        return;
+    case 1:
+        if(value.toString()=="Прибыль"){
+            type=Record::PROFIT;
+            return;
+        }
+        if(value.toString()=="Убыток"){
+            type=Record::LOSS;
+            return;
+        }
+    case 2:
+        category=value.toString();
+        return;
+    case 3:
+        description=value.toString();
+        return;
+    case 4:
+        sum=value.toFloat();
+        return;
+    case 5:
+        if(value.toString()=="USD"){
+            currency=Record::USD;
+            return;
+        }
+        if(value.toString()=="BYR"){
+            currency=Record::BYR;
+            return;
+        }
+        if(value.toString()=="RUB"){
+            currency=Record::RUB;
+            return;
+        }
+        if(value.toString()=="EUR"){
+            currency=Record::EUR;
+            return;
+        }
+    default:
+        return;
+    }
+}

@@ -36,12 +36,14 @@ void Password_Widget::slotClickedOk(){
     if(pLePassword->text()!=pLePasswordConfirmation->text()){
         QMessageBox::StandardButton reply;
         reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароли не совпадают!"));
+        Q_UNUSED(reply);
         return;
     }
     //Задать рег выражение для логина
     if(pLeName->text()==""||pLeName->text()==" "){
         QMessageBox::StandardButton reply;
         reply = QMessageBox::information(this,tr("Сообщение"),tr("Вы забыли указать имя!"));
+        Q_UNUSED(reply);
         return;
     }
     emit clickedOk(pLeName->text(),pLePassword->text());

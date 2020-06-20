@@ -47,3 +47,34 @@ QVariant Table_Model::headerData(int section, Qt::Orientation orientation, int r
     }
     else return QVariant();
 }
+
+bool Table_Model::insertRows(int row,int count, const QModelIndex& parent){
+    if(parent.isValid()){
+        return false;
+    }
+    beginInsertRows(QModelIndex(),row,row+count-1);
+    pData->insertRows(row,count);
+    endInsertRows();
+    return true;
+}
+
+bool Table_Model::removeRows(int row,int count, const QModelIndex& parent){
+    if(parent.isValid()){
+        return false;
+    }
+    beginRemoveRows(QModelIndex(),row,row+count-1);
+    pData->remove(row);
+    endRemoveRows();
+    return true;
+}
+
+
+bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (index.isValid() && role == Qt::EditRole)
+    {
+        pData->setData(index.row(),index.column(),value);
+        return true;
+    }
+    return false;
+}

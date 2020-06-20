@@ -1,12 +1,6 @@
 #pragma once
-#include <QWidget>
 #include <QtWidgets>
-#include "SRC/GUI/User_Widget.h"
-#include "SRC/GUI/Money_Repositary_Widget.h"
-#include "SRC/GUI/Planning_Widget.h"
-#include "SRC/GUI/Report_Widget.h"
-
-
+//#include <QObject>
 
 class Main_Window : public QWidget
 {

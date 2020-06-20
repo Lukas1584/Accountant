@@ -1,18 +1,11 @@
 #include "Money_Repositary_Widget.h"
-#include <QBoxLayout>
-#include <QComboBox>
-#include <QLineEdit>
-#include <QHeaderView>
-#include <QEvent>
-#include <QVector>
-
 
 Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : QWidget(), pModel(model)
 {
     pTable=new QTableView;
     pTable->setModel(pModel);
+    pTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    //QStringList listHeader={tr("id"),tr("Дата"),tr("Тип"),tr("Категория"),tr("Описание"),tr("Сумма"),tr("Валюта")};
 
     pTable->installEventFilter(this);
 
@@ -23,15 +16,22 @@ Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : Q
 
     QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(save()));
     QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
+    QObject::connect(pBtnDelete,SIGNAL(clicked()),SLOT(deleteRecord()));
+    QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
 
     pLineEditDate=new QLineEdit;
     pCbxType=new QComboBox;
-    pCbxType->addItems({tr("Доход"),tr("Убыток")});
+    pCbxType->addItems({tr("Прибыль"),tr("Убыток")});
     pCbxCategory=new QComboBox;
     pCbxDescription=new QComboBox;
     pLineEditSum=new QLineEdit;
     pCbxCurrency=new QComboBox;
     pCbxCurrency->addItems({"USD","BYR","RUB","EUR"});
+
+    ///временно
+    pCbxCategory->addItems({tr("Временная категория"),tr("Категория временная")});
+    pCbxDescription->addItems({tr("Временное описание"),tr("Описание временное")});
+
 
     QHBoxLayout* pHbxEdit=new QHBoxLayout;
     pHbxEdit->addWidget(pLineEditDate,1);
@@ -79,8 +79,27 @@ void Money_Repositary_Widget::save(){
     emit saveData();
 }
 
-
 void Money_Repositary_Widget::addRecord(){
+    int row=pModel->rowCount();
+    pModel->insertRows(row,1);
+    pModel->setData(pModel->index(row,0),pLineEditDate->text());
+    pModel->setData(pModel->index(row,1),pCbxType->currentText());
+    pModel->setData(pModel->index(row,2),pCbxCategory->currentText());
+    pModel->setData(pModel->index(row,3),pCbxDescription->currentText());
+    pModel->setData(pModel->index(row,4),pLineEditSum->text());
+    pModel->setData(pModel->index(row,5),pCbxCurrency->currentText());
+}
 
+void Money_Repositary_Widget::deleteRecord(){
+    pModel->removeRows(pTable->selectionModel()->currentIndex().row(),1);
+}
 
+void Money_Repositary_Widget::editRecord(){
+    int row=pTable->selectionModel()->currentIndex().row();
+    pLineEditDate->setText(pModel->data(pModel->index(row,0)).toString());
+    pCbxType->setCurrentText(pModel->data(pModel->index(row,1)).toString());
+    pCbxCategory->setCurrentText(pModel->data(pModel->index(row,2)).toString());
+    pCbxDescription->setCurrentText(pModel->data(pModel->index(row,3)).toString());
+    pLineEditSum->setText(pModel->data(pModel->index(row,4)).toString());
+    pCbxCurrency->setCurrentText(pModel->data(pModel->index(row,5)).toString());
 }
