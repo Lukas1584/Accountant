@@ -6,7 +6,6 @@ Money_Repositary_Widget::Money_Repositary_Widget(Table_Model* model) : QWidget()
     pTable=new QTableView;
     pTable->setModel(pModel);
     pTable->installEventFilter(this);
-    //pTable->setSortingEnabled(true);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
     pBtnAdd=new QPushButton(tr("Добавить запись"));
@@ -20,9 +19,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Table_Model* model) : QWidget()
     QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
     QObject::connect(pBtnCnacel,SIGNAL(clicked()),SLOT(cancelEditRecord()));
 
-    pLineEditDate=new QLineEdit;
-
-    pLineEditDate->setText(QDate::currentDate().toString("dd.MM.yyyy"));
+    pTimeEdit=new QDateTimeEdit(QDate::currentDate());
     pCbxType=new QComboBox;
     pCbxType->addItems({tr("Прибыль"),tr("Убыток")});
     pCbxCategory=new QComboBox;
@@ -37,7 +34,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Table_Model* model) : QWidget()
     QObject::connect(pCbxCategory,SIGNAL(textActivated(const QString&)),SLOT(categoryChanged()));
 
     QHBoxLayout* pHbxEdit=new QHBoxLayout;
-    pHbxEdit->addWidget(pLineEditDate,1);
+    pHbxEdit->addWidget(pTimeEdit,1);
     pHbxEdit->addWidget(pCbxType,1);
     pHbxEdit->addWidget(pCbxCategory,3);
     pHbxEdit->addWidget(pCbxDescription,3);
@@ -93,7 +90,7 @@ void Money_Repositary_Widget::addRecord(){
         row=pModel->rowCount();
         pModel->insertRows(row,1);
     }
-    pModel->setData(pModel->index(row,0),pLineEditDate->text());
+    pModel->setData(pModel->index(row,0),pTimeEdit->date());
     pModel->setData(pModel->index(row,1),pCbxType->currentText());
     pModel->setData(pModel->index(row,2),pCbxCategory->currentText());
     pModel->setData(pModel->index(row,3),pCbxDescription->currentText());
@@ -122,7 +119,7 @@ void Money_Repositary_Widget::setEditView(){
     pBtnDelete->setEnabled(false);
     pBtnAdd->setText(tr("Сохранить изменения"));
     int row=pTable->selectionModel()->currentIndex().row();
-    pLineEditDate->setText(pModel->data(pModel->index(row,0)).toString());
+    pTimeEdit->setDate(pModel->data(pModel->index(row,0)).toDate());
     pCbxType->setCurrentText(pModel->data(pModel->index(row,1)).toString());
     pCbxCategory->setCurrentText(pModel->data(pModel->index(row,2)).toString());
     pCbxDescription->setCurrentText(pModel->data(pModel->index(row,3)).toString());

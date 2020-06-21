@@ -2,11 +2,11 @@
 
 Data::Data(){}
 
-void Data::add(Record& record){
+void Data::add(const Record& record){
     data.push_back(record);
 }
 
-std::vector<Record> Data::getData(){
+std::vector<Record> Data::getData() const{
     std::vector<Record> d=data;
     return d;
 }
@@ -31,11 +31,11 @@ void Data::clear(){
     data.clear();
 }
 
-int Data::rows(){
+int Data::rows()const{
     return data.size();
 }
 
-int Data::columns(){
+int Data::columns()const{
     return data[0].columns();
 }
 
@@ -43,21 +43,21 @@ QVariant Data::at(int column,int row){
     return QVariant(data[row].convert(column));
 }
 
-void Data::remove(int row){
+void Data::remove(const int row){
     data.erase(data.begin()+row);
 }
 
-void Data::insertRows(int row,int count){
+void Data::insertRows(const int row, const int count){
     Record rec;
     for (int i=0;i<count;i++)
         data.insert(data.begin()+row,rec);
 }
 
-void Data::setData(int row,int column,QVariant value){
+void Data::setData(const int row, const int column, const QVariant &value){
     data[row].setData(column,value);
 }
 
-QStringList Data::getCategories(const QString& type){
+QStringList Data::getCategories(const QString& type) const{
     QStringList categories;
     for(auto i:data){
         if(i.convert(1).toString()==type){
@@ -74,7 +74,7 @@ QStringList Data::getCategories(const QString& type){
     return categories;
 }
 
-QStringList Data::getDescriprions(const QString& category){
+QStringList Data::getDescriprions(const QString& category) const{
     QStringList descroptions;
     for(auto i:data){
         if(i.getCategory()==category){

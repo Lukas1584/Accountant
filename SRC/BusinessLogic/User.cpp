@@ -2,7 +2,7 @@
 
 User::User(){};
 
-User::User(QString log,QString pass):login(log),password(pass){
+User::User(const QString& log,const QString& pass):login(log),password(pass){
 }
 
 bool User::operator==(const User& rhs) const{
@@ -25,6 +25,6 @@ QDataStream& operator<<(QDataStream& stream,const User& user){
     return stream;
 }
 
-bool User::operator<(const User& rhs) const{
+bool User::operator<(const User& rhs)const{
     return login<rhs.login;
 }

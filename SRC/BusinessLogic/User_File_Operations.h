@@ -14,11 +14,12 @@ public:
     void clearData();
     void loadData(const QString& login, const QString& password);
     bool isUserCreated(const QString& login, const QString& password);
-    QStringList getUsersNames();
+    QStringList getUsersNames()const;
     void deleteUser(const QString& login,const QString& password);
-    bool changedPassword(QString login,QString oldPassword,QString newPassword);
+    bool changedPassword(const QString& login,const QString& oldPassword,const QString& newPassword);
+
 public slots:
-    void saveData();
+    void saveData()const;
 
 signals:
     void dataIsLoaded();
@@ -30,7 +31,7 @@ private:
     QString settingsFileName;
     QVector<User> users;
 
-    bool userIsOnList(const User& user);
+    bool userIsOnList(const User& user)const;
     bool checkPassword(const User& userChecking);
     void loadUsers();
     void saveUsers();

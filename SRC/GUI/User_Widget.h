@@ -23,10 +23,10 @@ private slots:
     void btnNewUserClicked();
     void logIn();
     void changeUser();
-    void addUser(QString,QString);
+    void addUser(const QString& login,const QString& password);
     void deleteUser();
     void changePassword();
-    void changingPassword(QString,QString);
+    void changingPassword(const QString& oldPassword,const QString& newPassword);
 
 private:
     Password_Widget* wdgPassword;
@@ -47,7 +47,6 @@ private:
     QGridLayout* pGrdMain;
 
     void setStartView();
-
     void nameAlreadyExists();
 };
 

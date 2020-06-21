@@ -7,11 +7,11 @@
 class Record{
 
 public:
-    QVariant convert(const int column);
-    int columns();
-    void setData(int column,QVariant value);
-    QString getCategory();
-    QString getDescription();
+    QVariant convert(const int column) const;
+    int columns() const;
+    void setData(const int column,const QVariant& value);
+    QString getCategory() const;
+    QString getDescription() const;
 
     friend QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
     friend QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);

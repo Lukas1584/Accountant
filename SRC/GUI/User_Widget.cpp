@@ -72,7 +72,7 @@ void User_Widget::nameAlreadyExists(){
     btnNewUserClicked();
 }
 
-void User_Widget::addUser(QString login,QString password){
+void User_Widget::addUser(const QString& login,const QString& password){
     delete wdgPassword;
     wdgPassword=nullptr;
     if(pUserFileOperations->isUserCreated(login,password)){
@@ -119,11 +119,11 @@ void User_Widget::changePassword(){
     emit disableMainWindow();
     wdgChangePassword=new Change_Password_Widget();
     wdgChangePassword->show();
-    QObject::connect(wdgChangePassword,SIGNAL(clickedOk(QString,QString)),SLOT(changingPassword(QString,QString)));
+    QObject::connect(wdgChangePassword,SIGNAL(clickedOk(const QString&,const QString&)),SLOT(changingPassword(const QString&,const QString&)));
     QObject::connect(wdgChangePassword,SIGNAL(clickedCancel()),SIGNAL(enableMainWindow()));
 }
 
-void User_Widget::changingPassword(QString oldPassword,QString newPassword){
+void User_Widget::changingPassword(const QString &oldPassword, const QString &newPassword){
     delete wdgChangePassword;
     wdgChangePassword=nullptr;
     if(pUserFileOperations->changedPassword(pCbxUserName->currentText(),oldPassword,newPassword)){

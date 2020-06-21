@@ -8,16 +8,16 @@ class Data
 {
 public:
     Data();
-    void add(Record& record);
-    std::vector<Record> getData();
+    void add(const Record& record);
+    std::vector<Record> getData() const;
     void clear();
-    int rows();
-    int columns();
-    void remove(int row);
-    void insertRows(int row,int count=1);
-    void setData(int row,int column,QVariant value);
-    QStringList getCategories(const QString& type);
-    QStringList getDescriprions(const QString& category);
+    int rows()const;
+    int columns()const;
+    void remove(const int row);
+    void insertRows(const int row,const int count=1);
+    void setData(const int row,const int column,const QVariant& value);
+    QStringList getCategories(const QString& type)const;
+    QStringList getDescriprions(const QString& category)const;
 
     friend QDataStream& operator>>(QDataStream& dataStream, Data* rhs);
     friend QDataStream& operator<<(QDataStream& dataStream, Data* rhs);

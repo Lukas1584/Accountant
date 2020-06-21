@@ -9,7 +9,7 @@ public:
     explicit Password_Widget(QWidget *parent = nullptr);
 
 signals:
-    void clickedOk(QString,QString);
+    void clickedOk(const QString&,const QString&);
     void clickedCancel();
 
 private slots:

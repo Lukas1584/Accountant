@@ -31,7 +31,7 @@ void User_File_Operations::saveUsers(){
     }
 }
 
-bool User_File_Operations::userIsOnList(const User& user){
+bool User_File_Operations::userIsOnList(const User& user) const{
     for(auto i:users){
         if(user.login==i.login){
             return true;
@@ -54,7 +54,7 @@ void User_File_Operations::loadUsers(){
     settings.close();
 }
 
-QStringList User_File_Operations::getUsersNames(){
+QStringList User_File_Operations::getUsersNames() const{
     QStringList usersList;
     for(auto i:users)
         usersList.push_back(i.login);
@@ -85,7 +85,7 @@ void User_File_Operations::loadData(const QString& login, const QString& passwor
     }
 }
 
-void User_File_Operations::saveData(){
+void User_File_Operations::saveData() const{
     QFile data(dataFileName);
     if(data.open(QIODevice::WriteOnly)){
         QDataStream stream(&data);
@@ -113,7 +113,7 @@ void User_File_Operations::deleteUser(const QString& login,const QString& passwo
     }
 }
 
-bool User_File_Operations::changedPassword(QString login,QString oldPassword,QString newPassword){
+bool User_File_Operations::changedPassword(const QString &login, const QString &oldPassword, const QString &newPassword){
     User userOldPassword(login,oldPassword);
     User userNewPassword(login,newPassword);
     for(int i=0; i<users.size();i++){
@@ -122,7 +122,6 @@ bool User_File_Operations::changedPassword(QString login,QString oldPassword,QSt
             saveUsers();
             return true;
         }
-
     }
     emit wrongPassword();
     return false;

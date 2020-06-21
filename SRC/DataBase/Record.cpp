@@ -20,10 +20,10 @@ QDataStream& operator<<(QDataStream& dataStream,const Record& rhs){
     return dataStream;
 }
 
-QVariant Record::convert(int column){
+QVariant Record::convert(int column)const{
     switch (column){
     case 0:
-        return QVariant(date.toString("dd.MM.yyyy"));
+        return QVariant(date);
     case 1:
         switch (type) {
         case Record::PROFIT:
@@ -57,12 +57,12 @@ QVariant Record::convert(int column){
     }
 }
 
-int Record::columns()
+int Record::columns()const
 {
     return 6;
 }
 
-void Record::setData(int column,QVariant value){
+void Record::setData(const int column,const QVariant& value){
     switch (column){
     case 0:
         date=value.toDate();
@@ -107,9 +107,9 @@ void Record::setData(int column,QVariant value){
     }
 }
 
-QString Record::getCategory(){
+QString Record::getCategory() const{
     return category;
 }
-QString Record::getDescription(){
+QString Record::getDescription()const{
     return description;
 }

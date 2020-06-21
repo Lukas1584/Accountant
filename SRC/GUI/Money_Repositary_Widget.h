@@ -32,7 +32,7 @@ private:
     QPushButton* pBtnDelete;
     QPushButton* pBtnCnacel;
 
-    QLineEdit* pLineEditDate;
+    QDateTimeEdit* pTimeEdit;
     QComboBox* pCbxType;
     QComboBox* pCbxCategory;
     QComboBox* pCbxDescription;
