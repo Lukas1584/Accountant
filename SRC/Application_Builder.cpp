@@ -19,6 +19,7 @@ Application_Builder::Application_Builder() : QObject()
     QObject::connect(pWdgUser,SIGNAL(enableMainWindow()),pMainWindow,SLOT(enableMainWindow()));
     QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pMainWindow,SLOT(dataIsLoaded()));
     QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgUser,SLOT(setWorkView()));
+    QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgMoneyRepositary,SLOT(dataIsLoaded()));
     QObject::connect(pUserFileOperations,SIGNAL(wrongPassword()),pWdgUser,SLOT(wrongPassword()));
     QObject::connect(pWdgMoneyRepositary,SIGNAL(saveData()),pUserFileOperations,SLOT(saveData()));
     QObject::connect(pWdgUser,SIGNAL(exitUser()),pMainWindow,SLOT(exitUser()));

@@ -10,6 +10,8 @@ public:
     QVariant convert(const int column);
     int columns();
     void setData(int column,QVariant value);
+    QString getCategory();
+    QString getDescription();
 
     friend QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
     friend QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);

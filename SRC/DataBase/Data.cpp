@@ -55,5 +55,38 @@ void Data::insertRows(int row,int count){
 
 void Data::setData(int row,int column,QVariant value){
     data[row].setData(column,value);
+}
 
+QStringList Data::getCategories(const QString& type){
+    QStringList categories;
+    for(auto i:data){
+        if(i.convert(1).toString()==type){
+            bool isCategoryOnList=false;
+            for(auto k:categories){
+                if(k==i.getCategory())
+                    isCategoryOnList=true;
+            }
+            if (!isCategoryOnList)
+                categories.push_back(i.getCategory());
+        }
+    }
+    categories.sort();
+    return categories;
+}
+
+QStringList Data::getDescriprions(const QString& category){
+    QStringList descroptions;
+    for(auto i:data){
+        if(i.getCategory()==category){
+            bool isDescriptionOnList=false;
+            for(auto k:descroptions){
+                if(k==i.getDescription())
+                    isDescriptionOnList=true;
+            }
+            if (!isDescriptionOnList)
+                descroptions.push_back(i.getDescription());
+        }
+    }
+        descroptions.sort();
+        return descroptions;
 }

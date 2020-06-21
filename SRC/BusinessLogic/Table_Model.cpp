@@ -1,9 +1,6 @@
 #include "Table_Model.h"
 
-Table_Model::Table_Model(Data* data,QObject* parent) : QAbstractTableModel(parent),pData(data)
-{
-
-}
+Table_Model::Table_Model(Data* data,QObject* parent) : QAbstractTableModel(parent),pData(data){}
 
 int Table_Model::rowCount(const QModelIndex &parent) const
 {
@@ -79,6 +76,10 @@ bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int r
     return false;
 }
 
-QVector<QStringList> Table_Model::getCategoryDescription(){
-   // return pData->getCategoryDescription();
+QStringList Table_Model::getCategories(const QString& type){
+   return pData->getCategories(type);
+}
+
+QStringList Table_Model::getDescriptions(const QString& category){
+    return pData->getDescriprions(category);
 }

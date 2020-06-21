@@ -106,3 +106,10 @@ void Record::setData(int column,QVariant value){
         return;
     }
 }
+
+QString Record::getCategory(){
+    return category;
+}
+QString Record::getDescription(){
+    return description;
+}

@@ -1,16 +1,12 @@
 #pragma once
 #include <QtWidgets>
-//#include <QTableView>
-//#include <QAbstractTableModel>
-//#include <QHeaderView>
-//#include <QEvent>
-//#include <QVector>
+#include <SRC/BusinessLogic/Table_Model.h>
 
 class Money_Repositary_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Money_Repositary_Widget(QAbstractTableModel* model);
+    Money_Repositary_Widget(Table_Model* model);
     bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private slots:
@@ -19,13 +15,15 @@ private slots:
     void deleteRecord();
     void editRecord();
     void cancelEditRecord();
+    void categoryChanged();
 public slots:
+    void dataIsLoaded();
 
 signals:
     void saveData();
 
 private:
-    QAbstractTableModel* pModel;
+    Table_Model* pModel;
     QTableView* pTable;
 
     QPushButton* pBtnSave;
