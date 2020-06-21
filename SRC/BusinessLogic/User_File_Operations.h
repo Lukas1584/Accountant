@@ -6,7 +6,6 @@
 #include <QFile>
 #include <QDataStream>
 
-
 class User_File_Operations : public QObject
 {
     Q_OBJECT
@@ -16,7 +15,8 @@ public:
     void loadData(const QString& login, const QString& password);
     bool isUserCreated(const QString& login, const QString& password);
     QStringList getUsersNames();
-
+    void deleteUser(const QString& login,const QString& password);
+    bool changedPassword(QString login,QString oldPassword,QString newPassword);
 public slots:
     void saveData();
 
@@ -28,10 +28,12 @@ private:
     Data* pData;
     QString dataFileName;
     QString settingsFileName;
-    QStringList usersList;
+    QVector<User> users;
+
     bool userIsOnList(const User& user);
     bool checkPassword(const User& userChecking);
-    void loadUsersList();
+    void loadUsers();
+    void saveUsers();
 };
 
 

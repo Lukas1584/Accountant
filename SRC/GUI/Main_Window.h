@@ -14,6 +14,7 @@ public slots:
     void dataIsLoaded();
     void disableMainWindow();
     void enableMainWindow();
+    void exitUser();
 
 private slots:
     void slotMoneyShow();

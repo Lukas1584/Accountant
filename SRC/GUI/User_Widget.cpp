@@ -16,10 +16,11 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
     pLblPassword=new QLabel(tr("Введите пароль:"));
     pGrdMain=new QGridLayout;
 
-
     QObject::connect(pBtnNewUser,SIGNAL(clicked()),SLOT(btnNewUserClicked()));
     QObject::connect(pBtnLogIn,SIGNAL(clicked()),SLOT(logIn()));
     QObject::connect(pBtnChangeUser,SIGNAL(clicked()),SLOT(changeUser()));
+    QObject::connect(pBtnDeleteUser,SIGNAL(clicked()),SLOT(deleteUser()));
+    QObject::connect(pBtnChangePassword,SIGNAL(clicked()),SLOT(changePassword()));
 
     pGrdMain->addWidget(pLblUserName,1,1,Qt::AlignRight);
     pGrdMain->addWidget(pLblPassword,2,1,Qt::AlignRight);
@@ -41,10 +42,14 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
 }
 
 void User_Widget::setStartView(){
+    emit exitUser();
     pCbxUserName->clear();
     pCbxUserName->addItems(pUserFileOperations->getUsersNames());
-    pBtnNewUser->setEnabled(true);
     pBtnLogIn->setEnabled(true);
+    if(!pCbxUserName->count()){
+        pBtnLogIn->setEnabled(false);
+    }
+    pBtnNewUser->setEnabled(true);
     pBtnDeleteUser->setEnabled(true);
     pCbxUserName->setEnabled(true);
     pLedPassword->setEnabled(true);
@@ -103,4 +108,28 @@ void User_Widget::setWorkView(){
 void User_Widget::changeUser(){
     pUserFileOperations->clearData();
     setStartView();
+}
+
+void User_Widget::deleteUser(){
+    pUserFileOperations->deleteUser(pCbxUserName->currentText(),pLedPassword->text());
+    setStartView();
+}
+
+void User_Widget::changePassword(){
+    emit disableMainWindow();
+    wdgChangePassword=new Change_Password_Widget();
+    wdgChangePassword->show();
+    QObject::connect(wdgChangePassword,SIGNAL(clickedOk(QString,QString)),SLOT(changingPassword(QString,QString)));
+    QObject::connect(wdgChangePassword,SIGNAL(clickedCancel()),SIGNAL(enableMainWindow()));
+}
+
+void User_Widget::changingPassword(QString oldPassword,QString newPassword){
+    delete wdgChangePassword;
+    wdgChangePassword=nullptr;
+    if(pUserFileOperations->changedPassword(pCbxUserName->currentText(),oldPassword,newPassword)){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароль изменен"));
+        Q_UNUSED(reply);
+    }
+    emit enableMainWindow();
 }

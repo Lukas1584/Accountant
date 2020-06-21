@@ -1,7 +1,8 @@
 #pragma once
 #include <QtWidgets>
 #include "SRC/BusinessLogic/User_File_Operations.h"
-#include "Password_Widget.h"
+#include "SRC/GUI/Password_Widget.h"
+#include "SRC/GUI/Change_Password_Widget.h"
 
 class User_Widget : public QWidget
 {
@@ -12,6 +13,7 @@ public:
 signals:
     void disableMainWindow();
     void enableMainWindow();
+    void exitUser();
 
 public slots:
     void wrongPassword();
@@ -22,9 +24,13 @@ private slots:
     void logIn();
     void changeUser();
     void addUser(QString,QString);
+    void deleteUser();
+    void changePassword();
+    void changingPassword(QString,QString);
 
 private:
     Password_Widget* wdgPassword;
+    Change_Password_Widget* wdgChangePassword;
     User_File_Operations* pUserFileOperations;
 
     QPushButton* pBtnNewUser;

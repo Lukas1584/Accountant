@@ -4,8 +4,9 @@ Application_Builder::Application_Builder() : QObject()
 {
     pData=new Data;
 
-    pModel=new Table_Model(pData);
     pUserFileOperations=new User_File_Operations(pData);
+    pModel=new Table_Model(pData);
+
 
     pWdgUser=new User_Widget(pUserFileOperations);
     pWdgMoneyRepositary=new Money_Repositary_Widget(pModel);
@@ -20,6 +21,7 @@ Application_Builder::Application_Builder() : QObject()
     QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgUser,SLOT(setWorkView()));
     QObject::connect(pUserFileOperations,SIGNAL(wrongPassword()),pWdgUser,SLOT(wrongPassword()));
     QObject::connect(pWdgMoneyRepositary,SIGNAL(saveData()),pUserFileOperations,SLOT(saveData()));
+    QObject::connect(pWdgUser,SIGNAL(exitUser()),pMainWindow,SLOT(exitUser()));
 }
 
 Application_Builder::~Application_Builder(){

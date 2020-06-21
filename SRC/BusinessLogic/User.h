@@ -8,6 +8,8 @@ public:
     User();
     User(QString log,QString pass);
     bool operator==(const User& rhs) const;
+    bool operator!=(const User& rhs) const;
+    bool operator<(const User& rhs) const;
     QString login;
     QString password;
 };

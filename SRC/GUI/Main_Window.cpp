@@ -70,12 +70,21 @@ void Main_Window::slotPlanningShow(){
     pWdgPlanning->show();
     pWdgReport->hide();
 }
+
 void Main_Window::dataIsLoaded(){
     pBtnMoney->setEnabled(true);
     pBtnReport->setEnabled(true);
     pBtnPlanning->setEnabled(true);
     pLblBalance->show();
     slotMoneyShow();
+}
+
+void Main_Window::exitUser(){
+    pBtnMoney->setEnabled(false);
+    pBtnReport->setEnabled(false);
+    pBtnPlanning->setEnabled(false);
+    pLblBalance->hide();
+    slotUserShow();
 }
 
 void Main_Window::disableMainWindow(){

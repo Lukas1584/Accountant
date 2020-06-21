@@ -1,11 +1,9 @@
 #include "Money_Repositary_Widget.h"
 
-Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : QWidget(), pModel(model)
+Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : QWidget(), pModel(model), isEdit(false)
 {
     pTable=new QTableView;
     pTable->setModel(pModel);
-    pTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     pTable->installEventFilter(this);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
@@ -33,6 +31,8 @@ Money_Repositary_Widget::Money_Repositary_Widget(QAbstractTableModel* model) : Q
     ///временно
     pCbxCategory->addItems({tr("Временная категория"),tr("Категория временная")});
     pCbxDescription->addItems({tr("Временное описание"),tr("Описание временное")});
+    pCbxCategory->setEditable(true);
+    pCbxDescription->setEditable(true);
 
     QHBoxLayout* pHbxEdit=new QHBoxLayout;
     pHbxEdit->addWidget(pLineEditDate,1);

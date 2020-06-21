@@ -41,7 +41,7 @@ private:
     QLineEdit* pLineEditSum;
     QComboBox* pCbxCurrency;
 
-    bool isEdit=true;
+    bool isEdit;
 
     void setEditView();
     void setWorkView();

@@ -78,3 +78,7 @@ bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int r
     }
     return false;
 }
+
+QVector<QStringList> Table_Model::getCategoryDescription(){
+   // return pData->getCategoryDescription();
+}
