@@ -59,7 +59,7 @@ QVariant Record::convert(int column)const{
 
 int Record::columns()const
 {
-    return 6;
+    return coloumnsCount;
 }
 
 void Record::setData(const int column,const QVariant& value){

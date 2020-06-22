@@ -4,6 +4,8 @@
 #include <QVariant>
 #include <QDataStream>
 
+constexpr int coloumnsCount=6;
+
 class Record{
 
 public:

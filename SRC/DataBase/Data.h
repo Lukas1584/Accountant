@@ -19,10 +19,10 @@ public:
     QStringList getCategories(const QString& type)const;
     QStringList getDescriprions(const QString& category)const;
 
-    friend QDataStream& operator>>(QDataStream& dataStream, Data* rhs);
-    friend QDataStream& operator<<(QDataStream& dataStream, Data* rhs);
+    friend QDataStream& operator>>(QDataStream& dataStream, Data& rhs);
+    friend QDataStream& operator<<(QDataStream& dataStream,const Data& rhs);
 
-    QVariant at(int column,int row);
+    QVariant at(const int column,const int row)const;
 
 private:
     std::vector<Record> data;

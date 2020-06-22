@@ -78,7 +78,7 @@ void User_File_Operations::loadData(const QString& login, const QString& passwor
         if(data.open(QIODevice::ReadOnly)){
             QDataStream stream(&data);
             stream.setVersion(QDataStream::Qt_5_15);
-            stream>>pData;
+            stream>>(*pData);
             data.close();
         }
         emit dataIsLoaded();

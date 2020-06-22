@@ -11,17 +11,17 @@ std::vector<Record> Data::getData() const{
     return d;
 }
 
-QDataStream& operator>>(QDataStream& dataStream, Data* rhs){
+QDataStream& operator>>(QDataStream& dataStream, Data& rhs){
     while(!dataStream.atEnd()){
         Record i;
         dataStream>>i;
-        rhs->data.push_back(i);
+        rhs.data.push_back(i);
     }
     return dataStream;
 }
 
-QDataStream& operator<<(QDataStream& dataStream, Data* rhs){
-    for(auto i:rhs->data){
+QDataStream& operator<<(QDataStream& dataStream,const Data& rhs){
+    for(auto i:rhs.data){
         dataStream<<i;
     }
     return dataStream;
@@ -39,7 +39,7 @@ int Data::columns()const{
     return data[0].columns();
 }
 
-QVariant Data::at(int column,int row){
+QVariant Data::at(const int column, const int row) const{
     return QVariant(data[row].convert(column));
 }
 

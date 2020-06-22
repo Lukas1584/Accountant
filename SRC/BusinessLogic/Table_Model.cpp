@@ -2,15 +2,13 @@
 
 Table_Model::Table_Model(Data* data,QObject* parent) : QAbstractTableModel(parent),pData(data){}
 
-int Table_Model::rowCount(const QModelIndex &parent) const
+int Table_Model::rowCount(const QModelIndex&) const
 {
-    Q_UNUSED(parent);
     return pData->rows();
 }
 
-int Table_Model::columnCount(const QModelIndex &parent) const
+int Table_Model::columnCount(const QModelIndex&) const
 {
-    Q_UNUSED(parent);
     return pData->columns();
 }
 
@@ -83,3 +81,4 @@ QStringList Table_Model::getCategories(const QString& type){
 QStringList Table_Model::getDescriptions(const QString& category){
     return pData->getDescriprions(category);
 }
+

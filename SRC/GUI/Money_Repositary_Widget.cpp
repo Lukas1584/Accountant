@@ -6,6 +6,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(Table_Model* model) : QWidget()
     pTable=new QTableView;
     pTable->setModel(pModel);
     pTable->installEventFilter(this);
+    //pTable->setSortingEnabled(true);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
     pBtnAdd=new QPushButton(tr("Добавить запись"));

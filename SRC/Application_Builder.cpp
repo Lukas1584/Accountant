@@ -8,9 +8,10 @@ Application_Builder::Application_Builder() : QObject()
     pModel=new Table_Model(pData);
 
 
+
     pWdgUser=new User_Widget(pUserFileOperations);
     pWdgMoneyRepositary=new Money_Repositary_Widget(pModel);
-    pWdgReport= new Report_Widget;
+    pWdgReport= new Report_Widget(pModel);
     pWdgPlanning= new Planning_Widget;
 
     pMainWindow=new Main_Window(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning);
@@ -28,6 +29,7 @@ Application_Builder::Application_Builder() : QObject()
 Application_Builder::~Application_Builder(){
     delete pMainWindow;
     delete pUserFileOperations;
+    delete pProxyModel;
     delete pModel;
     delete pData;
 }

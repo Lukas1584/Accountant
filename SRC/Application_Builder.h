@@ -28,6 +28,7 @@ private:
 
     User_File_Operations* pUserFileOperations;
     Table_Model* pModel;
+    QSortFilterProxyModel* pProxyModel;
 
     User_Widget* pWdgUser;
     Money_Repositary_Widget* pWdgMoneyRepositary;
