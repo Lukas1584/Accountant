@@ -1,18 +1,26 @@
 #pragma once
-#include <QString>
-#include <QDataStream>
+#include <string>
+#include <iostream>
+
+constexpr char separator='~';
 
 class User
 {
 public:
     User();
-    User(const QString& log,const QString& pass);
+    User(const std::string& log,const std::string& pass);
     bool operator==(const User& rhs) const;
     bool operator!=(const User& rhs) const;
     bool operator<(const User& rhs)const;
-    QString login;
-    QString password;
+    void clear();
+    bool isNotEmpty() const;
+    std::string getLogin() const;
+
+    friend std::istream& operator>>(std::istream& stream,User& user);
+    friend std::ostream& operator<<(std::ostream& stream,const User& user);
+private:
+    std::string login;
+    std::string password;
 };
 
-QDataStream& operator>>(QDataStream& stream,User& user);
-QDataStream& operator<<(QDataStream& stream,const User& user);
+

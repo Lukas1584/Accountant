@@ -2,25 +2,17 @@
 
 Data::Data(){}
 
-void Data::add(const Record& record){
-    data.push_back(record);
-}
-
-std::vector<Record> Data::getData() const{
-    std::vector<Record> d=data;
-    return d;
-}
-
-QDataStream& operator>>(QDataStream& dataStream, Data& rhs){
-    while(!dataStream.atEnd()){
+std::istream& operator>>(std::istream& dataStream, Data& rhs){
+    while(!dataStream.eof()){
         Record i;
         dataStream>>i;
-        rhs.data.push_back(i);
+        if(i.isNotEmpty())
+            rhs.data.push_back(i);
     }
     return dataStream;
 }
 
-QDataStream& operator<<(QDataStream& dataStream,const Data& rhs){
+std::ostream& operator<<(std::ostream& dataStream,const Data& rhs){
     for(auto i:rhs.data){
         dataStream<<i;
     }
@@ -36,11 +28,12 @@ int Data::rows()const{
 }
 
 int Data::columns()const{
-    return data[0].columns();
+    Record temp;
+    return temp.columns();
 }
 
-QVariant Data::at(const int column, const int row) const{
-    return QVariant(data[row].convert(column));
+std::string Data::at(const int column, const int row) const{
+    return data[row].convert(column);
 }
 
 void Data::remove(const int row){
@@ -53,14 +46,14 @@ void Data::insertRows(const int row, const int count){
         data.insert(data.begin()+row,rec);
 }
 
-void Data::setData(const int row, const int column, const QVariant &value){
+void Data::setData(const int row, const int column, const std::string &value){
     data[row].setData(column,value);
 }
 
-QStringList Data::getCategories(const QString& type) const{
-    QStringList categories;
+std::list<std::string> Data::getCategories(const std::string &type) const{
+    std::list<std::string> categories;
     for(auto i:data){
-        if(i.convert(1).toString()==type){
+        if(i.convert(1)==type){
             bool isCategoryOnList=false;
             for(auto k:categories){
                 if(k==i.getCategory())
@@ -74,8 +67,8 @@ QStringList Data::getCategories(const QString& type) const{
     return categories;
 }
 
-QStringList Data::getDescriprions(const QString& category) const{
-    QStringList descroptions;
+std::list<std::string> Data::getDescriprions(const std::string& category) const{
+    std::list<std::string> descroptions;
     for(auto i:data){
         if(i.getCategory()==category){
             bool isDescriptionOnList=false;
@@ -87,6 +80,6 @@ QStringList Data::getDescriprions(const QString& category) const{
                 descroptions.push_back(i.getDescription());
         }
     }
-        descroptions.sort();
-        return descroptions;
+    descroptions.sort();
+    return descroptions;
 }

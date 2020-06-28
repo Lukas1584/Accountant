@@ -1,34 +1,36 @@
 #pragma once
-#include <QString>
-#include <QDate>
-#include <QVariant>
-#include <QDataStream>
+#include <string>
+#include <sstream>
+#include <iostream>
 
 constexpr int coloumnsCount=6;
+constexpr char separatorRecord='~';
 
 class Record{
 
 public:
-    QVariant convert(const int column) const;
+    std::string convert(const int column) const;
     int columns() const;
-    void setData(const int column,const QVariant& value);
-    QString getCategory() const;
-    QString getDescription() const;
+    void setData(const int column,const std::string& value);
+    std::string getCategory() const;
+    std::string getDescription() const;
+    void clear();
+    bool isNotEmpty() const;
 
-    friend QDataStream& operator>>(QDataStream& dataStream, Record& rhs);
-    friend QDataStream& operator<<(QDataStream& dataStream, const Record& rhs);
+    friend std::istream& operator>>(std::istream& dataStream, Record& rhs);
+    friend std::ostream& operator<<(std::ostream& dataStream, const Record& rhs);
+
 
 private:
-    QDate date;
+    std::string date;
     enum Type{
         PROFIT=1, LOSS
     }type;
-    QString category;
-    QString description;
-    float sum;
+    std::string category;
+    std::string description;
+    float sum=0;
     enum Currency{
         USD=1, BYR, RUB, EUR
     }currency;
 };
-
 

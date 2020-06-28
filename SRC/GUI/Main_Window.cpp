@@ -1,7 +1,7 @@
 #include "Main_Window.h"
 
-Main_Window::Main_Window(QWidget* User,QWidget* Money,QWidget* Report,QWidget* Planning)
-    : QWidget(), pWdgUser(User), pWdgMoney(Money), pWdgReport(Report),pWdgPlanning(Planning)
+Main_Window::Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget> money, std::shared_ptr<QWidget> report, std::shared_ptr<QWidget> planning)
+    : QWidget(),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning)
 {
 
     resize(1200,800);
@@ -34,10 +34,10 @@ Main_Window::Main_Window(QWidget* User,QWidget* Money,QWidget* Report,QWidget* P
 
     QHBoxLayout* pHblMain=new QHBoxLayout();
     pHblMain->addLayout(pVblLeftMenu,1);
-    pHblMain->addWidget(pWdgUser,5);
-    pHblMain->addWidget(pWdgMoney,5);
-    pHblMain->addWidget(pWdgReport,5);
-    pHblMain->addWidget(pWdgPlanning,5);
+    pHblMain->addWidget(&(*pWdgUser),5);
+    pHblMain->addWidget(&(*pWdgMoney),5);
+    pHblMain->addWidget(&(*pWdgReport),5);
+    pHblMain->addWidget(&(*pWdgPlanning),5);
     setLayout(pHblMain);
     show();
 

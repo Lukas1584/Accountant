@@ -1,6 +1,6 @@
 #include "Table_Model.h"
 
-Table_Model::Table_Model(Data* data,QObject* parent) : QAbstractTableModel(parent),pData(data){}
+Table_Model::Table_Model(std::shared_ptr<Data>& data,QObject* parent) : QAbstractTableModel(parent),pData(data){}
 
 int Table_Model::rowCount(const QModelIndex&) const
 {
@@ -14,8 +14,9 @@ int Table_Model::columnCount(const QModelIndex&) const
 
 QVariant Table_Model::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole)
-        return pData->at(index.column(),index.row());
+    if (role == Qt::DisplayRole){
+        return QString::fromStdString(pData->at(index.column(),index.row()));
+    }
     else return QVariant();
 }
 
@@ -67,7 +68,7 @@ bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int r
 {
     if (index.isValid() && role == Qt::EditRole)
     {
-        pData->setData(index.row(),index.column(),value);
+        pData->setData(index.row(),index.column(),value.toString().toStdString());
         emit dataChanged(index,index);
         return true;
     }
@@ -75,10 +76,21 @@ bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int r
 }
 
 QStringList Table_Model::getCategories(const QString& type){
-   return pData->getCategories(type);
+   std::list<std::string> cat=pData->getCategories(type.toStdString());
+   QStringList categories;
+   for (auto i:cat){
+       categories.push_back(QString::fromStdString(i));
+   }
+   return categories;
 }
 
+
 QStringList Table_Model::getDescriptions(const QString& category){
-    return pData->getDescriprions(category);
+    std::list<std::string> des=pData->getDescriprions(category.toStdString());
+    QStringList descriptions;
+    for (auto i:des){
+        descriptions.push_back(QString::fromStdString(i));
+    }
+    return descriptions;
 }
 

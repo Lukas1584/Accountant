@@ -10,7 +10,7 @@ class User_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    User_Widget(User_File_Operations* ufo);
+    User_Widget(std::shared_ptr<User_File_Operations>& pUserFileOperations);
 
 signals:
     void disableMainWindow();
@@ -33,7 +33,8 @@ private slots:
 private:
     Password_Widget* wdgPassword;
     Change_Password_Widget* wdgChangePassword;
-    User_File_Operations* pUserFileOperations;
+
+    std::shared_ptr<User_File_Operations> pUserFileOperations;
 
     QPushButton* pBtnNewUser;
     QPushButton* pBtnLogIn;
@@ -50,6 +51,7 @@ private:
 
     void setStartView();
     void nameAlreadyExists();
+    QStringList convertToStringist(std::list<std::string> listStd);
 };
 
 

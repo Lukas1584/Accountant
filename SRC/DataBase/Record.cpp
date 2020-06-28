@@ -1,29 +1,64 @@
 #include "Record.h"
 
-QDataStream& operator>>(QDataStream& dataStream, Record& rhs){
-    dataStream>>rhs.date;
-    dataStream>>rhs.type;
-    dataStream>>rhs.category;
-    dataStream>>rhs.description;
+std::istream& operator>>(std::istream& dataStream, Record& rhs){
+    rhs.clear();
+    char c;
+    while(dataStream.get(c) && c!=separatorRecord){
+        rhs.date += c;
+    }
+
+    int typeInt=0;
+    dataStream>>typeInt;
+    if(typeInt==Record::Type::PROFIT)
+        rhs.type=Record::PROFIT;
+    if(typeInt==Record::LOSS)
+        rhs.type=Record::LOSS;
+
+    dataStream.get(c); //separatorRecord
+    while(dataStream.get(c) && c!=separatorRecord){
+        rhs.category += c;
+    }
+    while(dataStream.get(c) && c!=separatorRecord){
+        rhs.description += c;
+    }
+
     dataStream>>rhs.sum;
-    dataStream>>rhs.currency;
+    dataStream.get(c); //separatorRecord
+
+    int currencyInt=0;
+    dataStream>>currencyInt;
+    switch(currencyInt){
+    case(Record::BYR):
+        rhs.currency=Record::BYR;
+        break;
+    case(Record::USD):
+        rhs.currency=Record::USD;
+        break;
+    case(Record::EUR):
+        rhs.currency=Record::EUR;
+        break;
+    case(Record::RUB):
+        rhs.currency=Record::RUB;
+        break;
+    }
+    dataStream.get(c); // '\n'
     return dataStream;
 }
 
-QDataStream& operator<<(QDataStream& dataStream,const Record& rhs){
-    dataStream<<rhs.date;
-    dataStream<<rhs.type;
-    dataStream<<rhs.category;
-    dataStream<<rhs.description;
-    dataStream<<rhs.sum;
-    dataStream<<rhs.currency;
+std::ostream& operator<<(std::ostream& dataStream,const Record& rhs){
+    dataStream<<rhs.date<<separatorRecord;
+    dataStream<<rhs.type<<separatorRecord;
+    dataStream<<rhs.category<<separatorRecord;
+    dataStream<<rhs.description<<separatorRecord;
+    dataStream<<rhs.sum<<separatorRecord;
+    dataStream<<rhs.currency<<'\n';
     return dataStream;
 }
 
-QVariant Record::convert(int column)const{
+std::string Record::convert(const int column)const{
     switch (column){
     case 0:
-        return QVariant(date);
+        return date;
     case 1:
         switch (type) {
         case Record::PROFIT:
@@ -31,14 +66,19 @@ QVariant Record::convert(int column)const{
         case Record::LOSS:
             return "Убыток";
         default:
-            return QVariant();
+            return "";
         }
     case 2:
-        return QVariant(category);
+        return category;
     case 3:
-        return QVariant(description);
-    case 4:
-        return QVariant(sum);
+        return description;
+    case 4:{
+        std::stringstream ss;
+        ss<<sum;
+        std::string str;
+        ss>>str;
+        return str;
+    }
     case 5:
         switch (currency) {
         case Record::USD:
@@ -50,10 +90,10 @@ QVariant Record::convert(int column)const{
         case Record::EUR:
             return "EUR";
         default:
-            return QVariant();
+            return "";
         }
     default:
-        return QVariant();
+        return "";
     }
 }
 
@@ -62,43 +102,46 @@ int Record::columns()const
     return coloumnsCount;
 }
 
-void Record::setData(const int column,const QVariant& value){
+void Record::setData(const int column,const std::string& value){
     switch (column){
     case 0:
-        date=value.toDate();
+        date=value;
         return;
     case 1:
-        if(value.toString()=="Прибыль"){
+        if(value=="Прибыль"){
             type=Record::PROFIT;
             return;
         }
-        if(value.toString()=="Убыток"){
+        if(value=="Убыток"){
             type=Record::LOSS;
             return;
         }
     case 2:
-        category=value.toString();
+        category=value;
         return;
     case 3:
-        description=value.toString();
+        description=value;
         return;
-    case 4:
-        sum=value.toFloat();
+    case 4:{
+        std::stringstream ss;
+        ss<<value;
+        ss>>sum;
         return;
+    }
     case 5:
-        if(value.toString()=="USD"){
+        if(value=="USD"){
             currency=Record::USD;
             return;
         }
-        if(value.toString()=="BYR"){
+        if(value=="BYR"){
             currency=Record::BYR;
             return;
         }
-        if(value.toString()=="RUB"){
+        if(value=="RUB"){
             currency=Record::RUB;
             return;
         }
-        if(value.toString()=="EUR"){
+        if(value=="EUR"){
             currency=Record::EUR;
             return;
         }
@@ -107,9 +150,21 @@ void Record::setData(const int column,const QVariant& value){
     }
 }
 
-QString Record::getCategory() const{
+std::string Record::getCategory() const{
     return category;
 }
-QString Record::getDescription()const{
+std::string Record::getDescription()const{
     return description;
 }
+
+void Record::clear(){
+    date="";
+    category="";
+    description="";
+    sum=0;
+}
+
+bool Record::isNotEmpty() const{
+    return (sum)?true:false;
+}
+

@@ -6,7 +6,7 @@ class Money_Repositary_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Money_Repositary_Widget(Table_Model* model);
+    Money_Repositary_Widget(std::shared_ptr<Table_Model>& model);
     bool eventFilter(QObject *pObject, QEvent *pEvent);
 
 private slots:
@@ -23,7 +23,7 @@ signals:
     void saveData();
 
 private:
-    Table_Model* pModel;
+    std::shared_ptr<Table_Model> pModel;
     QTableView* pTable;
 
     QPushButton* pBtnSave;

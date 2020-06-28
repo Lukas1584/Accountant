@@ -7,13 +7,13 @@ class Report_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Report_Widget(Table_Model* model);
+    explicit Report_Widget();
 
 signals:
 
 
 private:
-    Table_Model* pModel;
+    std::shared_ptr<Table_Model> pModel;
     QTableView* pTable;
 
     QPushButton* pBtnSave;

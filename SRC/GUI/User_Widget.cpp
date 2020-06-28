@@ -1,6 +1,6 @@
 #include "User_Widget.h"
 
-User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperations(ufo)
+User_Widget::User_Widget(std::shared_ptr<User_File_Operations>& user) : QWidget(), pUserFileOperations(user)
 {
     pBtnNewUser=new QPushButton(tr("Регистрация"));
     pBtnLogIn=new QPushButton(tr("Войти"));
@@ -44,7 +44,7 @@ User_Widget::User_Widget(User_File_Operations* ufo) : QWidget(), pUserFileOperat
 void User_Widget::setStartView(){
     emit exitUser();
     pCbxUserName->clear();
-    pCbxUserName->addItems(pUserFileOperations->getUsersNames());
+    pCbxUserName->addItems(convertToStringist(pUserFileOperations->getUsersNames()));
     pBtnLogIn->setEnabled(true);
     if(!pCbxUserName->count()){
         pBtnLogIn->setEnabled(false);
@@ -75,9 +75,9 @@ void User_Widget::nameAlreadyExists(){
 void User_Widget::addUser(const QString& login,const QString& password){
     delete wdgPassword;
     wdgPassword=nullptr;
-    if(pUserFileOperations->isUserCreated(login,password)){
+    if(pUserFileOperations->isUserCreated(login.toStdString(),password.toStdString())){
         pCbxUserName->clear();
-        pCbxUserName->addItems(pUserFileOperations->getUsersNames());
+        pCbxUserName->addItems(convertToStringist(pUserFileOperations->getUsersNames()));
         setWorkView();
         emit enableMainWindow();
     }
@@ -85,7 +85,7 @@ void User_Widget::addUser(const QString& login,const QString& password){
 }
 
 void User_Widget::logIn(){
-    pUserFileOperations->loadData(pCbxUserName->currentText(),pLedPassword->text());
+    pUserFileOperations->loadData(pCbxUserName->currentText().toStdString(),pLedPassword->text().toStdString());
 }
 
 void User_Widget::wrongPassword(){
@@ -111,7 +111,7 @@ void User_Widget::changeUser(){
 }
 
 void User_Widget::deleteUser(){
-    pUserFileOperations->deleteUser(pCbxUserName->currentText(),pLedPassword->text());
+    pUserFileOperations->deleteUser(pCbxUserName->currentText().toStdString(),pLedPassword->text().toStdString());
     setStartView();
 }
 
@@ -126,10 +126,17 @@ void User_Widget::changePassword(){
 void User_Widget::changingPassword(const QString &oldPassword, const QString &newPassword){
     delete wdgChangePassword;
     wdgChangePassword=nullptr;
-    if(pUserFileOperations->changedPassword(pCbxUserName->currentText(),oldPassword,newPassword)){
+    if(pUserFileOperations->changedPassword(pCbxUserName->currentText().toStdString(),oldPassword.toStdString(),newPassword.toStdString())){
         QMessageBox::StandardButton reply;
         reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароль изменен"));
         Q_UNUSED(reply);
     }
     emit enableMainWindow();
+}
+
+QStringList User_Widget::convertToStringist(std::list<std::string> listStd){
+    QStringList list;
+    for(auto i:listStd)
+        list.push_back(QString::fromStdString(i));
+    return list;
 }

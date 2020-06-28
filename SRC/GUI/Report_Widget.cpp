@@ -1,27 +1,10 @@
 #include "Report_Widget.h"
 #include <QObject>
-#include <QSortFilterProxyModel>
 
-Report_Widget::Report_Widget(Table_Model* model) : QWidget(),pModel(model)
+Report_Widget::Report_Widget() : QWidget()
 {
 
-
-
-    //pProxyModel->setFilterRegExp(QRegExp("", Qt::CaseInsensitive,QRegExp::FixedString));
-    //pProxyModel->setFilterKeyColumn(1);
-    //pProxyModel->setFilterWildcard("*");
-
-    //QStringListModel m;
-    //m.setStringList(QStringList()<<"asd"<<"asdas"<<"asdasd");
-
-
-
     pTable=new QTableView;
-    QSortFilterProxyModel* pProxyModel=new QSortFilterProxyModel;
-    pProxyModel->setSourceModel(pModel);
-    pTable->setModel(pProxyModel);
-
-    //pTable->installEventFilter(this);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
     pBtnAdd=new QPushButton(tr("Добавить запись"));

@@ -5,7 +5,7 @@ class Main_Window : public QWidget
 {
     Q_OBJECT
 public:
-    Main_Window(QWidget* User,QWidget* Money,QWidget* Report,QWidget* Planning);
+    Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget> money, std::shared_ptr<QWidget> report, std::shared_ptr<QWidget> planning);
 
 signals:
 
@@ -29,10 +29,9 @@ private:
 
     QLabel* pLblBalance;
 
-    QWidget* pWdgUser;
-    QWidget* pWdgMoney;
-    QWidget* pWdgReport;
-    QWidget* pWdgPlanning;
+    std::shared_ptr<QWidget> pWdgUser;
+    std::shared_ptr<QWidget> pWdgMoney;
+    std::shared_ptr<QWidget> pWdgReport;
+    std::shared_ptr<QWidget> pWdgPlanning;
 };
-
 

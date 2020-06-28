@@ -1,10 +1,10 @@
 #include "Money_Repositary_Widget.h"
 #include <QDate>
 
-Money_Repositary_Widget::Money_Repositary_Widget(Table_Model* model) : QWidget(), pModel(model), isEdit(false)
+Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& model) : QWidget(), pModel(model), isEdit(false)
 {
     pTable=new QTableView;
-    pTable->setModel(pModel);
+    pTable->setModel(&(*pModel));
     pTable->installEventFilter(this);
     //pTable->setSortingEnabled(true);
 

@@ -18,22 +18,19 @@ class Application_Builder : public QObject
     Q_OBJECT
 public:
     explicit Application_Builder();
-    ~Application_Builder();
 
 signals:
 
 private:
+    std::shared_ptr<Data> pData;
 
-    Data* pData;
+    std::shared_ptr<User_File_Operations> pUserFileOperations;
+    std::shared_ptr<Table_Model> pModel;
 
-    User_File_Operations* pUserFileOperations;
-    Table_Model* pModel;
-    QSortFilterProxyModel* pProxyModel;
+    std::shared_ptr<User_Widget> pWdgUser;
+    std::shared_ptr<Money_Repositary_Widget> pWdgMoneyRepositary;
+    std::shared_ptr<Report_Widget> pWdgReport;
+    std::shared_ptr<Planning_Widget> pWdgPlanning;
 
-    User_Widget* pWdgUser;
-    Money_Repositary_Widget* pWdgMoneyRepositary;
-    Report_Widget* pWdgReport;
-    Planning_Widget* pWdgPlanning;
-
-    Main_Window* pMainWindow;
+    std::unique_ptr<Main_Window> pMainWindow;
 };
