@@ -1,38 +1,57 @@
 #pragma once
 #include <QtWidgets>
-#include "SRC/BusinessLogic/Table_Model.h"
-
+#include <QObject>
+#include <SRC/BusinessLogic/Report.h>
 
 class Report_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Report_Widget();
-
+    explicit Report_Widget(std::shared_ptr<Report> report);
+    bool eventFilter(QObject *pObject, QEvent *pEvent);
 signals:
 
+public slots:
+    void updateTable();
+
+private slots:
+    void filter();
+    void fillComboBoxCategory();
+    void fillComboBoxDescription();
 
 private:
-    std::shared_ptr<Table_Model> pModel;
-    QTableView* pTable;
+    std::shared_ptr<Report> pReport;
+    QTableWidget* pTable;
 
-    QPushButton* pBtnSave;
-    QPushButton* pBtnAdd;
-    QPushButton* pBtnEdit;
-    QPushButton* pBtnDelete;
-    QPushButton* pBtnCnacel;
+    QPushButton* pBtnSaveTxt;
+    QPushButton* pBtnSaveExcel;
+    QPushButton* pBtnPrint;
+    QPushButton* pBtnChart;
+    QPushButton* pBtnApply;
+    QPushButton* pBtnReset;
 
-    QDateTimeEdit* pTimeEdit;
-    QComboBox* pCbxType;
+    QDateEdit* pTimeEditTo;
+    QDateEdit* pTimeEditFrom;
+    QCheckBox *pChbxTypeProfit;
+    QCheckBox *pChbxTypeLoss;
     QComboBox* pCbxCategory;
+    QStandardItemModel* pModelCategory;
     QComboBox* pCbxDescription;
-    QLineEdit* pLineEditSum;
-    QComboBox* pCbxCurrency;
+    QStandardItemModel* pModelDescription;
+    QLineEdit* pLineEditSumFrom;
+    QLineEdit* pLineEditSumTo;
+    QCheckBox *pChbxUsd;
+    QCheckBox *pChbxByr;
+    QCheckBox *pChbxRub;
+    QCheckBox *pChbxEur;
 
-    bool isEdit;
+    int typeToReport();
+    std::vector<bool> currencyToReport();
 
-    void setEditView();
-    void setWorkView();
-
+    std::vector<std::string> getComboBoxCheckedList(const QComboBox *combobox);
 };
+
+
+
+
 

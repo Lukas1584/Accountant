@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "rus");
     QApplication a(argc, argv);
     Application_Builder* app=new  Application_Builder;
     Q_UNUSED(app);

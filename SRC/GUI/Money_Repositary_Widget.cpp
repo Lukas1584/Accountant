@@ -6,7 +6,6 @@ Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& m
     pTable=new QTableView;
     pTable->setModel(&(*pModel));
     pTable->installEventFilter(this);
-    //pTable->setSortingEnabled(true);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
     pBtnAdd=new QPushButton(tr("Добавить запись"));
@@ -20,7 +19,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& m
     QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
     QObject::connect(pBtnCnacel,SIGNAL(clicked()),SLOT(cancelEditRecord()));
 
-    pTimeEdit=new QDateTimeEdit(QDate::currentDate());
+    pTimeEdit=new QDateEdit(QDate::currentDate());
     pCbxType=new QComboBox;
     pCbxType->addItems({tr("Прибыль"),tr("Убыток")});
     pCbxCategory=new QComboBox;

@@ -2,18 +2,15 @@
 
 Table_Model::Table_Model(std::shared_ptr<Data>& data,QObject* parent) : QAbstractTableModel(parent),pData(data){}
 
-int Table_Model::rowCount(const QModelIndex&) const
-{
+int Table_Model::rowCount(const QModelIndex&) const{
     return pData->rows();
 }
 
-int Table_Model::columnCount(const QModelIndex&) const
-{
+int Table_Model::columnCount(const QModelIndex&) const{
     return pData->columns();
 }
 
-QVariant Table_Model::data(const QModelIndex &index, int role) const
-{
+QVariant Table_Model::data(const QModelIndex &index, int role) const{
     if (role == Qt::DisplayRole){
         return QString::fromStdString(pData->at(index.column(),index.row()));
     }
@@ -64,8 +61,7 @@ bool Table_Model::removeRows(int row,int count, const QModelIndex& parent){
     return true;
 }
 
-bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int role)
-{
+bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int role){
     if (index.isValid() && role == Qt::EditRole)
     {
         pData->setData(index.row(),index.column(),value.toString().toStdString());
@@ -83,7 +79,6 @@ QStringList Table_Model::getCategories(const QString& type){
    }
    return categories;
 }
-
 
 QStringList Table_Model::getDescriptions(const QString& category){
     std::list<std::string> des=pData->getDescriprions(category.toStdString());

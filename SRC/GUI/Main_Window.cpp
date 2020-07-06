@@ -62,6 +62,7 @@ void Main_Window::slotReportShow(){
     pWdgUser->hide();
     pWdgPlanning->hide();
     pWdgReport->show();
+    emit report();
 }
 
 void Main_Window::slotPlanningShow(){

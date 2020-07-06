@@ -10,7 +10,7 @@ bool User::operator==(const User& rhs) const{
 }
 
 bool User::operator!=(const User& rhs) const{
-    return !((login==rhs.login)&&(password==rhs.password));
+    return !(*this==rhs);
 }
 
 bool User::operator<(const User& rhs)const{

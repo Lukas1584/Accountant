@@ -97,8 +97,7 @@ std::string Record::convert(const int column)const{
     }
 }
 
-int Record::columns()const
-{
+int Record::columns()const{
     return coloumnsCount;
 }
 

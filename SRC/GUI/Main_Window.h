@@ -8,6 +8,7 @@ public:
     Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget> money, std::shared_ptr<QWidget> report, std::shared_ptr<QWidget> planning);
 
 signals:
+    void report();
 
 public slots:
     void dataIsLoaded();
