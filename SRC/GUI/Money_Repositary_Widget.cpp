@@ -13,7 +13,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& m
     pBtnDelete=new QPushButton(tr("Удалить запись"));
     pBtnCnacel=new QPushButton(tr("Отмена"));
 
-    QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(save()));
+    QObject::connect(pBtnSave,SIGNAL(clicked()),SIGNAL(saveData()));
     QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
     QObject::connect(pBtnDelete,SIGNAL(clicked()),SLOT(deleteRecord()));
     QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
@@ -63,9 +63,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& m
     setWorkView();
 }
 
-bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
-    Q_UNUSED(pObject);
-    Q_UNUSED(pEvent);
+bool Money_Repositary_Widget::eventFilter(QObject*, QEvent *pEvent){
     if(pEvent->type() == QEvent::Resize){
         pTable->setColumnWidth(0, pTable->width() * 0.1);
         pTable->setColumnWidth(1, pTable->width() * 0.1);
@@ -75,10 +73,6 @@ bool Money_Repositary_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
         pTable->setColumnWidth(5, pTable->width() * 0.1);
     }
     return false;
-}
-
-void Money_Repositary_Widget::save(){
-    emit saveData();
 }
 
 void Money_Repositary_Widget::addRecord(){
@@ -99,6 +93,7 @@ void Money_Repositary_Widget::addRecord(){
     setWorkView();
     isEdit=false;
     pLineEditSum->clear();
+    pModel->sortData();
     dataIsLoaded();
 }
 

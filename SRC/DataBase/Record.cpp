@@ -167,3 +167,22 @@ bool Record::isNotEmpty() const{
     return (sum)?true:false;
 }
 
+bool Record::operator<(const Record& rhs)const{
+    if(date<rhs.date)
+        return true;
+    if(date>rhs.date)
+        return false;
+    if(category<rhs.category)
+        return true;
+    if(category>rhs.category)
+        return false;
+    if (description<rhs.description)
+        return true;
+    if (description>rhs.description)
+        return false;
+    if (sum<rhs.sum)
+        return true;
+    else
+        return false;
+}
+

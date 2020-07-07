@@ -26,6 +26,7 @@ Application_Builder::Application_Builder() : QObject()
 
     QObject::connect(pMainWindow.get(),SIGNAL(report()),pReport.get(),SLOT(update()));
     QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport.get(),SLOT(updateTable()));
+    QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport.get(),SLOT(fillFields()));
 
 
 

@@ -24,7 +24,7 @@ void Data::clear(){
 }
 
 int Data::rows()const{
-    return data.size();
+    return static_cast<int> (data.size());
 }
 
 int Data::columns()const{
@@ -82,4 +82,8 @@ std::list<std::string> Data::getDescriprions(const std::string& category) const{
     }
     descroptions.sort();
     return descroptions;
+}
+
+void Data::sort(){
+    std::sort(data.begin(),data.end());
 }

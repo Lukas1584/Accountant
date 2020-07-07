@@ -119,26 +119,6 @@ bool Report::sumInRange(const std::string& sum,const float& sumFrom,const float&
 }
 
 bool Report::dateInRange(const std::string& date,const std::string& dateFrom,const std::string& dateTo){
- /*   int yearCompare=year(date);
-    int monthCompare=month(date);
-    int dayCompare=day(date);
-    int yearFrom=year(dateFrom);
-    int monthFrom=month(dateFrom);
-    int dayFrom=day(dateFrom);
-    int yearTo=year(dateTo);
-    int monthTo=month(dateTo);
-    int dayTo=day(dateTo);
-    if (yearFrom < yearCompare && yearCompare < yearTo)
-        return true;
-    if( yearFrom==yearCompare || yearCompare == yearTo){
-        if(monthFrom < monthCompare && monthCompare < monthTo)
-            return true;
-        if(monthFrom == monthCompare || monthCompare == monthTo){
-            if(dayFrom <= dayCompare && dayCompare <= dayTo)
-                return true;
-        }
-    }
-    return false;*/
     if(dateFrom<=date && date<=dateTo)
         return true;
     return false;
@@ -183,28 +163,36 @@ std::list<std::string> Report::getDescriptions(const std::vector <std::string>& 
     description.sort();
     return description;
 }
-/*
-int Report::year(const std::string& date){
-    std::stringstream ss;
-    ss<<date.substr(0,3);
-    int year;
-    ss>>year;
-    return year;
+
+std::pair<std::string,std::string> Report::dateMinMax(){
+    return {pData->at(0,0),pData->at(0,static_cast<int>(filter.size()-1))};
 }
 
-int Report::month(const std::string& date){
+std::pair<std::string,std::string> Report::sumMinMax(){
+    float max;
+    float min;
+    for (unsigned int i=0;i<filter.size();i++){
+        std::string str=pData->at(4,i);
+        std::stringstream ss;
+        ss<<str;
+        float tmp;
+        ss>>tmp;
+        if(i==0){
+            max=tmp;
+            min=tmp;
+        }
+        if(max<tmp)
+            max=tmp;
+        if (min>tmp)
+            min=tmp;
+    }
     std::stringstream ss;
-    ss<<date.substr(5,6);
-    int month;
-    ss>>month;
-    return month;
+    ss<<min;
+    std::string strMin;
+    ss>>strMin;
+    ss.clear();
+    ss<<max;
+    std::string strMax;
+    ss>>strMax;
+    return {strMin,strMax};
 }
-
-int Report::day(const std::string& date){
-    std::stringstream ss;
-    ss<<date.substr(8,9);
-    int day;
-    ss>>day;
-    return day;
-}
-*/

@@ -89,3 +89,6 @@ QStringList Table_Model::getDescriptions(const QString& category){
     return descriptions;
 }
 
+void Table_Model::sortData(){
+    pData->sort();
+}

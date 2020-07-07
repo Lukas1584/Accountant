@@ -8,16 +8,17 @@ class Report_Widget : public QWidget
     Q_OBJECT
 public:
     explicit Report_Widget(std::shared_ptr<Report> report);
-    bool eventFilter(QObject *pObject, QEvent *pEvent);
+    bool eventFilter(QObject*, QEvent*);
 signals:
 
 public slots:
     void updateTable();
+    void fillFields();
 
 private slots:
     void filter();
-    void fillComboBoxCategory();
     void fillComboBoxDescription();
+    void fillComboBoxCategory();
 
 private:
     std::shared_ptr<Report> pReport;
@@ -49,6 +50,10 @@ private:
     std::vector<bool> currencyToReport();
 
     std::vector<std::string> getComboBoxCheckedList(const QComboBox *combobox);
+    void setTableDimensions();
+    void setTableHeader();
+    void fillDate();
+    void fillSum();
 };
 
 

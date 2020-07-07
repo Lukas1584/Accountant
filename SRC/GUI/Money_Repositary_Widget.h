@@ -7,10 +7,9 @@ class Money_Repositary_Widget : public QWidget
     Q_OBJECT
 public:
     Money_Repositary_Widget(std::shared_ptr<Table_Model>& model);
-    bool eventFilter(QObject *pObject, QEvent *pEvent);
+    bool eventFilter(QObject*,QEvent* pEvent);
 
 private slots:
-    void save();
     void addRecord();
     void deleteRecord();
     void editRecord();

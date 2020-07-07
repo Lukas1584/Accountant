@@ -16,10 +16,10 @@ public:
     std::string getDescription() const;
     void clear();
     bool isNotEmpty() const;
+    bool operator<(const Record& rhs) const;
 
     friend std::istream& operator>>(std::istream& dataStream, Record& rhs);
     friend std::ostream& operator<<(std::ostream& dataStream, const Record& rhs);
-
 
 private:
     std::string date;

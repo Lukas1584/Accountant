@@ -25,6 +25,8 @@ public:
                   const float& sumFrom,
                   const float& sumTo,
                   const std::vector<bool> &currency);
+    std::pair<std::string,std::string> dateMinMax();
+    std::pair<std::string,std::string> sumMinMax();
 
 signals:
 
@@ -43,11 +45,7 @@ private:
     bool descriptionInRange(const std::string& description,const std::vector<std::string>& descriptionFilter);
     bool sumInRange(const std::string& sum,const float& sumFrom,const float& sumTo);
     bool currencyInRange(const std::string& currency, const std::vector<bool>& currencyFilter);
-    /*
-    int year(const std::string& date);
-    int month(const std::string& date);
-    int day(const std::string& date);
-    */
+
 };
 
 

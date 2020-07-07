@@ -6,10 +6,6 @@ Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport
     pTable=new QTableWidget(this);
     pTable->installEventFilter(this);
 
-    //QStringList header{tr("Дата"),tr("Тип"),tr("Категория"),tr("Описание"),tr("Сумма"),tr("Валюта")};
-    //pTable->setHorizontalHeaderLabels(header);
-
-
     pBtnSaveTxt=new QPushButton(tr("Сохранить как"));
     pBtnSaveExcel=new QPushButton(tr("Сохранить в Excel"));
     pBtnPrint=new QPushButton(tr("Печать"));
@@ -27,7 +23,7 @@ Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport
     QLabel* pLblDateFrom=new QLabel(tr("От:"));
     pTimeEditFrom=new QDateEdit();
     QLabel* pLblDateTo=new QLabel(tr("До:"));
-    pTimeEditTo=new QDateEdit(QDate::currentDate());
+    pTimeEditTo=new QDateEdit();
     QVBoxLayout* pVbxDate=new QVBoxLayout;
     pVbxDate->addWidget(pLblDateFrom);
     pVbxDate->addWidget(pTimeEditFrom);
@@ -113,7 +109,6 @@ Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport
     pHbxButtonsAndFilter->addLayout(pVbxFilter);
     pHbxButtonsAndFilter->addLayout(pVbxButtons);
 
-
     QVBoxLayout* pVbxMain=new QVBoxLayout;
     pVbxMain->addLayout(pHbxButtonsAndFilter,1);
     pVbxMain->addWidget(pTable,6);
@@ -124,6 +119,7 @@ Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport
     QObject::connect(pChbxTypeLoss,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
     QObject::connect(pCbxCategory->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
 }
+
 
 void Report_Widget::updateTable(){
     int rows=pReport->rowCount();
@@ -137,27 +133,37 @@ void Report_Widget::updateTable(){
             pTable->setItem(row,column,item);
         }
     }
-    fillComboBoxCategory();
+    setTableHeader();
+    setTableDimensions();
 }
 
-bool Report_Widget::eventFilter(QObject *pObject, QEvent *pEvent){
-    Q_UNUSED(pObject);
-    Q_UNUSED(pEvent);
-    if(pEvent->type() == QEvent::Resize ){
-        pTable->setColumnWidth(0, pTable->width() * 0.1);
-        pTable->setColumnWidth(1, pTable->width() * 0.1);
-        pTable->setColumnWidth(2, pTable->width() * 0.295);
-        pTable->setColumnWidth(3, pTable->width() * 0.3);
-        pTable->setColumnWidth(4, pTable->width() * 0.1);
-        pTable->setColumnWidth(5, pTable->width() * 0.1);
+void Report_Widget::setTableHeader(){
+    std::vector<std::string> header{"Дата","Тип","Категория","Описание","Сумма","Валюта"};
+    for(int i=0;i< pReport->columnCount();i++){
+        QTableWidgetItem* item=new QTableWidgetItem(header[i].c_str());
+        pTable->setHorizontalHeaderItem(i,item);
     }
+    pTable->verticalHeader()->hide();
+}
+
+void Report_Widget::setTableDimensions(){
+    pTable->setColumnWidth(0, pTable->width() * 0.1);
+    pTable->setColumnWidth(1, pTable->width() * 0.1);
+    pTable->setColumnWidth(2, pTable->width() * 0.3);
+    pTable->setColumnWidth(3, pTable->width() * 0.3);
+    pTable->setColumnWidth(4, pTable->width() * 0.1);
+    pTable->setColumnWidth(5, pTable->width() * 0.1);
+}
+
+bool Report_Widget::eventFilter(QObject* , QEvent *pEvent){
+    if(pEvent->type() == QEvent::Resize )
+        setTableDimensions();
     return false;
 }
 
 void Report_Widget::filter(){
     QVariant from=pTimeEditFrom->date();
     QVariant to=pTimeEditTo->date();
-
     pReport->filterDB(from.toString().toStdString(),
                       to.toString().toStdString(),
                       typeToReport(),
@@ -204,7 +210,7 @@ std::vector<bool> Report_Widget::currencyToReport(){
 void Report_Widget::fillComboBoxCategory(){
     std::list<std::string> list;
     list=pReport->getCategories(pChbxTypeProfit->isChecked(),pChbxTypeLoss->isChecked());
-    pModelCategory->setRowCount(list.size());
+    pModelCategory->setRowCount(static_cast<int>(list.size()));
     int j=0;
     for (auto i:list)
     {
@@ -214,7 +220,6 @@ void Report_Widget::fillComboBoxCategory(){
         pModelCategory->setItem(j, 0, item);
         j++;
     }
-    fillComboBoxDescription();
 }
 
 void Report_Widget::fillComboBoxDescription(){
@@ -222,7 +227,7 @@ void Report_Widget::fillComboBoxDescription(){
     listCategories=getComboBoxCheckedList(pCbxCategory);
     std::list<std::string> listDescriptions;
     listDescriptions=pReport->getDescriptions(listCategories);
-    pModelDescription->setRowCount(listDescriptions.size());
+    pModelDescription->setRowCount(static_cast<int>(listDescriptions.size()));
     int j=0;
     for (auto i:listDescriptions){
         QStandardItem* item = new QStandardItem(i.c_str());
@@ -243,3 +248,23 @@ std::vector<std::string> Report_Widget::getComboBoxCheckedList(const QComboBox* 
     return list;
 }
 
+void Report_Widget::fillFields(){
+    fillComboBoxCategory();
+    fillComboBoxDescription();
+    fillDate();
+    fillSum();
+}
+
+void Report_Widget::fillDate(){
+    std::pair<std::string,std::string> minMax=pReport->dateMinMax();
+    QDate from= QDate::fromString(QString::fromStdString(minMax.first),"yyyy-MM-dd");
+    QDate to= QDate::fromString(QString::fromStdString(minMax.second),"yyyy-MM-dd");
+    pTimeEditFrom->setDate(from);
+    pTimeEditTo->setDate(to);
+}
+
+void Report_Widget::fillSum(){
+    std::pair<std::string,std::string> minMax=pReport->sumMinMax();
+    pLineEditSumFrom->setText(minMax.first.c_str());
+    pLineEditSumTo->setText(minMax.second.c_str());
+}

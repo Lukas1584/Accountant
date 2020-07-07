@@ -1,8 +1,9 @@
 #pragma once
-#include<vector>
+#include <vector>
 #include "SRC/DataBase/Record.h"
 #include <list>
 #include <iostream>
+#include <algorithm>
 
 class Data
 {
@@ -21,6 +22,7 @@ public:
     friend std::ostream& operator<<(std::ostream& dataStream,const Data& rhs);
 
     std::string at(const int column,const int row)const;
+    void sort();
 
 private:
     std::vector<Record> data;

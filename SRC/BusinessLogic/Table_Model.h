@@ -18,6 +18,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     QStringList getCategories(const QString& type);
     QStringList getDescriptions(const QString& category);
+    void sortData();
 
 signals:
 
