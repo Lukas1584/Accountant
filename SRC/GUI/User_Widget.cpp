@@ -14,7 +14,7 @@ User_Widget::User_Widget(std::shared_ptr<User_File_Operations>& user) : QWidget(
 
     pLblUserName=new QLabel(tr("Выберите имя из списка:"));
     pLblPassword=new QLabel(tr("Введите пароль:"));
-    pGrdMain=new QGridLayout;
+    QGridLayout* pGrdMain=new QGridLayout;
 
     QObject::connect(pBtnNewUser,SIGNAL(clicked()),SLOT(btnNewUserClicked()));
     QObject::connect(pBtnLogIn,SIGNAL(clicked()),SLOT(logIn()));
@@ -134,7 +134,7 @@ void User_Widget::changingPassword(const QString &oldPassword, const QString &ne
     emit enableMainWindow();
 }
 
-QStringList User_Widget::convertToStringist(std::list<std::string> listStd){
+QStringList User_Widget::convertToStringist(const std::list<std::string> &listStd) const{
     QStringList list;
     for(auto i:listStd)
         list.push_back(QString::fromStdString(i));

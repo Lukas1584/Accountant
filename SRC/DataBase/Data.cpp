@@ -32,8 +32,8 @@ int Data::columns()const{
     return temp.columns();
 }
 
-std::string Data::at(const int column, const int row) const{
-    return data[row].convert(column);
+std::string Data::at(const int row,const int column) const{
+    return data[row].at(column);
 }
 
 void Data::remove(const int row){
@@ -50,40 +50,10 @@ void Data::setData(const int row, const int column, const std::string &value){
     data[row].setData(column,value);
 }
 
-std::list<std::string> Data::getCategories(const std::string &type) const{
-    std::list<std::string> categories;
-    for(auto i:data){
-        if(i.convert(1)==type){
-            bool isCategoryOnList=false;
-            for(auto k:categories){
-                if(k==i.getCategory())
-                    isCategoryOnList=true;
-            }
-            if (!isCategoryOnList)
-                categories.push_back(i.getCategory());
-        }
-    }
-    categories.sort();
-    return categories;
-}
-
-std::list<std::string> Data::getDescriprions(const std::string& category) const{
-    std::list<std::string> descroptions;
-    for(auto i:data){
-        if(i.getCategory()==category){
-            bool isDescriptionOnList=false;
-            for(auto k:descroptions){
-                if(k==i.getDescription())
-                    isDescriptionOnList=true;
-            }
-            if (!isDescriptionOnList)
-                descroptions.push_back(i.getDescription());
-        }
-    }
-    descroptions.sort();
-    return descroptions;
-}
-
 void Data::sort(){
     std::sort(data.begin(),data.end());
+}
+
+float Data::getSum(const int row)const{
+    return data[row].getSum();
 }

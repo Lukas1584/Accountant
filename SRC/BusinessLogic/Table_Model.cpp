@@ -12,7 +12,7 @@ int Table_Model::columnCount(const QModelIndex&) const{
 
 QVariant Table_Model::data(const QModelIndex &index, int role) const{
     if (role == Qt::DisplayRole){
-        return QString::fromStdString(pData->at(index.column(),index.row()));
+        return QString::fromStdString(pData->at(index.row(),index.column()));
     }
     else return QVariant();
 }
@@ -71,24 +71,35 @@ bool Table_Model::setData(const QModelIndex& index, const QVariant& value, int r
     return false;
 }
 
-QStringList Table_Model::getCategories(const QString& type){
-   std::list<std::string> cat=pData->getCategories(type.toStdString());
-   QStringList categories;
-   for (auto i:cat){
-       categories.push_back(QString::fromStdString(i));
-   }
-   return categories;
-}
-
-QStringList Table_Model::getDescriptions(const QString& category){
-    std::list<std::string> des=pData->getDescriprions(category.toStdString());
-    QStringList descriptions;
-    for (auto i:des){
-        descriptions.push_back(QString::fromStdString(i));
-    }
-    return descriptions;
-}
-
 void Table_Model::sortData(){
     pData->sort();
+}
+
+QStringList Table_Model::getCategoryOrDescription(const QString& typeOrCategory,const QString& type) const{
+    QStringList list;
+    int keyColumn;
+    int dependentColumn;
+    if(type=="category"){
+        keyColumn=1;
+        dependentColumn=2;
+    }
+    if(type=="description"){
+        keyColumn=2;
+        dependentColumn=3;
+    }
+    for(int i=0;i<rowCount();i++){
+        std::string categoryOrDescriptionCheck=pData->at(i,keyColumn);
+        if(typeOrCategory.toStdString()==categoryOrDescriptionCheck){
+            std::string categoryOrDescription=pData->at(i,dependentColumn);
+            bool isUnique=true;
+            for(auto j:list){
+                if(j.toStdString()==categoryOrDescription)
+                    isUnique=false;
+            }
+            if(isUnique)
+                list.push_back(QString::fromStdString(categoryOrDescription));
+        }
+    }
+    list.sort();
+    return list;
 }

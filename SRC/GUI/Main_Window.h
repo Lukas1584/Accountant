@@ -11,16 +11,16 @@ signals:
     void report();
 
 public slots:
-    void dataIsLoaded();
+    void dataIsLoaded()const;
     void disableMainWindow();
     void enableMainWindow();
-    void exitUser();
+    void exitUser()const;
 
 private slots:
-    void slotMoneyShow();
-    void slotUserShow();
+    void slotMoneyShow()const;
+    void slotUserShow()const;
     void slotReportShow();
-    void slotPlanningShow();
+    void slotPlanningShow()const;
 
 private:
     QPushButton* pBtnUser;

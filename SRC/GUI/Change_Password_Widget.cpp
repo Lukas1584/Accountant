@@ -33,7 +33,7 @@ Change_Password_Widget::Change_Password_Widget(QWidget *parent) : QWidget(parent
 
     setLayout(pGrdMain);
 }
-void Change_Password_Widget::slotClickedOk(){
+void Change_Password_Widget::slotClickedOk() {
     if(pLePassword->text()!=pLePasswordConfirmation->text()){
         QMessageBox::StandardButton reply;
         reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароли не совпадают!"));

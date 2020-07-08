@@ -42,7 +42,7 @@ Main_Window::Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget>
     show();
 
 }
-void Main_Window::slotMoneyShow(){
+void Main_Window::slotMoneyShow() const{
     pWdgMoney->show();
     pWdgUser->hide();
     pWdgPlanning->hide();
@@ -50,7 +50,7 @@ void Main_Window::slotMoneyShow(){
 
 }
 
-void Main_Window::slotUserShow(){
+void Main_Window::slotUserShow() const{
     pWdgMoney->hide();
     pWdgUser->show();
     pWdgPlanning->hide();
@@ -65,14 +65,14 @@ void Main_Window::slotReportShow(){
     emit report();
 }
 
-void Main_Window::slotPlanningShow(){
+void Main_Window::slotPlanningShow() const{
     pWdgMoney->hide();
     pWdgUser->hide();
     pWdgPlanning->show();
     pWdgReport->hide();
 }
 
-void Main_Window::dataIsLoaded(){
+void Main_Window::dataIsLoaded() const{
     pBtnMoney->setEnabled(true);
     pBtnReport->setEnabled(true);
     pBtnPlanning->setEnabled(true);
@@ -80,7 +80,7 @@ void Main_Window::dataIsLoaded(){
     slotMoneyShow();
 }
 
-void Main_Window::exitUser(){
+void Main_Window::exitUser() const{
     pBtnMoney->setEnabled(false);
     pBtnReport->setEnabled(false);
     pBtnPlanning->setEnabled(false);

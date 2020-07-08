@@ -137,12 +137,12 @@ void Money_Repositary_Widget::cancelEditRecord(){
 
 void Money_Repositary_Widget::dataIsLoaded(){
     pCbxCategory->clear();
-    pCbxCategory->addItems(pModel->getCategories(pCbxType->currentText()));
+    pCbxCategory->addItems(pModel->getCategoryOrDescription(pCbxType->currentText(),"category"));
     categoryChanged();
 }
 
 void Money_Repositary_Widget::categoryChanged(){
     pCbxDescription->clear();
-    pCbxDescription->addItems(pModel->getDescriptions(pCbxCategory->currentText()));
+    pCbxDescription->addItems(pModel->getCategoryOrDescription(pCbxCategory->currentText(),"description"));
 }
 

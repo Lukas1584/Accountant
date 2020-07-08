@@ -15,14 +15,12 @@ public:
     void remove(const int row);
     void insertRows(const int row,const int count=1);
     void setData(const int row,const int column,const std::string& value);
-    std::list<std::string> getCategories(const std::string& type)const;
-    std::list<std::string> getDescriprions(const std::string& category)const;
+    void sort();
+    std::string at(const int row,const int column)const;
+    float getSum(const int row)const;
 
     friend std::istream& operator>>(std::istream& dataStream, Data& rhs);
     friend std::ostream& operator<<(std::ostream& dataStream,const Data& rhs);
-
-    std::string at(const int column,const int row)const;
-    void sort();
 
 private:
     std::vector<Record> data;

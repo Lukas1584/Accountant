@@ -9,14 +9,13 @@ constexpr char separatorRecord='~';
 class Record{
 
 public:
-    std::string convert(const int column) const;
     int columns() const;
     void setData(const int column,const std::string& value);
-    std::string getCategory() const;
-    std::string getDescription() const;
     void clear();
     bool isNotEmpty() const;
     bool operator<(const Record& rhs) const;
+    std::string at(const int column) const;
+    float getSum()const;
 
     friend std::istream& operator>>(std::istream& dataStream, Record& rhs);
     friend std::ostream& operator<<(std::ostream& dataStream, const Record& rhs);
@@ -28,7 +27,7 @@ private:
     }type;
     std::string category;
     std::string description;
-    float sum=0;
+    float sum;
     enum Currency{
         USD=1, BYR, RUB, EUR
     }currency;

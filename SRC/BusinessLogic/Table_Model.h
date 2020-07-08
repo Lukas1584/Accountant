@@ -16,8 +16,7 @@ public:
     bool insertRows(int row,int count=1, const QModelIndex& parent=QModelIndex()) override;
     bool removeRows(int row,int count=1, const QModelIndex& parent=QModelIndex()) override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    QStringList getCategories(const QString& type);
-    QStringList getDescriptions(const QString& category);
+    QStringList getCategoryOrDescription(const QString& typeOrCategory,const QString& type)const;
     void sortData();
 
 signals:

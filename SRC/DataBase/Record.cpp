@@ -55,7 +55,7 @@ std::ostream& operator<<(std::ostream& dataStream,const Record& rhs){
     return dataStream;
 }
 
-std::string Record::convert(const int column)const{
+std::string Record::at(const int column)const{
     switch (column){
     case 0:
         return date;
@@ -149,13 +149,6 @@ void Record::setData(const int column,const std::string& value){
     }
 }
 
-std::string Record::getCategory() const{
-    return category;
-}
-std::string Record::getDescription()const{
-    return description;
-}
-
 void Record::clear(){
     date="";
     category="";
@@ -186,3 +179,6 @@ bool Record::operator<(const Record& rhs)const{
         return false;
 }
 
+float Record::getSum()const{
+    return sum;
+}

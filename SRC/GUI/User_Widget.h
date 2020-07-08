@@ -47,11 +47,10 @@ private:
 
     QLabel* pLblUserName;
     QLabel* pLblPassword;
-    QGridLayout* pGrdMain;
 
     void setStartView();
     void nameAlreadyExists();
-    QStringList convertToStringist(std::list<std::string> listStd);
+    QStringList convertToStringist(const std::list<std::string>& listStd)const;
 };
 
 

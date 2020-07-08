@@ -7,7 +7,7 @@ class Money_Repositary_Widget : public QWidget
     Q_OBJECT
 public:
     Money_Repositary_Widget(std::shared_ptr<Table_Model>& model);
-    bool eventFilter(QObject*,QEvent* pEvent);
+    bool eventFilter(QObject*,QEvent* pEvent)override;
 
 private slots:
     void addRecord();
