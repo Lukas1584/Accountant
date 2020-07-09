@@ -1,7 +1,5 @@
 #pragma once
 #include <QObject>
-#include <memory>
-#include <vector>
 #include "SRC/DataBase/Data.h"
 
 class Report:public QObject

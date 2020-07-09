@@ -162,10 +162,8 @@ bool Report_Widget::eventFilter(QObject* , QEvent *pEvent){
 }
 
 void Report_Widget::filter(){
-    QVariant from=pTimeEditFrom->date();
-    QVariant to=pTimeEditTo->date();
-    pReport->filterDB(from.toString().toStdString(),
-                      to.toString().toStdString(),
+    pReport->filterDB(pTimeEditFrom->date().toString("yyyy-MM-dd").toStdString(),
+                      pTimeEditTo->date().toString("yyyy-MM-dd").toStdString(),
                       typeToReport(),
                       getComboBoxCheckedList(pCbxCategory),
                       getComboBoxCheckedList(pCbxDescription),
@@ -261,10 +259,8 @@ void Report_Widget::fillFields(){
 
 void Report_Widget::fillDate(){
     std::pair<std::string,std::string> minMax=pReport->dateMinMax();
-    QDate from= QDate::fromString(QString::fromStdString(minMax.first),"yyyy-MM-dd");
-    QDate to= QDate::fromString(QString::fromStdString(minMax.second),"yyyy-MM-dd");
-    pTimeEditFrom->setDate(from);
-    pTimeEditTo->setDate(to);
+    pTimeEditFrom->setDate(QDate::fromString(QString::fromStdString(minMax.first),"yyyy-MM-dd"));
+    pTimeEditTo->setDate(QDate::fromString(QString::fromStdString(minMax.second),"yyyy-MM-dd"));
 }
 
 void Report_Widget::fillSum(){

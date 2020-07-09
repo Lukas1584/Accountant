@@ -8,8 +8,8 @@
 #include "SRC/GUI/User_Widget.h"
 
 #include "SRC/BusinessLogic/User_File_Operations.h"
-#include "SRC/BusinessLogic/Table_Model.h"
 #include "SRC/BusinessLogic/Report.h"
+#include "SRC/BusinessLogic/Records_Operations.h"
 
 #include "SRC/DataBase/Data.h"
 
@@ -26,7 +26,7 @@ private:
     std::shared_ptr<Data> pData;
 
     std::shared_ptr<User_File_Operations> pUserFileOperations;
-    std::shared_ptr<Table_Model> pModel;
+    std::shared_ptr<Records_Operations> pModel;
     std::shared_ptr<Report> pReport;
 
     std::shared_ptr<User_Widget> pWdgUser;

@@ -1,10 +1,9 @@
 #include "Money_Repositary_Widget.h"
-#include <QDate>
 
-Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& model) : QWidget(), pModel(model), isEdit(false)
+
+Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Records_Operations>& model) : QWidget(), pModel(model), isEdit(false)
 {
-    pTable=new QTableView;
-    pTable->setModel(&(*pModel));
+    pTable=new QTableWidget;
     pTable->installEventFilter(this);
 
     pBtnSave=new QPushButton(tr("Сохранить кошелек"));
@@ -65,12 +64,7 @@ Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Table_Model>& m
 
 bool Money_Repositary_Widget::eventFilter(QObject*, QEvent *pEvent){
     if(pEvent->type() == QEvent::Resize){
-        pTable->setColumnWidth(0, pTable->width() * 0.1);
-        pTable->setColumnWidth(1, pTable->width() * 0.1);
-        pTable->setColumnWidth(2, pTable->width() * 0.295);
-        pTable->setColumnWidth(3, pTable->width() * 0.3);
-        pTable->setColumnWidth(4, pTable->width() * 0.1);
-        pTable->setColumnWidth(5, pTable->width() * 0.1);
+        setTableDimensions();
     }
     return false;
 }
@@ -84,12 +78,12 @@ void Money_Repositary_Widget::addRecord(){
         row=pModel->rowCount();
         pModel->insertRows(row,1);
     }
-    pModel->setData(pModel->index(row,0),pTimeEdit->date());
-    pModel->setData(pModel->index(row,1),pCbxType->currentText());
-    pModel->setData(pModel->index(row,2),pCbxCategory->currentText());
-    pModel->setData(pModel->index(row,3),pCbxDescription->currentText());
-    pModel->setData(pModel->index(row,4),pLineEditSum->text());
-    pModel->setData(pModel->index(row,5),pCbxCurrency->currentText());
+    pModel->setData(row,0, pTimeEdit->date().toString("yyyy-MM-dd").toStdString());
+    pModel->setData(row,1,pCbxType->currentText().toStdString());
+    pModel->setData(row,2,pCbxCategory->currentText().toStdString());
+    pModel->setData(row,3,pCbxDescription->currentText().toStdString());
+    pModel->setData(row,4,pLineEditSum->text().toStdString());
+    pModel->setData(row,5,pCbxCurrency->currentText().toStdString());
     setWorkView();
     isEdit=false;
     pLineEditSum->clear();
@@ -98,7 +92,7 @@ void Money_Repositary_Widget::addRecord(){
 }
 
 void Money_Repositary_Widget::deleteRecord(){
-    pModel->removeRows(pTable->selectionModel()->currentIndex().row(),1);
+    pModel->removeRows(pTable->selectionModel()->currentIndex().row());
     dataIsLoaded();
 }
 
@@ -114,12 +108,12 @@ void Money_Repositary_Widget::setEditView(){
     pBtnDelete->setEnabled(false);
     pBtnAdd->setText(tr("Сохранить изменения"));
     int row=pTable->selectionModel()->currentIndex().row();
-    pTimeEdit->setDate(pModel->data(pModel->index(row,0)).toDate());
-    pCbxType->setCurrentText(pModel->data(pModel->index(row,1)).toString());
-    pCbxCategory->setCurrentText(pModel->data(pModel->index(row,2)).toString());
-    pCbxDescription->setCurrentText(pModel->data(pModel->index(row,3)).toString());
-    pLineEditSum->setText(pModel->data(pModel->index(row,4)).toString());
-    pCbxCurrency->setCurrentText(pModel->data(pModel->index(row,5)).toString());
+    pTimeEdit->setDate(QDate::fromString(QString::fromStdString(pModel->data(row,0)),"yyyy-MM-dd"));
+    pCbxType->setCurrentText(QString::fromStdString(pModel->data(row,1)));
+    pCbxCategory->setCurrentText(QString::fromStdString(pModel->data(row,2)));
+    pCbxDescription->setCurrentText(QString::fromStdString(pModel->data(row,3)));
+    pLineEditSum->setText(QString::fromStdString(pModel->data(row,4)));
+    pCbxCurrency->setCurrentText(QString::fromStdString(pModel->data(row,5)));
 }
 
 void Money_Repositary_Widget::setWorkView(){
@@ -137,12 +131,55 @@ void Money_Repositary_Widget::cancelEditRecord(){
 
 void Money_Repositary_Widget::dataIsLoaded(){
     pCbxCategory->clear();
-    pCbxCategory->addItems(pModel->getCategoryOrDescription(pCbxType->currentText(),"category"));
+    updateTable();
+    std::list<std::string> categories=pModel->getCategoryOrDescription(pCbxType->currentText().toStdString(),"category");
+    QStringList categoriesQt;
+    for(auto i:categories){
+        categoriesQt.push_back(QString::fromStdString(i));
+    }
+    pCbxCategory->addItems(categoriesQt);
     categoryChanged();
 }
 
 void Money_Repositary_Widget::categoryChanged(){
     pCbxDescription->clear();
-    pCbxDescription->addItems(pModel->getCategoryOrDescription(pCbxCategory->currentText(),"description"));
+    std::list<std::string> descriptions=pModel->getCategoryOrDescription(pCbxCategory->currentText().toStdString(),"description");
+    QStringList descriptionsQt;
+    for(auto i:descriptions){
+        descriptionsQt.push_back(QString::fromStdString(i));
+    }
+    pCbxDescription->addItems(descriptionsQt);
 }
 
+void Money_Repositary_Widget::updateTable(){
+    int rows=pModel->rowCount();
+    int columns=pModel->columnCount();
+    pTable->setRowCount(rows);
+    pTable->setColumnCount(columns);
+    for(int row = 0;row<rows;row++){
+        for(int column = 0;column<columns;column++){
+            QTableWidgetItem* item = new QTableWidgetItem(QString::fromStdString(pModel->data(row,column)));
+            pTable->setItem(row,column,item);
+        }
+    }
+    setTableHeader();
+    setTableDimensions();
+}
+
+void Money_Repositary_Widget::setTableHeader(){
+    std::vector<std::string> header{"Дата","Тип","Категория","Описание","Сумма","Валюта"};
+    for(int i=0;i< pModel->columnCount();i++){
+        QTableWidgetItem* item=new QTableWidgetItem(header[i].c_str());
+        pTable->setHorizontalHeaderItem(i,item);
+    }
+    pTable->verticalHeader()->hide();
+}
+
+void Money_Repositary_Widget::setTableDimensions(){
+    pTable->setColumnWidth(0, pTable->width() * 0.1);
+    pTable->setColumnWidth(1, pTable->width() * 0.1);
+    pTable->setColumnWidth(2, pTable->width() * 0.3);
+    pTable->setColumnWidth(3, pTable->width() * 0.3);
+    pTable->setColumnWidth(4, pTable->width() * 0.1);
+    pTable->setColumnWidth(5, pTable->width() * 0.1);
+}
