@@ -1,7 +1,6 @@
 #include "Report_Widget.h"
 
-
-Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport(report)
+Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),pReport(report)
 {
     pTable=new QTableWidget(this);
     pTable->installEventFilter(this);
@@ -117,9 +116,12 @@ Report_Widget::Report_Widget(std::shared_ptr<Report> report) : QWidget(),pReport
     QObject::connect(pBtnApply,SIGNAL(clicked()),SLOT(filter()));
     QObject::connect(pChbxTypeProfit,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
     QObject::connect(pChbxTypeLoss,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
+
+    QObject::connect(pCbxCategory->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(categoryCheckedAll(QStandardItem*)));
+    QObject::connect(pCbxDescription->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionCheckedAll(QStandardItem*)));
+
     QObject::connect(pCbxCategory->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
 }
-
 
 void Report_Widget::updateTable(){
     int rows=pReport->rowCount();
@@ -212,6 +214,7 @@ std::vector<bool> Report_Widget::currencyToReport() const{
 void Report_Widget::fillComboBoxCategory(){
     std::list<std::string> list;
     list=pReport->getCategories(pChbxTypeProfit->isChecked(),pChbxTypeLoss->isChecked());
+    list.insert(list.begin(),"Все");
     pModelCategory->setRowCount(static_cast<int>(list.size()));
     int row=0;
     for (auto i:list)
@@ -229,6 +232,7 @@ void Report_Widget::fillComboBoxDescription() {
     listCategories=getComboBoxCheckedList(pCbxCategory);
     std::list<std::string> listDescriptions;
     listDescriptions=pReport->getDescriptions(listCategories);
+    listDescriptions.insert(listDescriptions.begin(),"Все");
     pModelDescription->setRowCount(static_cast<int>(listDescriptions.size()));
     int row=0;
     for (auto i:listDescriptions){
@@ -268,3 +272,36 @@ void Report_Widget::fillSum(){
     pLineEditSumFrom->setText(QString::fromStdString(minMax.first));
     pLineEditSumTo->setText(QString::fromStdString(minMax.second));
 }
+
+void Report_Widget::categoryCheckedAll(QStandardItem* item){
+    if(item->index().row()!=0)
+        return;
+
+    bool isCheckedAll=true;
+//    for(int i=0; i<pCbxCategory->count(); i++)
+//        if(pModelCategory->item(i)->flags()==Qt::Unchecked)
+//            isCheckedAll=false;
+//    if(isCheckedAll)
+//        for(int i=0; i<pCbxCategory->count(); i++)
+//            pModelCategory->item(i)->setData(Qt::Unchecked);
+//    else
+//        for(int i=0; i<pCbxCategory->count(); i++)
+//            pModelCategory->item(i)->setData(Qt::Checked);
+
+
+
+}
+
+void Report_Widget::descriptionCheckedAll(QStandardItem* item){
+    //if(item->index().row()==0)
+
+
+}
+
+
+
+
+
+
+
+

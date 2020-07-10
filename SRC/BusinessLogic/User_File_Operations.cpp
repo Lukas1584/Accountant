@@ -1,6 +1,6 @@
 #include "User_File_Operations.h"
 
-User_File_Operations::User_File_Operations(std::shared_ptr<Data>& d) : QObject(),pData(d)
+User_File_Operations::User_File_Operations(std::shared_ptr<Data>& d, QObject *pobj) : QObject(pobj),pData(d)
 {
     settingsFileName="settings.ac";
     loadUsers();

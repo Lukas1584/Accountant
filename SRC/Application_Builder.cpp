@@ -3,26 +3,26 @@
 Application_Builder::Application_Builder() : QObject(){
     pData=std::make_shared<Data>();
 
-    pUserFileOperations=std::make_shared<User_File_Operations>(pData);
-    pModel=std::make_shared<Records_Operations>(pData);
-    pReport=std::make_shared<Report>(pData);
+    pUserFileOperations=new User_File_Operations(pData,this);
+    pModel=new Records_Operations(pData,this);
+    pReport=new Report(pData,this);
 
-    pWdgUser=std::make_shared<User_Widget>(pUserFileOperations);
-    pWdgMoneyRepositary=std::make_shared<Money_Repositary_Widget>(pModel);
-    pWdgReport= std::make_shared<Report_Widget>(pReport);
-    pWdgPlanning=std::make_shared<Planning_Widget>();
+    pWdgUser=new User_Widget (pUserFileOperations);
+    pWdgMoneyRepositary= new Money_Repositary_Widget(pModel);
+    pWdgReport= new Report_Widget(pReport);
+    pWdgPlanning=new Planning_Widget();
 
     pMainWindow= std::make_unique<Main_Window>(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning);
 
-    QObject::connect(pWdgUser.get(),SIGNAL(disableMainWindow()),pMainWindow.get(),SLOT(disableMainWindow()));
-    QObject::connect(pWdgUser.get(),SIGNAL(enableMainWindow()),pMainWindow.get(),SLOT(enableMainWindow()));
-    QObject::connect(pUserFileOperations.get(),SIGNAL(dataIsLoaded()),pMainWindow.get(),SLOT(dataIsLoaded()));
-    QObject::connect(pUserFileOperations.get(),SIGNAL(dataIsLoaded()),pWdgUser.get(),SLOT(setWorkView()));
-    QObject::connect(pUserFileOperations.get(),SIGNAL(dataIsLoaded()),pWdgMoneyRepositary.get(),SLOT(dataIsLoaded()));
-    QObject::connect(pUserFileOperations.get(),SIGNAL(wrongPassword()),pWdgUser.get(),SLOT(wrongPassword()));
-    QObject::connect(pWdgMoneyRepositary.get(),SIGNAL(saveData()),pUserFileOperations.get(),SLOT(saveData()));
-    QObject::connect(pWdgUser.get(),SIGNAL(exitUser()),pMainWindow.get(),SLOT(exitUser()));
-    QObject::connect(pMainWindow.get(),SIGNAL(report()),pReport.get(),SLOT(update()));
-    QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport.get(),SLOT(updateTable()));
-    QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport.get(),SLOT(fillFields()));
+    QObject::connect(pWdgUser,SIGNAL(disableMainWindow()),pMainWindow.get(),SLOT(disableMainWindow()));
+    QObject::connect(pWdgUser,SIGNAL(enableMainWindow()),pMainWindow.get(),SLOT(enableMainWindow()));
+    QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pMainWindow.get(),SLOT(dataIsLoaded()));
+    QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgUser,SLOT(setWorkView()));
+    QObject::connect(pUserFileOperations,SIGNAL(dataIsLoaded()),pWdgMoneyRepositary,SLOT(dataIsLoaded()));
+    QObject::connect(pUserFileOperations,SIGNAL(wrongPassword()),pWdgUser,SLOT(wrongPassword()));
+    QObject::connect(pWdgMoneyRepositary,SIGNAL(saveData()),pUserFileOperations,SLOT(saveData()));
+    QObject::connect(pWdgUser,SIGNAL(exitUser()),pMainWindow.get(),SLOT(exitUser()));
+    QObject::connect(pMainWindow.get(),SIGNAL(report()),pReport,SLOT(update()));
+    QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport,SLOT(updateTable()));
+    QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport,SLOT(fillFields()));
 }

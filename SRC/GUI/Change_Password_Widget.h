@@ -13,7 +13,6 @@ signals:
 
 private slots:
     void slotClickedOk();
-    void slotClickedCancel();
 
 private:
     QPushButton* pBtnOK;

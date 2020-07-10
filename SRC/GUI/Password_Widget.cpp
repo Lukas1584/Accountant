@@ -17,8 +17,8 @@ Password_Widget::Password_Widget(QWidget *parent) : QWidget(parent)
     QLabel* pLblPassword=new QLabel(tr("Пароль"));
     QLabel* pLblPasswordConfirmation=new QLabel(tr("Подтверждение пароля"));
 
-    QObject::connect(pBtnOK,SIGNAL(clicked()),this,SLOT(slotClickedOk()));
-    QObject::connect(pBtnCancel,SIGNAL(clicked()),this,SLOT(slotClickedCancel()));
+    QObject::connect(pBtnOK,SIGNAL(clicked()),SLOT(slotClickedOk()));
+    QObject::connect(pBtnCancel,SIGNAL(clicked()),SIGNAL(clickedCancel()));
 
     QGridLayout* pGrdMain=new QGridLayout;
     pGrdMain->addWidget(pLblName,0,0,Qt::AlignRight);
@@ -47,9 +47,4 @@ void Password_Widget::slotClickedOk(){
         return;
     }
     emit clickedOk(pLeName->text(),pLePassword->text());
-}
-
-void Password_Widget::slotClickedCancel(){
-    emit clickedCancel();
-    this->destroy();
 }

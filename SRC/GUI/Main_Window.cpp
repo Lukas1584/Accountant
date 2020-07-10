@@ -1,7 +1,11 @@
 #include "Main_Window.h"
 
-Main_Window::Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget> money, std::shared_ptr<QWidget> report, std::shared_ptr<QWidget> planning)
-    : QWidget(),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning)
+Main_Window::Main_Window(QWidget* user,
+                         QWidget *money,
+                         QWidget *report,
+                         QWidget *planning,
+                         QWidget* parent)
+    : QWidget(parent),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning)
 {
 
     resize(1200,800);
@@ -40,14 +44,12 @@ Main_Window::Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget>
     pHblMain->addWidget(&(*pWdgPlanning),5);
     setLayout(pHblMain);
     show();
-
 }
 void Main_Window::slotMoneyShow() const{
     pWdgMoney->show();
     pWdgUser->hide();
     pWdgPlanning->hide();
     pWdgReport->hide();
-
 }
 
 void Main_Window::slotUserShow() const{

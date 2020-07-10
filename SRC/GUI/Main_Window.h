@@ -5,18 +5,20 @@ class Main_Window : public QWidget
 {
     Q_OBJECT
 public:
-    Main_Window(std::shared_ptr<QWidget> user, std::shared_ptr<QWidget> money, std::shared_ptr<QWidget> report, std::shared_ptr<QWidget> planning);
+    Main_Window(QWidget *user,
+                QWidget* money,
+                QWidget* report,
+                QWidget* planning,
+                QWidget *parent=nullptr);
 
 signals:
     void report();
 
-public slots:
+private slots:
     void dataIsLoaded()const;
     void disableMainWindow();
     void enableMainWindow();
     void exitUser()const;
-
-private slots:
     void slotMoneyShow()const;
     void slotUserShow()const;
     void slotReportShow();
@@ -30,9 +32,9 @@ private:
 
     QLabel* pLblBalance;
 
-    std::shared_ptr<QWidget> pWdgUser;
-    std::shared_ptr<QWidget> pWdgMoney;
-    std::shared_ptr<QWidget> pWdgReport;
-    std::shared_ptr<QWidget> pWdgPlanning;
+    QWidget* pWdgUser;
+    QWidget* pWdgMoney;
+    QWidget* pWdgReport;
+    QWidget* pWdgPlanning;
 };
 

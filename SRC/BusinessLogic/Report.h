@@ -6,7 +6,7 @@ class Report:public QObject
 {
     Q_OBJECT
 public:
-    explicit Report(std::shared_ptr<Data>& data);
+    explicit Report(std::shared_ptr<Data>& data,QObject* pobj=nullptr);
     std::vector<std::string> getRow(const int row) const;
     int rowCount()const;
     int columnCount()const;
@@ -25,7 +25,7 @@ public:
 
 signals:
 
-public slots:
+private slots:
     void update();
 
 private:

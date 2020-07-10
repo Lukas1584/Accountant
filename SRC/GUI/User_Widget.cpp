@@ -1,6 +1,6 @@
 #include "User_Widget.h"
 
-User_Widget::User_Widget(std::shared_ptr<User_File_Operations>& user) : QWidget(), pUserFileOperations(user)
+User_Widget::User_Widget(User_File_Operations *user,QWidget* parent) : QWidget(parent), pUserFileOperations(user)
 {
     pBtnNewUser=new QPushButton(tr("Регистрация"));
     pBtnLogIn=new QPushButton(tr("Войти"));
@@ -62,7 +62,7 @@ void User_Widget::btnNewUserClicked(){
     wdgPassword=new Password_Widget();
     wdgPassword->show();
     QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),SLOT(addUser(QString,QString)));
-    QObject::connect(wdgPassword,SIGNAL(clickedCancel()),SIGNAL(enableMainWindow()));
+    QObject::connect(wdgPassword,SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
 }
 
 void User_Widget::nameAlreadyExists(){
@@ -82,6 +82,11 @@ void User_Widget::addUser(const QString& login,const QString& password){
         emit enableMainWindow();
     }
     else nameAlreadyExists();
+}
+void User_Widget::cancelNewUser(){
+    delete wdgPassword;
+    wdgPassword=nullptr;
+    emit enableMainWindow();
 }
 
 void User_Widget::logIn(){
@@ -120,7 +125,7 @@ void User_Widget::changePassword(){
     wdgChangePassword=new Change_Password_Widget();
     wdgChangePassword->show();
     QObject::connect(wdgChangePassword,SIGNAL(clickedOk(const QString&,const QString&)),SLOT(changingPassword(const QString&,const QString&)));
-    QObject::connect(wdgChangePassword,SIGNAL(clickedCancel()),SIGNAL(enableMainWindow()));
+    QObject::connect(wdgChangePassword,SIGNAL(clickedCancel()),SLOT(cancelChangePassword()));
 }
 
 void User_Widget::changingPassword(const QString &oldPassword, const QString &newPassword){
@@ -131,6 +136,12 @@ void User_Widget::changingPassword(const QString &oldPassword, const QString &ne
         reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароль изменен"));
         Q_UNUSED(reply);
     }
+    emit enableMainWindow();
+}
+
+void User_Widget::cancelChangePassword(){
+    delete wdgChangePassword;
+    wdgChangePassword=nullptr;
     emit enableMainWindow();
 }
 

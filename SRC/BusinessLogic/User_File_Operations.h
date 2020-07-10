@@ -13,7 +13,7 @@ class User_File_Operations : public QObject
 {
     Q_OBJECT
 public:
-    User_File_Operations(std::shared_ptr<Data> &d);
+    explicit User_File_Operations(std::shared_ptr<Data> &d,QObject* pobj=nullptr);
     void clearData();
     void loadData(const std::string& login, const std::string& password);
     bool isUserCreated(const std::string& login, const std::string& password);
@@ -21,7 +21,7 @@ public:
     void deleteUser(const std::string& login,const std::string& password);
     bool changedPassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword);
 
-public slots:
+private slots:
     void saveData()const;
 
 signals:

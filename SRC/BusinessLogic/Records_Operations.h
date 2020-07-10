@@ -6,7 +6,7 @@ class Records_Operations : public QObject
 {
     Q_OBJECT
 public:
-    explicit Records_Operations(std::shared_ptr<Data> &data);
+    explicit Records_Operations(std::shared_ptr<Data> &data,QObject* pobj=0);
 
     int rowCount() const;
     int columnCount() const;

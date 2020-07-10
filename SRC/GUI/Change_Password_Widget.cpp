@@ -18,8 +18,8 @@ Change_Password_Widget::Change_Password_Widget(QWidget *parent) : QWidget(parent
     QLabel* pLblPassword=new QLabel(tr("Новый пароль"));
     QLabel* pLblPasswordConfirmation=new QLabel(tr("Подтверждение пароля"));
 
-    QObject::connect(pBtnOK,SIGNAL(clicked()),this,SLOT(slotClickedOk()));
-    QObject::connect(pBtnCancel,SIGNAL(clicked()),this,SLOT(slotClickedCancel()));
+    QObject::connect(pBtnOK,SIGNAL(clicked()),SLOT(slotClickedOk()));
+    QObject::connect(pBtnCancel,SIGNAL(clicked()),SIGNAL(clickedCancel()));
 
     QGridLayout* pGrdMain=new QGridLayout;
     pGrdMain->addWidget(pLblName,0,0,Qt::AlignRight);
@@ -41,9 +41,4 @@ void Change_Password_Widget::slotClickedOk() {
         return;
     }
     emit clickedOk(pLeOldPassword->text(),pLePassword->text());
-}
-
-void Change_Password_Widget::slotClickedCancel(){
-    emit clickedCancel();
-    this->destroy();
 }

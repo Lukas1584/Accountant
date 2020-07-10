@@ -1,6 +1,6 @@
 #include "Records_Operations.h"
 
-Records_Operations::Records_Operations(std::shared_ptr<Data>& data) : QObject(),pData(data){
+Records_Operations::Records_Operations(std::shared_ptr<Data>& data, QObject* pobj) : QObject(pobj),pData(data){
 }
 
 int Records_Operations::rowCount() const{

@@ -7,7 +7,7 @@ class Money_Repositary_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Money_Repositary_Widget(std::shared_ptr<Records_Operations>& model);
+    explicit Money_Repositary_Widget(Records_Operations *model,QWidget* parent=nullptr);
     bool eventFilter(QObject*,QEvent* pEvent)override;
 
 private slots:
@@ -16,15 +16,13 @@ private slots:
     void editRecord();
     void cancelEditRecord();
     void categoryChanged();
-
-public slots:
     void dataIsLoaded();
 
 signals:
     void saveData();
 
 private:
-    std::shared_ptr<Records_Operations> pModel;
+    Records_Operations* pModel;
     QTableWidget* pTable;
 
     QPushButton* pBtnSave;

@@ -10,18 +10,16 @@ class User_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    User_Widget(std::shared_ptr<User_File_Operations>& pUserFileOperations);
+    explicit User_Widget(User_File_Operations* user,QWidget* parent=nullptr);
 
 signals:
     void disableMainWindow();
     void enableMainWindow();
     void exitUser();
 
-public slots:
+private slots:
     void wrongPassword();
     void setWorkView();
-
-private slots:
     void btnNewUserClicked();
     void logIn();
     void changeUser();
@@ -29,12 +27,14 @@ private slots:
     void deleteUser();
     void changePassword();
     void changingPassword(const QString& oldPassword,const QString& newPassword);
+    void cancelNewUser();
+    void cancelChangePassword();
 
 private:
     Password_Widget* wdgPassword;
     Change_Password_Widget* wdgChangePassword;
 
-    std::shared_ptr<User_File_Operations> pUserFileOperations;
+    User_File_Operations* pUserFileOperations;
 
     QPushButton* pBtnNewUser;
     QPushButton* pBtnLogIn;

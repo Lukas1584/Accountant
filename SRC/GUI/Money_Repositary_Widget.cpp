@@ -1,7 +1,7 @@
 #include "Money_Repositary_Widget.h"
 
 
-Money_Repositary_Widget::Money_Repositary_Widget(std::shared_ptr<Records_Operations>& model) : QWidget(), pModel(model), isEdit(false)
+Money_Repositary_Widget::Money_Repositary_Widget(Records_Operations* model, QWidget* parent) : QWidget(parent), pModel(model), isEdit(false)
 {
     pTable=new QTableWidget;
     pTable->installEventFilter(this);

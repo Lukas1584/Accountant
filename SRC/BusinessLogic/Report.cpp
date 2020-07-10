@@ -1,6 +1,6 @@
 #include "Report.h"
 
-Report::Report(std::shared_ptr<Data>& data): QObject(),pData(data){}
+Report::Report(std::shared_ptr<Data>& data, QObject* pobj): QObject(pobj),pData(data){}
 
 std::vector<std::string> Report::getRow(const int row) const{
     int count=0;

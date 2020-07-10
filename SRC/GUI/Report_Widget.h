@@ -7,21 +7,21 @@ class Report_Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Report_Widget(std::shared_ptr<Report> report);
+    explicit Report_Widget(Report* report,QWidget* parent=nullptr);
     bool eventFilter(QObject*, QEvent*)override;
 signals:
 
-public slots:
+private slots:
     void updateTable();
     void fillFields();
-
-private slots:
     void filter();
     void fillComboBoxDescription();
     void fillComboBoxCategory();
+    void categoryCheckedAll(QStandardItem *item);
+    void descriptionCheckedAll(QStandardItem *item);
 
 private:
-    std::shared_ptr<Report> pReport;
+    Report* pReport;
     QTableWidget* pTable;
 
     QPushButton* pBtnSaveTxt;
@@ -53,6 +53,7 @@ private:
     void setTableHeader();
     void fillDate();
     void fillSum();
+
 };
 
 
