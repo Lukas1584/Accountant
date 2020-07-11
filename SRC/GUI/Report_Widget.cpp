@@ -1,7 +1,6 @@
 #include "Report_Widget.h"
 
-Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),pReport(report)
-{
+Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),pReport(report){
     pTable=new QTableWidget(this);
     pTable->installEventFilter(this);
 
@@ -32,9 +31,7 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
 
     QLabel* pLblType=new QLabel(tr("Тип:"));
     pChbxTypeProfit=new QCheckBox(tr("Прибыль"));
-    pChbxTypeProfit->setChecked(true);
     pChbxTypeLoss=new QCheckBox(tr("Убыток"));
-    pChbxTypeLoss->setChecked(true);
     QVBoxLayout* pVbxType=new QVBoxLayout;
     pVbxType->addWidget(pLblType);
     pVbxType->addWidget(pChbxTypeProfit);
@@ -72,13 +69,9 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
 
     QLabel* pLblCurrency=new QLabel(tr("Валюта:"));
     pChbxUsd=new QCheckBox(tr("USD"));
-    pChbxUsd->setChecked(true);
     pChbxByr=new QCheckBox(tr("BYR"));
-    pChbxByr->setChecked(true);
     pChbxRub=new QCheckBox(tr("RUB"));
-    pChbxRub->setChecked(true);
     pChbxEur=new QCheckBox(tr("EUR"));
-    pChbxEur->setChecked(true);
     QVBoxLayout* pVbxCurrency=new QVBoxLayout;
     pVbxCurrency->addWidget(pLblCurrency);
     pVbxCurrency->addWidget(pChbxUsd);
@@ -116,11 +109,10 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
     QObject::connect(pBtnApply,SIGNAL(clicked()),SLOT(filter()));
     QObject::connect(pChbxTypeProfit,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
     QObject::connect(pChbxTypeLoss,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
-
-    QObject::connect(pCbxCategory->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(categoryCheckedAll(QStandardItem*)));
-    QObject::connect(pCbxDescription->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionCheckedAll(QStandardItem*)));
-
-    QObject::connect(pCbxCategory->model(),SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
+    QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(categoryChecked(QStandardItem*)));
+    QObject::connect(pModelDescription,SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionChecked(QStandardItem*)));
+    QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
+    QObject::connect(pBtnReset,SIGNAL(clicked()),SLOT(resetFilter()));
 }
 
 void Report_Widget::updateTable(){
@@ -175,7 +167,7 @@ void Report_Widget::filter(){
     updateTable();
 }
 
-int Report_Widget::typeToReport(){
+int Report_Widget::typeToReport() const{
     if (pChbxTypeProfit->isChecked()){
             if(pChbxTypeLoss->isChecked()) {
                 return 11;
@@ -211,54 +203,17 @@ std::vector<bool> Report_Widget::currencyToReport() const{
     return currency;
 }
 
-void Report_Widget::fillComboBoxCategory(){
-    std::list<std::string> list;
-    list=pReport->getCategories(pChbxTypeProfit->isChecked(),pChbxTypeLoss->isChecked());
-    list.insert(list.begin(),"Все");
-    pModelCategory->setRowCount(static_cast<int>(list.size()));
-    int row=0;
-    for (auto i:list)
-    {
-        QStandardItem* item = new QStandardItem(i.c_str());
-        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
-        item->setData(Qt::Checked, Qt::CheckStateRole);
-        pModelCategory->setItem(row, 0, item);
-        row++;
-    }
-}
-
-void Report_Widget::fillComboBoxDescription() {
-    std::vector<std::string> listCategories;
-    listCategories=getComboBoxCheckedList(pCbxCategory);
-    std::list<std::string> listDescriptions;
-    listDescriptions=pReport->getDescriptions(listCategories);
-    listDescriptions.insert(listDescriptions.begin(),"Все");
-    pModelDescription->setRowCount(static_cast<int>(listDescriptions.size()));
-    int row=0;
-    for (auto i:listDescriptions){
-        QStandardItem* item = new QStandardItem(i.c_str());
-        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-        item->setData(Qt::Checked, Qt::CheckStateRole);
-        pModelDescription->setItem(row, 0, item);
-        row++;
-    }
-}
-
-std::vector<std::string> Report_Widget::getComboBoxCheckedList(const QComboBox* combobox) const{
-    std::vector<std::string> list;
-    for(int i=0; i<combobox->count(); i++){
-        QModelIndex index = combobox->model()->index(i, 0);
-        if(index.data(Qt::CheckStateRole).toInt() == 2)
-            list.push_back(index.data(Qt::DisplayRole).toString().toStdString());
-    }
-    return list;
-}
-
 void Report_Widget::fillFields(){
+    pChbxTypeProfit->setChecked(true);
+    pChbxTypeLoss->setChecked(true);
     fillComboBoxCategory();
     fillComboBoxDescription();
     fillDate();
     fillSum();
+    pChbxUsd->setChecked(true);
+    pChbxByr->setChecked(true);
+    pChbxRub->setChecked(true);
+    pChbxEur->setChecked(true);
 }
 
 void Report_Widget::fillDate(){
@@ -273,34 +228,91 @@ void Report_Widget::fillSum(){
     pLineEditSumTo->setText(QString::fromStdString(minMax.second));
 }
 
-void Report_Widget::categoryCheckedAll(QStandardItem* item){
-    if(item->index().row()!=0)
-        return;
+void Report_Widget::fillComboBoxCategory(){
+    QObject::disconnect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(categoryChecked(QStandardItem*)));
+    std::list<std::string> list;
+    list=pReport->getCategories(pChbxTypeProfit->isChecked(),pChbxTypeLoss->isChecked());
+    list.insert(list.begin(),"Все");
+    pModelCategory->setRowCount(static_cast<int>(list.size()));
+    int row=0;
+    for (auto i:list){
+        QStandardItem* item = new QStandardItem(i.c_str());
+        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
+        item->setData(Qt::Checked, Qt::CheckStateRole);
+        pModelCategory->setItem(row, 0, item);
+        row++;
+    }
+    QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(categoryChecked(QStandardItem*)));
+}
 
-    bool isCheckedAll=true;
-//    for(int i=0; i<pCbxCategory->count(); i++)
-//        if(pModelCategory->item(i)->flags()==Qt::Unchecked)
-//            isCheckedAll=false;
-//    if(isCheckedAll)
-//        for(int i=0; i<pCbxCategory->count(); i++)
-//            pModelCategory->item(i)->setData(Qt::Unchecked);
-//    else
-//        for(int i=0; i<pCbxCategory->count(); i++)
-//            pModelCategory->item(i)->setData(Qt::Checked);
+void Report_Widget::fillComboBoxDescription() {
 
-
+    std::vector<std::string> listCategories;
+    listCategories=getComboBoxCheckedList(pCbxCategory);
+    std::list<std::string> listDescriptions;
+    listDescriptions=pReport->getDescriptions(listCategories);
+    listDescriptions.insert(listDescriptions.begin(),"Все");
+    pModelDescription->setRowCount(static_cast<int>(listDescriptions.size()));
+    int row=0;
+    for (auto i:listDescriptions){
+        QStandardItem* item = new QStandardItem(i.c_str());
+        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+        item->setData(Qt::Checked, Qt::CheckStateRole);
+        pModelDescription->setItem(row, 0, item);
+        row++;
+    }
 
 }
 
-void Report_Widget::descriptionCheckedAll(QStandardItem* item){
-    //if(item->index().row()==0)
-
-
+std::vector<std::string> Report_Widget::getComboBoxCheckedList(const QComboBox* combobox) const{
+    std::vector<std::string> list;
+    for(int i=0; i<combobox->count(); i++){
+        QModelIndex index = combobox->model()->index(i, 0);
+        if(index.data(Qt::CheckStateRole) == Qt::Checked)
+            list.push_back(index.data(Qt::DisplayRole).toString().toStdString());
+    }
+    return list;
 }
 
+void Report_Widget::categoryChecked(QStandardItem* item){
+    QObject::disconnect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(categoryChecked(QStandardItem*)));
+    checkControl(pModelCategory,item);
+    QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(categoryChecked(QStandardItem*)));
+}
 
+void Report_Widget::descriptionChecked(QStandardItem* item){
+    QObject::disconnect(pModelDescription,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(descriptionChecked(QStandardItem*)));
+    checkControl(pModelDescription,item);
+    QObject::connect(pModelDescription,SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionChecked(QStandardItem*)));
+}
 
+void Report_Widget::checkControl(QStandardItemModel* model,QStandardItem* item){
+    QModelIndex index = model->index(item->index().row(),0);
+    if(item->index().row()==0){
+        if(index.data(Qt::CheckStateRole) == Qt::Checked)
+            setCheckAll(model,Qt::Checked);
+        else
+            setCheckAll(model,Qt::Unchecked);
+    }
+    else{
+        if(index.data(Qt::CheckStateRole) == Qt::Unchecked){
+            QModelIndex indexAll = model->index(0, 0);
+            model->setData(indexAll,Qt::Unchecked, Qt::CheckStateRole);
+        }
+    }
+}
 
+void Report_Widget::setCheckAll(QStandardItemModel* model,Qt::CheckState state){
+    for(int i=0; i<model->rowCount(); i++){
+        QModelIndex index = model->index(i, 0);
+        model->setData(index,state, Qt::CheckStateRole);
+    }
+}
+
+void Report_Widget::resetFilter(){
+    fillFields();
+    filter();
+}
 
 
 

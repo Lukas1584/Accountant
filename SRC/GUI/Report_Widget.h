@@ -17,8 +17,9 @@ private slots:
     void filter();
     void fillComboBoxDescription();
     void fillComboBoxCategory();
-    void categoryCheckedAll(QStandardItem *item);
-    void descriptionCheckedAll(QStandardItem *item);
+    void categoryChecked(QStandardItem *item);
+    void descriptionChecked(QStandardItem *item);
+    void resetFilter();
 
 private:
     Report* pReport;
@@ -46,14 +47,15 @@ private:
     QCheckBox *pChbxRub;
     QCheckBox *pChbxEur;
 
-    int typeToReport();
+    int typeToReport()const;
     std::vector<bool> currencyToReport()const;
     std::vector<std::string> getComboBoxCheckedList(const QComboBox *combobox)const;
     void setTableDimensions();
     void setTableHeader();
     void fillDate();
     void fillSum();
-
+    void checkControl(QStandardItemModel* model,QStandardItem* item);
+    void setCheckAll(QStandardItemModel* model,Qt::CheckState state);
 };
 
 
