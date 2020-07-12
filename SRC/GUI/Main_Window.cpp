@@ -4,10 +4,10 @@ Main_Window::Main_Window(QWidget* user,
                          QWidget *money,
                          QWidget *report,
                          QWidget *planning,
+                         Balance_Calculator *balance,
                          QWidget* parent)
-    : QWidget(parent),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning)
+    : QWidget(parent),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning),pBalance(balance)
 {
-
     resize(1200,800);
     pBtnUser=new  QPushButton(tr("Пользователь"));
     pBtnMoney=new QPushButton(tr("Кошелек"));
@@ -74,12 +74,13 @@ void Main_Window::slotPlanningShow() const{
     pWdgReport->hide();
 }
 
-void Main_Window::dataIsLoaded() const{
+void Main_Window::dataIsLoaded() {
     pBtnMoney->setEnabled(true);
     pBtnReport->setEnabled(true);
     pBtnPlanning->setEnabled(true);
     pLblBalance->show();
     slotMoneyShow();
+    balance();
 }
 
 void Main_Window::exitUser() const{
@@ -98,4 +99,9 @@ void Main_Window::enableMainWindow(){
     setEnabled(true);
 }
 
+void Main_Window::balance(){
+    QDate date=QDate::currentDate();
+    pBalance->setCurrentDate(date.toString("yyyy-MM-dd").toStdString());
+    pLblBalance->setText(pBalance->getBalance().c_str());
+}
 

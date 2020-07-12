@@ -1,6 +1,7 @@
 SOURCES += \
     Main.cpp \
     SRC/Application_Builder.cpp \
+    SRC/BusinessLogic/Balance_Calculator.cpp \
     SRC/BusinessLogic/Records_Operations.cpp \
     SRC/BusinessLogic/Report.cpp \
     SRC/BusinessLogic/Report_Save.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     SRC/Application_Builder.h \
+    SRC/BusinessLogic/Balance_Calculator.h \
     SRC/BusinessLogic/Records_Operations.h \
     SRC/BusinessLogic/Report.h \
     SRC/BusinessLogic/Report_Save.h \
@@ -35,3 +37,4 @@ HEADERS += \
 
 QT += widgets
 QT += core
+QT += printsupport

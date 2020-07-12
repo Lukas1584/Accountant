@@ -6,13 +6,14 @@ Application_Builder::Application_Builder() : QObject(){
     pUserFileOperations=new User_File_Operations(pData,this);
     pModel=new Records_Operations(pData,this);
     pReport=new Report(pData,this);
+    pBalance=new Balance_Calculator(pData,this);
 
     pWdgUser=new User_Widget (pUserFileOperations);
     pWdgMoneyRepositary= new Money_Repositary_Widget(pModel);
     pWdgReport= new Report_Widget(pReport);
     pWdgPlanning=new Planning_Widget();
 
-    pMainWindow= std::make_unique<Main_Window>(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning);
+    pMainWindow= std::make_unique<Main_Window>(pWdgUser,pWdgMoneyRepositary,pWdgReport,pWdgPlanning,pBalance);
 
     QObject::connect(pWdgUser,SIGNAL(disableMainWindow()),pMainWindow.get(),SLOT(disableMainWindow()));
     QObject::connect(pWdgUser,SIGNAL(enableMainWindow()),pMainWindow.get(),SLOT(enableMainWindow()));

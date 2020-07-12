@@ -2,7 +2,8 @@
 #include <QtWidgets>
 #include <QObject>
 #include "SRC/BusinessLogic/Report.h"
-
+#include <QPrintDialog>
+#include <QPrinter>
 
 class Report_Widget : public QWidget
 {
@@ -22,6 +23,7 @@ private slots:
     void descriptionChecked(QStandardItem *item);
     void resetFilter();
     void saveTxt();
+    void print();
 
 private:
     Report* pReport;

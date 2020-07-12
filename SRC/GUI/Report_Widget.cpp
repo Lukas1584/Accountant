@@ -114,8 +114,7 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
     QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
     QObject::connect(pBtnReset,SIGNAL(clicked()),SLOT(resetFilter()));
     QObject::connect(pBtnSaveTxt,SIGNAL(clicked()),SLOT(saveTxt()));
-
-
+    QObject::connect(pBtnPrint,SIGNAL(clicked()),SLOT(print()));
 }
 
 void Report_Widget::updateTable(){
@@ -321,4 +320,11 @@ void Report_Widget::saveTxt(){
     pReport->saveTxt(fieName.toStdString());
 }
 
+void Report_Widget::print(){
+    QPrinter print;
+    QPrintDialog* printDialog=new QPrintDialog(&print);
+    if (printDialog->exec() == QDialog::Accepted) {
+        // print ...
+    }
+}
 

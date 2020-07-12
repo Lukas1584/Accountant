@@ -1,5 +1,6 @@
 #pragma once
 #include <QtWidgets>
+#include "SRC/BusinessLogic/Balance_Calculator.h"
 
 class Main_Window : public QWidget
 {
@@ -9,13 +10,14 @@ public:
                 QWidget* money,
                 QWidget* report,
                 QWidget* planning,
+                Balance_Calculator* balance,
                 QWidget *parent=nullptr);
 
 signals:
     void report();
 
 private slots:
-    void dataIsLoaded()const;
+    void dataIsLoaded();
     void disableMainWindow();
     void enableMainWindow();
     void exitUser()const;
@@ -36,5 +38,8 @@ private:
     QWidget* pWdgMoney;
     QWidget* pWdgReport;
     QWidget* pWdgPlanning;
+    Balance_Calculator* pBalance;
+
+    void balance();
 };
 

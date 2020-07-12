@@ -52,7 +52,3 @@ int Report_Save::maxLength(const int column)const{
     }
     return max;
 }
-
-
-
-
