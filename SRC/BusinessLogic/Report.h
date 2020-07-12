@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include "SRC/DataBase/Data.h"
+#include "SRC/BusinessLogic/Report_Save.h"
 
 class Report:public QObject
 {
@@ -22,6 +23,7 @@ public:
                   const std::vector<bool>& currency);
     std::pair<std::string,std::string> dateMinMax()const;
     std::pair<std::string,std::string> sumMinMax()const;
+    void saveTxt(const std::string& fieName);
 
 signals:
 
@@ -40,7 +42,6 @@ private:
     bool descriptionInRange(const std::string& description,const std::vector<std::string>& descriptionFilter)const;
     bool sumInRange(const std::string& sum,const float& sumFrom,const float& sumTo)const;
     bool currencyInRange(const std::string& currency, const std::vector<bool>& currencyFilter)const;
-
 };
 
 

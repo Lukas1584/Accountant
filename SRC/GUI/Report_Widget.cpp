@@ -4,7 +4,7 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
     pTable=new QTableWidget(this);
     pTable->installEventFilter(this);
 
-    pBtnSaveTxt=new QPushButton(tr("Сохранить как"));
+    pBtnSaveTxt=new QPushButton(tr("Сохранить TXT"));
     pBtnSaveExcel=new QPushButton(tr("Сохранить в Excel"));
     pBtnPrint=new QPushButton(tr("Печать"));
     pBtnChart=new QPushButton(tr("График"));
@@ -113,6 +113,9 @@ Report_Widget::Report_Widget(Report *report, QWidget *parent) : QWidget(parent),
     QObject::connect(pModelDescription,SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionChecked(QStandardItem*)));
     QObject::connect(pModelCategory,SIGNAL(itemChanged(QStandardItem*)),SLOT(fillComboBoxDescription()));
     QObject::connect(pBtnReset,SIGNAL(clicked()),SLOT(resetFilter()));
+    QObject::connect(pBtnSaveTxt,SIGNAL(clicked()),SLOT(saveTxt()));
+
+
 }
 
 void Report_Widget::updateTable(){
@@ -143,7 +146,7 @@ void Report_Widget::setTableHeader(){
 void Report_Widget::setTableDimensions(){
     pTable->setColumnWidth(0, pTable->width() * 0.1);
     pTable->setColumnWidth(1, pTable->width() * 0.1);
-    pTable->setColumnWidth(2, pTable->width() * 0.3);
+    pTable->setColumnWidth(2, pTable->width() * 0.28);
     pTable->setColumnWidth(3, pTable->width() * 0.3);
     pTable->setColumnWidth(4, pTable->width() * 0.1);
     pTable->setColumnWidth(5, pTable->width() * 0.1);
@@ -261,7 +264,6 @@ void Report_Widget::fillComboBoxDescription() {
         pModelDescription->setItem(row, 0, item);
         row++;
     }
-
 }
 
 std::vector<std::string> Report_Widget::getComboBoxCheckedList(const QComboBox* combobox) const{
@@ -314,6 +316,9 @@ void Report_Widget::resetFilter(){
     filter();
 }
 
-
+void Report_Widget::saveTxt(){
+    QString fieName = QFileDialog::getSaveFileName(0,tr("Сохранить txt"),"","*.txt");
+    pReport->saveTxt(fieName.toStdString());
+}
 
 

@@ -3,6 +3,7 @@ SOURCES += \
     SRC/Application_Builder.cpp \
     SRC/BusinessLogic/Records_Operations.cpp \
     SRC/BusinessLogic/Report.cpp \
+    SRC/BusinessLogic/Report_Save.cpp \
     SRC/BusinessLogic/User.cpp \
     SRC/BusinessLogic/User_File_Operations.cpp \
     SRC/DataBase/Data.cpp \
@@ -19,6 +20,7 @@ HEADERS += \
     SRC/Application_Builder.h \
     SRC/BusinessLogic/Records_Operations.h \
     SRC/BusinessLogic/Report.h \
+    SRC/BusinessLogic/Report_Save.h \
     SRC/BusinessLogic/User.h \
     SRC/BusinessLogic/User_File_Operations.h \
     SRC/DataBase/Data.h \

@@ -197,3 +197,9 @@ std::pair<std::string,std::string> Report::sumMinMax() const{
     ss>>strMax;
     return {strMin,strMax};
 }
+
+void Report::saveTxt(const std::string& fieName){
+    Report_Save txt(pData,filter);
+    txt.saveTxt(fieName);
+
+}

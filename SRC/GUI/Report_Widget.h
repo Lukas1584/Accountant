@@ -1,7 +1,8 @@
 #pragma once
 #include <QtWidgets>
 #include <QObject>
-#include <SRC/BusinessLogic/Report.h>
+#include "SRC/BusinessLogic/Report.h"
+
 
 class Report_Widget : public QWidget
 {
@@ -20,6 +21,7 @@ private slots:
     void categoryChecked(QStandardItem *item);
     void descriptionChecked(QStandardItem *item);
     void resetFilter();
+    void saveTxt();
 
 private:
     Report* pReport;
@@ -56,6 +58,7 @@ private:
     void fillSum();
     void checkControl(QStandardItemModel* model,QStandardItem* item);
     void setCheckAll(QStandardItemModel* model,Qt::CheckState state);
+
 };
 
 
