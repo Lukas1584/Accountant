@@ -32,28 +32,18 @@ int Data::columns()const{
     return temp.columns();
 }
 
-std::string Data::at(const int row,const int column) const{
-    return data[row].at(column);
-}
-
 void Data::remove(const int row){
     data.erase(data.begin()+row);
-}
-
-void Data::insertRows(const int row, const int count){
-    Record rec;
-    for (int i=0;i<count;i++)
-        data.insert(data.begin()+row,rec);
-}
-
-void Data::setData(const int row, const int column, const std::string &value){
-    data[row].setData(column,value);
 }
 
 void Data::sort(){
     std::sort(data.begin(),data.end());
 }
 
-float Data::getSum(const int row)const{
-    return data[row].getSum();
+Record Data::getRecord(const int row){
+    return data[row];
+}
+
+void Data::setRecord(const int row,const Record& record){
+    data[row]=record;
 }

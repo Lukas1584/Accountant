@@ -11,50 +11,57 @@ int Records_Operations::columnCount() const{
     return pData->columns();
 }
 
-std::string Records_Operations::data(const int row,const int column) const{
-    return pData->at(row,column);
-}
-
-void Records_Operations::insertRows(int row, int count){
-    pData->insertRows(row,count);
-}
-
-void Records_Operations::removeRows(int row){
+void Records_Operations::removeRow(const int row){
     pData->remove(row);
-}
-
-void Records_Operations::setData(const int row,const int column, const std::string& value){
-    pData->setData(row,column,value);
-    emit dataChanged();
 }
 
 void Records_Operations::sortData(){
     pData->sort();
 }
 
-std::list<std::string> Records_Operations::getCategoryOrDescription(const std::string& typeOrCategory,const std::string& type) const{
+Record_String Records_Operations::data(const int row) const{
+    return pData->getRecord(row);
+}
+
+void Records_Operations::setData(const int row, const Record_String& rec){
+    pData->setRecord(row,rec.convertToRecord());
+    emit dataChanged();
+}
+
+std::list<std::string> Records_Operations::getCategory(const std::string& type) const{
     std::list<std::string> list;
-    int keyColumn;
-    int dependentColumn;
-    if(type=="category"){
-        keyColumn=1;
-        dependentColumn=2;
-    }
-    if(type=="description"){
-        keyColumn=2;
-        dependentColumn=3;
-    }
     for(int i=0;i<rowCount();i++){
-        std::string categoryOrDescriptionCheck=pData->at(i,keyColumn);
-        if(typeOrCategory==categoryOrDescriptionCheck){
-            std::string categoryOrDescription=pData->at(i,dependentColumn);
+        Record rec=pData->getRecord(i);
+        Record_String recString(rec);
+        if(type==recString.getType()){
+            std::string category=recString.getCategory();
             bool isUnique=true;
-            for(auto j:list){
-                if(j==categoryOrDescription)
+            for(const auto& j:list){
+                if(j==category)
                     isUnique=false;
             }
             if(isUnique)
-                list.push_back(categoryOrDescription);
+                list.push_back(category);
+        }
+    }
+    list.sort();
+    return list;
+}
+
+std::list<std::string> Records_Operations::getDescription(const std::string& category) const{
+    std::list<std::string> list;
+    for(int i=0;i<rowCount();i++){
+        Record rec=pData->getRecord(i);
+        Record_String recString(rec);
+        if(category==recString.getCategory()){
+            std::string description=recString.getDescription();
+            bool isUnique=true;
+            for(const auto& j:list){
+                if(j==description)
+                    isUnique=false;
+            }
+            if(isUnique)
+                list.push_back(description);
         }
     }
     list.sort();

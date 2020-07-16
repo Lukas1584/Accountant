@@ -59,10 +59,11 @@ void User_Widget::setStartView(){
 
 void User_Widget::btnNewUserClicked(){
     emit disableMainWindow();
-    wdgPassword=new Password_Widget();
+    wdgPassword=std::make_shared<Password_Widget>();
     wdgPassword->show();
-    QObject::connect(wdgPassword,SIGNAL(clickedOk(QString,QString)),SLOT(addUser(QString,QString)));
-    QObject::connect(wdgPassword,SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
+    QObject::connect(wdgPassword.get(),SIGNAL(clickedOk(QString,QString)),SLOT(addUser(QString,QString)));
+    QObject::connect(wdgPassword.get(),SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
+    QObject::connect(wdgPassword.get(),SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
 }
 
 void User_Widget::nameAlreadyExists(){
@@ -73,8 +74,7 @@ void User_Widget::nameAlreadyExists(){
 }
 
 void User_Widget::addUser(const QString& login,const QString& password){
-    delete wdgPassword;
-    wdgPassword=nullptr;
+    wdgPassword.reset();
     if(pUserFileOperations->isUserCreated(login.toStdString(),password.toStdString())){
         pCbxUserName->clear();
         pCbxUserName->addItems(convertToStringist(pUserFileOperations->getUsersNames()));
@@ -84,8 +84,7 @@ void User_Widget::addUser(const QString& login,const QString& password){
     else nameAlreadyExists();
 }
 void User_Widget::cancelNewUser(){
-    delete wdgPassword;
-    wdgPassword=nullptr;
+    wdgPassword.reset();
     emit enableMainWindow();
 }
 
@@ -122,14 +121,14 @@ void User_Widget::deleteUser(){
 
 void User_Widget::changePassword(){
     emit disableMainWindow();
-    wdgChangePassword=new Change_Password_Widget();
+    wdgChangePassword=std::make_shared<Change_Password_Widget>();
     wdgChangePassword->show();
-    QObject::connect(wdgChangePassword,SIGNAL(clickedOk(const QString&,const QString&)),SLOT(changingPassword(const QString&,const QString&)));
-    QObject::connect(wdgChangePassword,SIGNAL(clickedCancel()),SLOT(cancelChangePassword()));
+    QObject::connect(wdgChangePassword.get(),SIGNAL(clickedOk(const QString&,const QString&)),SLOT(changingPassword(const QString&,const QString&)));
+    QObject::connect(wdgChangePassword.get(),SIGNAL(clickedCancel()),SLOT(cancelChangePassword()));
 }
 
 void User_Widget::changingPassword(const QString &oldPassword, const QString &newPassword){
-    delete wdgChangePassword;
+    wdgChangePassword.reset();
     wdgChangePassword=nullptr;
     if(pUserFileOperations->changedPassword(pCbxUserName->currentText().toStdString(),oldPassword.toStdString(),newPassword.toStdString())){
         QMessageBox::StandardButton reply;
@@ -140,14 +139,14 @@ void User_Widget::changingPassword(const QString &oldPassword, const QString &ne
 }
 
 void User_Widget::cancelChangePassword(){
-    delete wdgChangePassword;
+    wdgChangePassword.reset();
     wdgChangePassword=nullptr;
     emit enableMainWindow();
 }
 
 QStringList User_Widget::convertToStringist(const std::list<std::string> &listStd) const{
     QStringList list;
-    for(auto i:listStd)
+    for(const auto& i:listStd)
         list.push_back(QString::fromStdString(i));
     return list;
 }

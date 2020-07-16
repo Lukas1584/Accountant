@@ -2,7 +2,7 @@
 
 Balance_Calculator::Balance_Calculator(std::shared_ptr<Data>& data, QObject *parent) : QObject (parent),pData(data){}
 
-std::string Balance_Calculator::balance(const int period, const std::string &currency)const{
+std::string Balance_Calculator::balance(const int period, const Record::Currency currency)const{
     std::string balance;
     if(period==year)
        balance=balanceCalculate(minusYear(),currency);
@@ -25,15 +25,16 @@ std::string Balance_Calculator::minusYear() const{
     return dateMinusYear;
 }
 
-std::string Balance_Calculator::balanceCalculate(const std::string& dateFrom,const std::string& currency)const{
+std::string Balance_Calculator::balanceCalculate(const std::string& dateFrom,const Record::Currency currency)const{
     float balanceFloat=0;
     for(int i=0;i<pData->rows();i++){
-        std::string date=pData->at(i,0);
-        if((dateFrom<=date && date<=currentDate)&&(currency==pData->at(i,5))){
-            if(pData->at(i,1)=="Прибыль")
-                balanceFloat+=pData->getSum(i);
-            if(pData->at(i,1)=="Убыток")
-                balanceFloat-=pData->getSum(i);
+        Record rec=pData->getRecord(i);
+        std::string date=rec.getDate();
+        if((dateFrom<=date && date<=currentDate)&&(currency==rec.getCurrency())){
+            if(rec.getType()==Record::Type::PROFIT)
+                balanceFloat+=rec.getSum();
+            if(rec.getType()==Record::Type::LOSS)
+                balanceFloat-=rec.getSum();
         }
     }
     std::string balance;
@@ -66,13 +67,13 @@ std::string Balance_Calculator::minusMonth()const{
 
 std::string Balance_Calculator::getBalance()const{
     return "Баланс за месяц:\n\n"+
-            balance(month,"USD")+" USD\n"+
-            balance(month,"BYR")+" BYR\n"+
-            balance(month,"RUB")+" RUB\n"+
-            balance(month,"EUR")+" EUR\n\n"+
+            balance(month,Record::Currency::USD)+" USD\n"+
+            balance(month,Record::Currency::BYR)+" BYR\n"+
+            balance(month,Record::Currency::RUB)+" RUB\n"+
+            balance(month,Record::Currency::EUR)+" EUR\n\n"+
             "Баланс за год:\n\n"+
-            balance(year,"USD")+" USD\n"+
-            balance(year,"BYR")+" BYR\n"+
-            balance(year,"RUB")+" RUB\n"+
-            balance(year,"EUR")+" EUR\n\n";
+            balance(year,Record::Currency::USD)+" USD\n"+
+            balance(year,Record::Currency::BYR)+" BYR\n"+
+            balance(year,Record::Currency::RUB)+" RUB\n"+
+            balance(year,Record::Currency::EUR)+" EUR\n\n";
 }

@@ -10,12 +10,13 @@ public:
 
     int rowCount() const;
     int columnCount() const;
-    std::string data(const int row, const int column) const;
-    void insertRows(int row,int count=1);
-    void removeRows(int row);
-    void setData(const int row, const int column, const std::string& value);
+    Record_String data(const int row) const;
+    void removeRow(const int row);
+    void setData(const int row, const Record_String& rec);
     void sortData();
     std::list<std::string> getCategoryOrDescription(const std::string &typeOrCategory, const std::string &type)const;
+    std::list<std::string> getCategory(const std::string &type)const;
+    std::list<std::string> getDescription(const std::string& category)const;
 
 signals:
     void dataChanged();

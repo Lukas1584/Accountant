@@ -1,8 +1,6 @@
 #include "User_File_Operations.h"
 
-User_File_Operations::User_File_Operations(std::shared_ptr<Data>& d, QObject *pobj) : QObject(pobj),pData(d)
-{
-    settingsFileName="settings.ac";
+User_File_Operations::User_File_Operations(std::shared_ptr<Data>& d, QObject *pobj) : QObject(pobj),pData(d){
     loadUsers();
 }
 
@@ -22,16 +20,14 @@ bool User_File_Operations::isUserCreated(const std::string& login, const std::st
 void User_File_Operations::saveUsers(){
     std::sort(users.begin(),users.end());
     std::ofstream settings{settingsFileName,std::ios_base::binary};
-    for(User i:users)
+    for(const User& i:users)
     settings<<i;
 }
 
 bool User_File_Operations::userIsOnList(const User& user) const{
-    for(auto i:users){
-        if(user.getLogin()==i.getLogin()){
+    for(const auto& i:users)
+        if(user.getLogin()==i.getLogin())
             return true;
-        }
-    }
     return false;
 }
 
@@ -49,13 +45,13 @@ void User_File_Operations::loadUsers(){
 
 std::list<std::string> User_File_Operations::getUsersNames() const{
     std::list<std::string> usersList;
-    for(auto i:users)
+    for(const auto& i:users)
         usersList.push_back(i.getLogin());
     return usersList;
 }
 
 bool User_File_Operations::checkPassword(const User& userChecking){
-    for(auto i:users){
+    for(const auto& i:users){
         if(userChecking==i)
             return true;
     }

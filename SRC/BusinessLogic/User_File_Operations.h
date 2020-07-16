@@ -31,7 +31,7 @@ signals:
 private:
     std::shared_ptr<Data> pData;
     std::string dataFileName;
-    std::string settingsFileName;
+    std::string settingsFileName="settings.ac";
     std::vector<User> users;
 
     bool userIsOnList(const User& user)const;

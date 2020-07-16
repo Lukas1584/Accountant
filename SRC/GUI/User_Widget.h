@@ -29,8 +29,8 @@ private slots:
     void cancelChangePassword();
 
 private:
-    Password_Widget* wdgPassword;
-    Change_Password_Widget* wdgChangePassword;
+    std::shared_ptr<Password_Widget> wdgPassword;
+    std::shared_ptr<Change_Password_Widget> wdgChangePassword;
 
     User_File_Operations* pUserFileOperations;
 

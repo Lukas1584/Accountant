@@ -63,27 +63,24 @@ Money_Repositary_Widget::Money_Repositary_Widget(Records_Operations* model, QWid
 }
 
 bool Money_Repositary_Widget::eventFilter(QObject*, QEvent *pEvent){
-    if(pEvent->type() == QEvent::Resize){
+    if(pEvent->type() == QEvent::Resize)
         setTableDimensions();
-    }
     return false;
 }
 
 void Money_Repositary_Widget::addRecord(){
-    int row;
-    if(isEdit){
+    int row=-1;
+    if(isEdit)
         row=pTable->selectionModel()->currentIndex().row();
-    }
-    else{
+    else
         row=pModel->rowCount();
-        pModel->insertRows(row,1);
-    }
-    pModel->setData(row,0, pTimeEdit->date().toString("yyyy-MM-dd").toStdString());
-    pModel->setData(row,1,pCbxType->currentText().toStdString());
-    pModel->setData(row,2,pCbxCategory->currentText().toStdString());
-    pModel->setData(row,3,pCbxDescription->currentText().toStdString());
-    pModel->setData(row,4,pLineEditSum->text().toStdString());
-    pModel->setData(row,5,pCbxCurrency->currentText().toStdString());
+    Record_String rec( pTimeEdit->date().toString("yyyy-MM-dd").toStdString(),
+                       pCbxType->currentText().toStdString(),
+                       pCbxCategory->currentText().toStdString(),
+                       pCbxDescription->currentText().toStdString(),
+                       pLineEditSum->text().toStdString(),
+                       pCbxCurrency->currentText().toStdString());
+    pModel->setData(row,rec);
     setWorkView();
     isEdit=false;
     pLineEditSum->clear();
@@ -92,7 +89,7 @@ void Money_Repositary_Widget::addRecord(){
 }
 
 void Money_Repositary_Widget::deleteRecord(){
-    pModel->removeRows(pTable->selectionModel()->currentIndex().row());
+    pModel->removeRow(pTable->selectionModel()->currentIndex().row());
     dataIsLoaded();
 }
 
@@ -108,12 +105,13 @@ void Money_Repositary_Widget::setEditView(){
     pBtnDelete->setEnabled(false);
     pBtnAdd->setText(tr("Сохранить изменения"));
     int row=pTable->selectionModel()->currentIndex().row();
-    pTimeEdit->setDate(QDate::fromString(QString::fromStdString(pModel->data(row,0)),"yyyy-MM-dd"));
-    pCbxType->setCurrentText(QString::fromStdString(pModel->data(row,1)));
-    pCbxCategory->setCurrentText(QString::fromStdString(pModel->data(row,2)));
-    pCbxDescription->setCurrentText(QString::fromStdString(pModel->data(row,3)));
-    pLineEditSum->setText(QString::fromStdString(pModel->data(row,4)));
-    pCbxCurrency->setCurrentText(QString::fromStdString(pModel->data(row,5)));
+    Record_String rec=pModel->data(row);
+    pTimeEdit->setDate(QDate::fromString(QString::fromStdString(rec.getDate()),"yyyy-MM-dd"));
+    pCbxType->setCurrentText(QString::fromStdString(rec.getType()));
+    pCbxCategory->setCurrentText(QString::fromStdString(rec.getCategory()));
+    pCbxDescription->setCurrentText(QString::fromStdString(rec.getDescription()));
+    pLineEditSum->setText(QString::fromStdString(rec.getSum()));
+    pCbxCurrency->setCurrentText(QString::fromStdString(rec.getCurrency()));
 }
 
 void Money_Repositary_Widget::setWorkView(){
@@ -132,22 +130,20 @@ void Money_Repositary_Widget::cancelEditRecord(){
 void Money_Repositary_Widget::dataIsLoaded(){
     pCbxCategory->clear();
     updateTable();
-    std::list<std::string> categories=pModel->getCategoryOrDescription(pCbxType->currentText().toStdString(),"category");
+    std::list<std::string> categories=pModel->getCategory(pCbxType->currentText().toStdString());
     QStringList categoriesQt;
-    for(auto i:categories){
+    for(const auto& i:categories)
         categoriesQt.push_back(QString::fromStdString(i));
-    }
     pCbxCategory->addItems(categoriesQt);
     categoryChanged();
 }
 
 void Money_Repositary_Widget::categoryChanged(){
     pCbxDescription->clear();
-    std::list<std::string> descriptions=pModel->getCategoryOrDescription(pCbxCategory->currentText().toStdString(),"description");
+    std::list<std::string> descriptions=pModel->getDescription(pCbxCategory->currentText().toStdString());
     QStringList descriptionsQt;
-    for(auto i:descriptions){
+    for(const auto& i:descriptions)
         descriptionsQt.push_back(QString::fromStdString(i));
-    }
     pCbxDescription->addItems(descriptionsQt);
 }
 
@@ -157,10 +153,19 @@ void Money_Repositary_Widget::updateTable(){
     pTable->setRowCount(rows);
     pTable->setColumnCount(columns);
     for(int row = 0;row<rows;row++){
-        for(int column = 0;column<columns;column++){
-            QTableWidgetItem* item = new QTableWidgetItem(QString::fromStdString(pModel->data(row,column)));
-            pTable->setItem(row,column,item);
-        }
+        Record_String rec=pModel->data(row);
+        QTableWidgetItem* item0 = new QTableWidgetItem(QString::fromStdString(rec.getDate()));
+        pTable->setItem(row,0,item0);
+        QTableWidgetItem* item1 = new QTableWidgetItem(QString::fromStdString(rec.getType()));
+        pTable->setItem(row,1,item1);
+        QTableWidgetItem* item2 = new QTableWidgetItem(QString::fromStdString(rec.getCategory()));
+        pTable->setItem(row,2,item2);
+        QTableWidgetItem* item3 = new QTableWidgetItem(QString::fromStdString(rec.getDescription()));
+        pTable->setItem(row,3,item3);
+        QTableWidgetItem* item4 = new QTableWidgetItem(QString::fromStdString(rec.getSum()));
+        pTable->setItem(row,4,item4);
+        QTableWidgetItem* item5 = new QTableWidgetItem(QString::fromStdString(rec.getCurrency()));
+        pTable->setItem(row,5,item5);
     }
     setTableHeader();
     setTableDimensions();

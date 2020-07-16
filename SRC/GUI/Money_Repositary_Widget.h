@@ -2,6 +2,7 @@
 #include <QtWidgets>
 #include <QDate>
 #include "SRC/BusinessLogic/Records_Operations.h"
+#include "SRC/BusinessLogic/Record_String.h"
 
 class Money_Repositary_Widget : public QWidget
 {
@@ -39,7 +40,7 @@ private:
     QComboBox* pCbxCurrency;
 
     void updateTable();
-    bool isEdit;
+    bool isEdit=false;
     void setEditView();
     void setWorkView();
     void setTableDimensions();

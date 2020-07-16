@@ -5,6 +5,7 @@ Report_Save::Report_Save(const std::shared_ptr<Data>& data,const std::vector<boo
 
 void Report_Save::saveTxt(const std::string& filename){
     std::ofstream file{filename};
+    maxLength();
     for(int i=0;i<static_cast<int>(filter.size());i++){
         if(filter[i]){
             file<<row(i);
@@ -18,37 +19,50 @@ int Report_Save::stringLength(const std::string& str)const{
     return static_cast<int>(wstr.size());
 }
 
-std::string Report_Save::row(const int row)const{
-    int fieldTypeLength=maxLength(1)+1;
-    int fieldCategoryLength=maxLength(2)+1;
-    int fieldDescriptionLength=maxLength(3)+1;
-    int fieldSumLength=maxLength(4)+1;
-    std::string result;
-    result+=pData->at(row,0)+" ";
-    std::string type=pData->at(row,1);
-    std::string separatorType(fieldTypeLength-stringLength(type),' ');
-    std::string category=pData->at(row,2);
-    std::string separatorCategory(fieldCategoryLength-stringLength(category),' ');
-    std::string description=pData->at(row,3);
-    std::string separatorDescription (fieldDescriptionLength-stringLength(description),' ');
-    std::string sum=pData->at(row,4);
-    std::string separatorSum(fieldSumLength-stringLength(sum),' ');
-    result+=type+separatorType+
-            category+separatorCategory+
-            description+separatorDescription+
-            sum+separatorSum+
-            pData->at(row,5)+"\n";
-    return result;
-}
-
-int Report_Save::maxLength(const int column)const{
-    int max=0;
+void Report_Save::maxLength(){
+    int maxType=0;
+    int maxCategory=0;
+    int maxDescription=0;
+    int maxSum=0;
     for(int i=0;i<static_cast<int>(filter.size());i++){
         if(filter[i]){
-            int size=stringLength(pData->at(i,column));
-            if(max<size)
-                max=size;
+            Record record=pData->getRecord(i);
+            Record_String recordString(record);
+            int sizeType=stringLength(recordString.getType());
+            int sizeCategory=stringLength(recordString.getCategory());
+            int sizeDescription=stringLength(recordString.getDescription());
+            int sizeSum=stringLength(recordString.getSum());
+            if(maxType<sizeType)
+                maxType=sizeType;
+            if(maxCategory<sizeCategory)
+                maxCategory=sizeCategory;
+            if(maxDescription<sizeDescription)
+                maxDescription=sizeDescription;
+            if(maxSum<sizeSum)
+                maxSum=sizeSum;
         }
     }
-    return max;
+    fieldTypeLength=maxType;
+    fieldCategoryLength=maxCategory;
+    fieldDescriptionLength=maxDescription;
+    fieldSumLength=maxSum;
+}
+
+std::string Report_Save::row(const int row)const{
+    char separatorFields=' ';
+    int numberSeparatorFields=1;
+    Record record=pData->getRecord(row);
+    Record_String recordString(record);
+    std::string result;
+    result+=recordString.getDate()+separatorFields;
+    std::string separatorType(fieldTypeLength-stringLength(recordString.getType())+numberSeparatorFields,separatorFields);
+    std::string separatorCategory(fieldCategoryLength-stringLength(recordString.getCategory())+numberSeparatorFields,separatorFields);
+    std::string separatorDescription (fieldDescriptionLength-stringLength(recordString.getDescription())+numberSeparatorFields,separatorFields);
+    std::string separatorSum(fieldSumLength-stringLength(recordString.getSum())+numberSeparatorFields,separatorFields);
+    result+=recordString.getType()+separatorType+
+            recordString.getCategory()+separatorCategory+
+            recordString.getDescription()+separatorDescription+
+            recordString.getSum()+separatorSum+
+            recordString.getCurrency()+"\n";
+    return result;
 }

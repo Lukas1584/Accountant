@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include "SRC/DataBase/Data.h"
+#include "SRC/DataBase/Record.h"
 #include <QDebug>
 
 constexpr int year=0;
@@ -18,10 +19,10 @@ private:
     std::shared_ptr<Data> pData;
     std::string currentDate;
 
-    std::string balance(const int period, const std::string& currency)const;
+    std::string balance(const int period, const Record::Currency currency)const;
     std::string minusYear()const;
     std::string minusMonth()const;
-    std::string balanceCalculate(const std::string& dateFrom,const std::string& currency)const;
+    std::string balanceCalculate(const std::string& dateFrom,const Record::Currency currency)const;
 };
 
 

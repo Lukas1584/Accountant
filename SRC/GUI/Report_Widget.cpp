@@ -123,11 +123,19 @@ void Report_Widget::updateTable(){
     pTable->setRowCount(rows);
     pTable->setColumnCount(columns);
     for(int row = 0;row<rows;row++){
-        std::vector<std::string> rowData=pReport->getRow(row);
-        for(int column = 0;column<columns;column++){
-            QTableWidgetItem* item = new QTableWidgetItem(rowData[column].c_str());
-            pTable->setItem(row,column,item);
-        }
+        Record_String rec=pReport->getRow(row);
+        QTableWidgetItem* item0 = new QTableWidgetItem(rec.getDate().c_str());
+        pTable->setItem(row,0,item0);
+        QTableWidgetItem* item1 = new QTableWidgetItem(rec.getType().c_str());
+        pTable->setItem(row,1,item1);
+        QTableWidgetItem* item2 = new QTableWidgetItem(rec.getCategory().c_str());
+        pTable->setItem(row,2,item2);
+        QTableWidgetItem* item3 = new QTableWidgetItem(rec.getDescription().c_str());
+        pTable->setItem(row,3,item3);
+        QTableWidgetItem* item4 = new QTableWidgetItem(rec.getSum().c_str());
+        pTable->setItem(row,4,item4);
+        QTableWidgetItem* item5 = new QTableWidgetItem(rec.getCurrency().c_str());
+        pTable->setItem(row,5,item5);
     }
     setTableHeader();
     setTableDimensions();
@@ -248,7 +256,6 @@ void Report_Widget::fillComboBoxCategory(){
 }
 
 void Report_Widget::fillComboBoxDescription() {
-
     std::vector<std::string> listCategories;
     listCategories=getComboBoxCheckedList(pCbxCategory);
     std::list<std::string> listDescriptions;
@@ -256,7 +263,7 @@ void Report_Widget::fillComboBoxDescription() {
     listDescriptions.insert(listDescriptions.begin(),"Все");
     pModelDescription->setRowCount(static_cast<int>(listDescriptions.size()));
     int row=0;
-    for (auto i:listDescriptions){
+    for (const auto& i:listDescriptions){
         QStandardItem* item = new QStandardItem(i.c_str());
         item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
         item->setData(Qt::Checked, Qt::CheckStateRole);
