@@ -177,19 +177,13 @@ void Report_Widget::filter(){
     updateTable();
 }
 
-int Report_Widget::typeToReport() const{
-    if (pChbxTypeProfit->isChecked()){
-            if(pChbxTypeLoss->isChecked()) {
-                return 11;
-            }
-            else return 10;
-    }
-    else {
-        if(pChbxTypeLoss->isChecked()) {
-            return 01;
-        }
-        else return 00;
-    }
+std::pair<bool,bool> Report_Widget::typeToReport() const{
+    std::pair<bool,bool> type {false,false};
+    if (pChbxTypeProfit->isChecked())
+        type.first=true;
+    if(pChbxTypeLoss->isChecked())
+        type.second=true;
+    return type;
 }
 
 std::vector<bool> Report_Widget::currencyToReport() const{

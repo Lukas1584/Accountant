@@ -25,6 +25,7 @@ private slots:
     void slotUserShow()const;
     void slotReportShow();
     void slotPlanningShow()const;
+    void balance();
 
 private:
     QPushButton* pBtnUser;
@@ -39,7 +40,5 @@ private:
     QWidget* pWdgReport;
     QWidget* pWdgPlanning;
     Balance_Calculator* pBalance;
-
-    void balance();
 };
 

@@ -21,6 +21,7 @@ private slots:
 
 signals:
     void saveData();
+    void tableChaged();
 
 private:
     Records_Operations* pModel;

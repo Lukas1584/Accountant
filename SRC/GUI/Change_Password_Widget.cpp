@@ -1,7 +1,6 @@
 #include "Change_Password_Widget.h"
 
-Change_Password_Widget::Change_Password_Widget(QWidget *parent) : QWidget(parent)
-{
+Change_Password_Widget::Change_Password_Widget(QWidget *parent) : QWidget(parent){
     resize(400,150);
 
     pBtnOK=new QPushButton(tr("Ок"));
@@ -41,4 +40,9 @@ void Change_Password_Widget::slotClickedOk() {
         return;
     }
     emit clickedOk(pLeOldPassword->text(),pLePassword->text());
+}
+
+void Change_Password_Widget::closeEvent(QCloseEvent* event){
+    emit close();
+    event->accept();
 }

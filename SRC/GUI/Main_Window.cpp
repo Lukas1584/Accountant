@@ -78,9 +78,9 @@ void Main_Window::dataIsLoaded() {
     pBtnMoney->setEnabled(true);
     pBtnReport->setEnabled(true);
     pBtnPlanning->setEnabled(true);
+    balance();
     pLblBalance->show();
     slotMoneyShow();
-    balance();
 }
 
 void Main_Window::exitUser() const{

@@ -169,6 +169,7 @@ void Money_Repositary_Widget::updateTable(){
     }
     setTableHeader();
     setTableDimensions();
+    emit tableChaged();
 }
 
 void Money_Repositary_Widget::setTableHeader(){

@@ -10,6 +10,7 @@ public:
 signals:
     void clickedOk(const QString&,const QString&);
     void clickedCancel();
+    void close();
 
 private slots:
     void slotClickedOk();
@@ -20,5 +21,6 @@ private:
     QLineEdit* pLeOldPassword;
     QLineEdit* pLePassword;
     QLineEdit* pLePasswordConfirmation;
+    void closeEvent(QCloseEvent* event);
 };
 

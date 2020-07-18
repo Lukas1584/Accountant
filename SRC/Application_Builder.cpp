@@ -26,4 +26,5 @@ Application_Builder::Application_Builder() : QObject(){
     QObject::connect(pMainWindow.get(),SIGNAL(report()),pReport,SLOT(update()));
     QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport,SLOT(updateTable()));
     QObject::connect(pMainWindow.get(),SIGNAL(report()),pWdgReport,SLOT(fillFields()));
+    QObject::connect(pWdgMoneyRepositary,SIGNAL(tableChaged()),pMainWindow.get(),SLOT(balance()));
 }

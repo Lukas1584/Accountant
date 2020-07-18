@@ -25,7 +25,6 @@ Record_String Records_Operations::data(const int row) const{
 
 void Records_Operations::setData(const int row, const Record_String& rec){
     pData->setRecord(row,rec.convertToRecord());
-    emit dataChanged();
 }
 
 std::list<std::string> Records_Operations::getCategory(const std::string& type) const{

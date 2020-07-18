@@ -1,7 +1,6 @@
 #include "Password_Widget.h"
 
-Password_Widget::Password_Widget(QWidget *parent) : QWidget(parent)
-{
+Password_Widget::Password_Widget(QWidget *parent) : QWidget(parent){
     resize(400,150);
 
     pBtnOK=new QPushButton(tr("Ок"));
@@ -47,4 +46,9 @@ void Password_Widget::slotClickedOk(){
         return;
     }
     emit clickedOk(pLeName->text(),pLePassword->text());
+}
+
+void Password_Widget::closeEvent(QCloseEvent* event){
+    emit close();
+    event->accept();
 }

@@ -63,7 +63,7 @@ void User_Widget::btnNewUserClicked(){
     wdgPassword->show();
     QObject::connect(wdgPassword.get(),SIGNAL(clickedOk(QString,QString)),SLOT(addUser(QString,QString)));
     QObject::connect(wdgPassword.get(),SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
-    QObject::connect(wdgPassword.get(),SIGNAL(clickedCancel()),SLOT(cancelNewUser()));
+    QObject::connect(wdgPassword.get(),SIGNAL(close()),SIGNAL(enableMainWindow()));
 }
 
 void User_Widget::nameAlreadyExists(){
@@ -125,6 +125,7 @@ void User_Widget::changePassword(){
     wdgChangePassword->show();
     QObject::connect(wdgChangePassword.get(),SIGNAL(clickedOk(const QString&,const QString&)),SLOT(changingPassword(const QString&,const QString&)));
     QObject::connect(wdgChangePassword.get(),SIGNAL(clickedCancel()),SLOT(cancelChangePassword()));
+    QObject::connect(wdgChangePassword.get(),SIGNAL(close()),SIGNAL(enableMainWindow()));
 }
 
 void User_Widget::changingPassword(const QString &oldPassword, const QString &newPassword){

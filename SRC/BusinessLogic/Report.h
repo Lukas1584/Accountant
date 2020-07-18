@@ -16,7 +16,7 @@ public:
     std::list<std::string> getDescriptions(const std::vector<std::string>& categories)const;
     void filterDB(const std::string& dateFrom,
                   const std::string& dateTo,
-                  const int type,
+                  const std::pair<bool, bool>& type,
                   const std::vector<std::string>& category,
                   const std::vector<std::string>& description,
                   const float& sumFrom,
@@ -38,7 +38,7 @@ private:
 
     void sizeReport();
     bool dateInRange(const std::string& date,const std::string& dateFrom,const std::string& dateTo)const;
-    bool typeInRange(const Record::Type type,const int typeFilter)const;
+    bool typeInRange(const Record::Type type,const std::pair<bool,bool> typeFilter)const;
     bool categoryInRange(const std::string& category,const std::vector<std::string>& categoryFilter)const;
     bool descriptionInRange(const std::string& description,const std::vector<std::string>& descriptionFilter)const;
     bool sumInRange(const float& sum,const float& sumFrom,const float& sumTo)const;

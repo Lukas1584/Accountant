@@ -51,7 +51,7 @@ private:
     QCheckBox *pChbxRub;
     QCheckBox *pChbxEur;
 
-    int typeToReport()const;
+    std::pair<bool,bool> typeToReport()const;
     std::vector<bool> currencyToReport()const;
     std::vector<std::string> getComboBoxCheckedList(const QComboBox *combobox)const;
     void setTableDimensions();

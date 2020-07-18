@@ -45,5 +45,7 @@ Record Data::getRecord(const int row){
 }
 
 void Data::setRecord(const int row,const Record& record){
-    data[row]=record;
+    if(row > static_cast<int>(data.size())-1)
+        data.push_back(record);
+    else data[row]=record;
 }

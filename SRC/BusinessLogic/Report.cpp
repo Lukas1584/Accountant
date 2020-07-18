@@ -39,7 +39,7 @@ void Report::sizeReport(){
 
 void Report::filterDB(const std::string& dateFrom,
               const std::string& dateTo,
-              const int type,
+              const std::pair<bool,bool>& type,
               const std::vector<std::string>& category,
               const std::vector<std::string>& description,
               const float& sumFrom,
@@ -59,25 +59,12 @@ void Report::filterDB(const std::string& dateFrom,
     sizeReport();
 }
 
-bool Report::typeInRange(const Record::Type type,const int typeFilter) const{
-    switch (typeFilter) {
-    case (00):
-        return false;
-    case (01):
-        if(type==Record::Type::LOSS)
-            return true;
-        else
-            return false;
-    case (10):
-        if(type==Record::Type::PROFIT)
-            return true;
-        else
-            return false;
-    case (11):
+bool Report::typeInRange(const Record::Type type,const std::pair<bool,bool> typeFilter) const{
+    if(type==Record::Type::PROFIT && typeFilter.first)
         return true;
-    default:
-        return false;
-    }
+    if(type==Record::Type::LOSS && typeFilter.second)
+        return true;
+    return false;
 }
 
 bool Report::currencyInRange(const Record::Currency currency,const std::vector<bool>& currencyFilter) const{
