@@ -1,6 +1,7 @@
 #include "User_File_Operations.h"
 
-User_File_Operations::User_File_Operations(std::shared_ptr<Data>& d, QObject *pobj) : QObject(pobj),pData(d){
+User_File_Operations::User_File_Operations(std::shared_ptr<AbstractData>& d,std::shared_ptr<AbstractDataFileOperations> operations):
+    pData(d),pOperations(operations){
     loadUsers();
 }
 
@@ -13,7 +14,6 @@ bool User_File_Operations::isUserCreated(const std::string& login, const std::st
     saveUsers();
     dataFileName=user.getLogin()+".dat";
     saveData();
-    emit dataIsLoaded();
     return true;
 }
 
@@ -55,43 +55,27 @@ bool User_File_Operations::checkPassword(const User& userChecking){
         if(userChecking==i)
             return true;
     }
-    emit wrongPassword();
     return false;
-}
-
-void User_File_Operations::loadData(const std::string& login, const std::string& password){
-    User user(login,password);
-    if(checkPassword(user)){
-        dataFileName=user.getLogin()+".dat";
-        std::ifstream data{dataFileName,std::ios_base::binary};
-        if(data){
-            data>>(*pData);
-            emit dataIsLoaded();
-        }
-    }
-}
-
-void User_File_Operations::saveData() const{
-    std::ofstream data{dataFileName,std::ios_base::binary};
-    data<<*pData;
 }
 
 void User_File_Operations::clearData(){
     pData->clear();
 }
 
-void User_File_Operations::deleteUser(const std::string& login,const std::string& password){
+bool User_File_Operations::deleteUser(const std::string& login,const std::string& password){
     User userDeleting(login,password);
-    dataFileName=userDeleting.getLogin()+".dat";
     if (checkPassword(userDeleting)){
         for(unsigned int i=0;i<users.size();i++){
             if(userDeleting==users[i]){
                 users.erase(users.begin()+i);
                 saveUsers();
+                dataFileName=userDeleting.getLogin()+".dat";
                 std::remove(dataFileName.c_str());
+                return true;
             }
         }
     }
+    return false;
 }
 
 bool User_File_Operations::changedPassword(const std::string &login, const std::string &oldPassword, const std::string &newPassword){
@@ -104,6 +88,19 @@ bool User_File_Operations::changedPassword(const std::string &login, const std::
             return true;
         }
     }
-    emit wrongPassword();
     return false;
+}
+
+bool User_File_Operations::loadData(const std::string& login, const std::string& password){
+    User user(login,password);
+    if(checkPassword(user)){
+        dataFileName=user.getLogin()+".dat";
+        pOperations->loadFromFile(dataFileName);
+        return true;
+    }
+    return false;
+}
+
+void User_File_Operations::saveData() const{
+    pOperations->saveToFile(dataFileName);
 }

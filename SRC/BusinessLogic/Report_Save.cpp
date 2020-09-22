@@ -1,6 +1,13 @@
+#pragma once
 #include "Report_Save.h"
+#include <hpdf.h>
+//#include "SRC/Libs/libharu-master/hpdf.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <setjmp.h>
 
-Report_Save::Report_Save(const std::shared_ptr<Data>& data,const std::vector<bool>& fil)
+Report_Save::Report_Save(const std::shared_ptr<AbstractData>& data,const std::vector<bool>& fil)
     : pData(data),filter(fil){}
 
 void Report_Save::saveTxt(const std::string& filename){
@@ -26,12 +33,11 @@ void Report_Save::maxLength(){
     int maxSum=0;
     for(int i=0;i<static_cast<int>(filter.size());i++){
         if(filter[i]){
-            Record record=pData->getRecord(i);
-            Record_String recordString(record);
+            Record_String recordString=pData->getRecord(i);
             int sizeType=stringLength(recordString.getType());
             int sizeCategory=stringLength(recordString.getCategory());
             int sizeDescription=stringLength(recordString.getDescription());
-            int sizeSum=stringLength(recordString.getSum());
+            int sizeSum=stringLength(doubleToString(recordString.getSum()));
             if(maxType<sizeType)
                 maxType=sizeType;
             if(maxCategory<sizeCategory)
@@ -51,18 +57,30 @@ void Report_Save::maxLength(){
 std::string Report_Save::row(const int row)const{
     char separatorFields=' ';
     int numberSeparatorFields=1;
-    Record record=pData->getRecord(row);
-    Record_String recordString(record);
+    Record_String recordString=pData->getRecord(row);
     std::string result;
     result+=recordString.getDate()+separatorFields;
     std::string separatorType(fieldTypeLength-stringLength(recordString.getType())+numberSeparatorFields,separatorFields);
     std::string separatorCategory(fieldCategoryLength-stringLength(recordString.getCategory())+numberSeparatorFields,separatorFields);
-    std::string separatorDescription (fieldDescriptionLength-stringLength(recordString.getDescription())+numberSeparatorFields,separatorFields);
-    std::string separatorSum(fieldSumLength-stringLength(recordString.getSum())+numberSeparatorFields,separatorFields);
+    std::string separatorDescription(fieldDescriptionLength-stringLength(recordString.getDescription())+numberSeparatorFields,separatorFields);
+
+    std::string separatorSum(fieldSumLength-stringLength(doubleToString(recordString.getSum()))+numberSeparatorFields,separatorFields);
+
     result+=recordString.getType()+separatorType+
             recordString.getCategory()+separatorCategory+
             recordString.getDescription()+separatorDescription+
-            recordString.getSum()+separatorSum+
+            doubleToString(recordString.getSum())+separatorSum+
             recordString.getCurrency()+"\n";
     return result;
 }
+
+std::string Report_Save::doubleToString(const double value)const{
+    std::stringstream ss;
+    std::string string;
+    ss<<value;
+    ss>>string;
+    return string;
+}
+
+
+

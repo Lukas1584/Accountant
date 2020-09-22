@@ -1,73 +1,8 @@
 #include "Record.h"
-
-std::istream& operator>>(std::istream& dataStream, Record& rhs){
-    rhs.clear();
-    char c;
-    while(dataStream.get(c) && c!=separatorRecord){
-        rhs.date += c;
-    }
-
-    int typeInt=0;
-    dataStream>>typeInt;
-    if(typeInt==static_cast<int>(Record::Type::PROFIT))
-        rhs.type=Record::Type::PROFIT;
-    if(typeInt==static_cast<int>(Record::Type::LOSS))
-        rhs.type=Record::Type::LOSS;
-
-    dataStream.get(c); //separatorRecord
-    while(dataStream.get(c) && c!=separatorRecord){
-        rhs.category += c;
-    }
-    while(dataStream.get(c) && c!=separatorRecord){
-        rhs.description += c;
-    }
-
-    dataStream>>rhs.sum;
-    dataStream.get(c); //separatorRecord
-
-    int currencyInt=0;
-    dataStream>>currencyInt;
-    switch(currencyInt){
-    case(static_cast<int>(Record::Currency::BYR)):
-        rhs.currency=Record::Currency::BYR;
-        break;
-    case(static_cast<int>(Record::Currency::USD)):
-        rhs.currency=Record::Currency::USD;
-        break;
-    case(static_cast<int>(Record::Currency::EUR)):
-        rhs.currency=Record::Currency::EUR;
-        break;
-    case(static_cast<int>(Record::Currency::RUB)):
-        rhs.currency=Record::Currency::RUB;
-        break;
-    }
-    dataStream.get(c); // '\n'
-    return dataStream;
-}
-
-std::ostream& operator<<(std::ostream& dataStream,const Record& rhs){
-    dataStream<<rhs.date<<separatorRecord;
-    dataStream<<static_cast<int>(rhs.type)<<separatorRecord;
-    dataStream<<rhs.category<<separatorRecord;
-    dataStream<<rhs.description<<separatorRecord;
-    dataStream<<rhs.sum<<separatorRecord;
-    dataStream<<static_cast<int>(rhs.currency)<<'\n';
-    return dataStream;
-}
+constexpr int coloumnsCount=6;
 
 int Record::columns()const{
     return coloumnsCount;
-}
-
-void Record::clear(){
-    date="";
-    category="";
-    description="";
-    sum=0;
-}
-
-bool Record::isNotEmpty() const{
-    return (sum)?true:false;
 }
 
 bool Record::operator<(const Record& rhs)const{
@@ -89,7 +24,7 @@ bool Record::operator<(const Record& rhs)const{
         return false;
 }
 
-float Record::getSum()const{
+double Record::getSum()const{
     return sum;
 }
 
@@ -129,10 +64,56 @@ void Record::setDescription(const std::string& d){
     description=d;
 }
 
-void Record::setSum(const float s){
+void Record::setSum(const double s){
     sum=s;
 }
 
 void Record::setCurrency(const Record::Currency c){
     currency=c;
+}
+
+Record::Record(const Record_String &record){
+    date=record.getDate();
+    std::string typeString=record.getType();
+    if(typeString=="Прибыль")
+        type=Record::Type::PROFIT;
+    if(typeString=="Убыток")
+        type=Record::Type::LOSS;
+    category=record.getCategory();
+    description=record.getDescription();
+    sum=record.getSum();
+    std::string currencyString=record.getCurrency();
+    if(currencyString=="USD")
+        currency=Record::Currency::USD;
+    if(currencyString=="BYR")
+        currency=Record::Currency::BYR;
+    if(currencyString=="RUB")
+        currency=Record::Currency::RUB;
+    if(currencyString=="EUR")
+        currency=Record::Currency::EUR;
+}
+
+Record_String Record::convertToString(){
+    std::string typeString;
+    if(type==Record::Type::LOSS)
+        typeString="Убыток";
+    if(type==Record::Type::PROFIT)
+        typeString="Прибыль";
+    std::string currencyString;
+    if(currency==Record::Currency::BYR)
+        currencyString="BYR";
+    if(currency==Record::Currency::USD)
+        currencyString="USD";
+    if(currency==Record::Currency::RUB)
+        currencyString="RUB";
+    if(currency==Record::Currency::EUR)
+        currencyString="EUR";
+    return {date,typeString,category,description,sum,currencyString};
+}
+
+std::list<std::string> Record::getAllCurrencies(){
+    return {"USD","BYR","RUB","EUR"};
+}
+std::list<std::string> Record::getAllTypes(){
+    return {"Прибыль","Убыток"};
 }

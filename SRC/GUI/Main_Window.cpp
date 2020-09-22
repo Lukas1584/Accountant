@@ -1,13 +1,8 @@
 #include "Main_Window.h"
 
-Main_Window::Main_Window(QWidget* user,
-                         QWidget *money,
-                         QWidget *report,
-                         QWidget *planning,
-                         Balance_Calculator *balance,
-                         QWidget* parent)
-    : QWidget(parent),pWdgUser(user),pWdgMoney(money),pWdgReport(report),pWdgPlanning(planning),pBalance(balance)
-{
+Main_Window::Main_Window(std::shared_ptr<AbstractBusinessLogic> logic):pLogic(logic){
+    createWindows();
+
     resize(1200,800);
     pBtnUser=new  QPushButton(tr("Пользователь"));
     pBtnMoney=new QPushButton(tr("Кошелек"));
@@ -18,13 +13,6 @@ Main_Window::Main_Window(QWidget* user,
     pBtnPlanning->setEnabled(false);
     pLblBalance = new QLabel(tr("Текущий баланс"));
     pLblBalance->hide();
-    slotUserShow();
-
-    QObject::connect(pBtnMoney,SIGNAL(clicked()),SLOT(slotMoneyShow()));
-    QObject::connect(pBtnUser,SIGNAL(clicked()),SLOT(slotUserShow()));
-    QObject::connect(pBtnReport,SIGNAL(clicked()),SLOT(slotReportShow()));
-    QObject::connect(pBtnPlanning,SIGNAL(clicked()),SLOT(slotPlanningShow()));
-
 
     QVBoxLayout* pVblLeftMenu=new QVBoxLayout();
     pVblLeftMenu->setSpacing(20);
@@ -38,36 +26,52 @@ Main_Window::Main_Window(QWidget* user,
 
     QHBoxLayout* pHblMain=new QHBoxLayout();
     pHblMain->addLayout(pVblLeftMenu,1);
-    pHblMain->addWidget(&(*pWdgUser),5);
-    pHblMain->addWidget(&(*pWdgMoney),5);
-    pHblMain->addWidget(&(*pWdgReport),5);
-    pHblMain->addWidget(&(*pWdgPlanning),5);
+    pHblMain->addWidget(pWdgUser.get(),5);
+    pHblMain->addWidget(pWdgMoney.get(),5);
+    pHblMain->addWidget(pWdgReport.get(),5);
+    pHblMain->addWidget(pWdgPlanning.get(),5);
     setLayout(pHblMain);
+
+    QObject::connect(pBtnMoney,SIGNAL(clicked()),SLOT(moneyShow()));
+    QObject::connect(pBtnUser,SIGNAL(clicked()),SLOT(userShow()));
+    QObject::connect(pBtnReport,SIGNAL(clicked()),SLOT(reportShow()));
+    QObject::connect(pBtnPlanning,SIGNAL(clicked()),SLOT(planningShow()));
+
+    QObject::connect(pWdgUser.get(),SIGNAL(disableMainWindow()),SLOT(disableMainWindow()));
+    QObject::connect(pWdgUser.get(),SIGNAL(enableMainWindow()),SLOT(enableMainWindow()));
+    QObject::connect(pWdgUser.get(),SIGNAL(dataIsLoaded()),SLOT(dataIsLoaded()));
+    QObject::connect(pWdgUser.get(),SIGNAL(dataIsLoaded()),pWdgMoney.get(),SLOT(dataIsLoaded()));
+    QObject::connect(pWdgUser.get(),SIGNAL(exitUser()),SLOT(exitUser()));
+    QObject::connect(pWdgMoney.get(),SIGNAL(tableChanged()),SLOT(balance()));
+    userShow();
     show();
 }
-void Main_Window::slotMoneyShow() const{
+
+void Main_Window::moneyShow() const{
     pWdgMoney->show();
     pWdgUser->hide();
     pWdgPlanning->hide();
     pWdgReport->hide();
 }
 
-void Main_Window::slotUserShow() const{
+void Main_Window::userShow() const{
     pWdgMoney->hide();
     pWdgUser->show();
     pWdgPlanning->hide();
     pWdgReport->hide();
 }
 
-void Main_Window::slotReportShow(){
+void Main_Window::reportShow(){
     pWdgMoney->hide();
     pWdgUser->hide();
     pWdgPlanning->hide();
     pWdgReport->show();
-    emit report();
+    pLogic->updateReport();
+    pWdgReport->fillFields();
+    pWdgReport->updateTable();
 }
 
-void Main_Window::slotPlanningShow() const{
+void Main_Window::planningShow() const{
     pWdgMoney->hide();
     pWdgUser->hide();
     pWdgPlanning->show();
@@ -80,7 +84,7 @@ void Main_Window::dataIsLoaded() {
     pBtnPlanning->setEnabled(true);
     balance();
     pLblBalance->show();
-    slotMoneyShow();
+    moneyShow();
 }
 
 void Main_Window::exitUser() const{
@@ -88,7 +92,8 @@ void Main_Window::exitUser() const{
     pBtnReport->setEnabled(false);
     pBtnPlanning->setEnabled(false);
     pLblBalance->hide();
-    slotUserShow();
+    pLogic->clearData();
+    userShow();
 }
 
 void Main_Window::disableMainWindow(){
@@ -101,7 +106,12 @@ void Main_Window::enableMainWindow(){
 
 void Main_Window::balance(){
     QDate date=QDate::currentDate();
-    pBalance->setCurrentDate(date.toString("yyyy-MM-dd").toStdString());
-    pLblBalance->setText(pBalance->getBalance().c_str());
+    pLblBalance->setText(pLogic->getBalance(date.toString("yyyy-MM-dd").toStdString()).c_str());
 }
 
+void Main_Window::createWindows(){
+    pWdgUser=std::make_unique<User_Widget>(pLogic,this);
+    pWdgMoney=std::make_unique<Money_Repositary_Widget>(pLogic,this);
+    pWdgReport=std::make_unique<Report_Widget>(pLogic,this);
+    pWdgPlanning=std::make_unique<Planning_Widget>(pLogic,this);
+}

@@ -1,18 +1,18 @@
 #pragma once
 #include <string>
-#include "SRC/DataBase/Data.h"
-#include "SRC/DataBase/Record.h"
 #include <fstream>
 #include <locale>
 #include <codecvt>
+#include "SRC/DataBase/Data.h"
 #include "SRC/BusinessLogic/Record_String.h"
+#include <sstream>
 
 class Report_Save{
 public:
-    Report_Save(const std::shared_ptr<Data>& data,const std::vector<bool>& fil);
+    Report_Save(const std::shared_ptr<AbstractData>& data,const std::vector<bool>& fil);
     void saveTxt(const std::string& filename);
 private:
-    std::shared_ptr<Data> pData;
+    std::shared_ptr<AbstractData> pData;
     std::vector<bool> filter;
     int fieldTypeLength=0;
     int fieldCategoryLength=0;
@@ -22,5 +22,6 @@ private:
     int stringLength(const std::string& str)const;
     std::string row(const int row)const;
     void maxLength();
+    std::string doubleToString(const double)const;
 };
 

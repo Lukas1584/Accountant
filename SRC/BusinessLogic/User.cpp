@@ -1,6 +1,5 @@
 #include "User.h"
-
-User::User(){};
+constexpr char separator='~';
 
 User::User(const std::string &log, const std::string &pass):login(log),password(pass){
 }

@@ -1,6 +1,8 @@
 #include "Report.h"
+constexpr char LOSS[]="Убыток";
+constexpr char PROFIT[]="Прибыль";
 
-Report::Report(std::shared_ptr<Data>& data, QObject* pobj): QObject(pobj),pData(data){}
+Report::Report(std::shared_ptr<AbstractData>& data):pData(data){}
 
 Record_String Report::getRow(const int row) const{
     int count=0;
@@ -13,15 +15,11 @@ Record_String Report::getRow(const int row) const{
             count++;
         }
     }
-    return {"","","","","",""};
+    return {"","","","",0,""};
 }
 
-int Report::rowCount() const{
+int Report::rowsCount() const{
     return size;
-}
-
-int Report::columnCount() const{
-    return pData->columns();
 }
 
 void Report::update(){
@@ -38,62 +36,43 @@ void Report::sizeReport(){
 }
 
 void Report::filterDB(const std::string& dateFrom,
-              const std::string& dateTo,
-              const std::pair<bool,bool>& type,
-              const std::vector<std::string>& category,
-              const std::vector<std::string>& description,
-              const float& sumFrom,
-              const float& sumTo,
-              const std::vector<bool>& currency){
+                      const std::string& dateTo,
+                      const std::pair<bool,bool>& type,
+                      const std::vector<std::string>& category,
+                      const std::vector<std::string>& description,
+                      const double& sumFrom,
+                      const double& sumTo,
+                      const std::vector<std::string>& currency){
     for(int i=0;i<pData->rows();i++){
-        Record rec=pData->getRecord(i);
+        Record_String rec=pData->getRecord(i);
         if(dateInRange(rec.getDate(),dateFrom,dateTo) &&
                 typeInRange(rec.getType(),type) &&
-                categoryInRange(rec.getCategory(),category) &&
-                descriptionInRange(rec.getDescription(),description) &&
+                valueInRange(rec.getCategory(),category) &&
+                valueInRange(rec.getDescription(),description) &&
                 sumInRange(rec.getSum(),sumFrom,sumTo) &&
-                currencyInRange(rec.getCurrency(),currency) )
+                valueInRange(rec.getCurrency(),currency) )
             filter[i]=true;
         else filter[i]=false;
     }
     sizeReport();
 }
 
-bool Report::typeInRange(const Record::Type type,const std::pair<bool,bool> typeFilter) const{
-    if(type==Record::Type::PROFIT && typeFilter.first)
+bool Report::typeInRange(const std::string& type,const std::pair<bool,bool> typeFilter) const{
+    if(type==PROFIT && typeFilter.first)
         return true;
-    if(type==Record::Type::LOSS && typeFilter.second)
-        return true;
-    return false;
-}
-
-bool Report::currencyInRange(const Record::Currency currency,const std::vector<bool>& currencyFilter) const{
-    if(currencyFilter[0] && currency==Record::Currency::USD)
-        return true;
-    if(currencyFilter[1] && currency==Record::Currency::BYR)
-        return true;
-    if(currencyFilter[2] && currency==Record::Currency::RUB)
-        return true;
-    if(currencyFilter[3] && currency==Record::Currency::EUR)
+    if(type==LOSS && typeFilter.second)
         return true;
     return false;
 }
 
-bool Report::categoryInRange(const std::string& category,const std::vector<std::string>& categoryFilter) const{
-    for(const auto& i:categoryFilter)
-        if(category==i)
+bool Report::valueInRange(const std::string& value,const std::vector<std::string>& vector) const{
+    for(const auto& i:vector)
+        if(value==i)
             return true;
     return false;
 }
 
-bool Report::descriptionInRange(const std::string& description,const std::vector<std::string>& descriptionFilter) const{
-    for(const auto& i:descriptionFilter)
-        if(description==i)
-            return true;
-    return false;
-}
-
-bool Report::sumInRange(const float& sum,const float& sumFrom,const float& sumTo) const{
+bool Report::sumInRange(const double& sum,const double& sumFrom,const double& sumTo) const{
     if(sumFrom<=sum && sum<=sumTo)
         return true;
     return false;
@@ -108,8 +87,8 @@ bool Report::dateInRange(const std::string& date,const std::string& dateFrom,con
 std::list<std::string> Report::getCategories(const bool profit,const bool loss) const{
     std::list<std::string> categories;
     for(int i=0;i<static_cast<int>(filter.size());i++){
-        Record rec=pData->getRecord(i);
-        if((profit && rec.getType()==Record::Type::PROFIT) || (loss && rec.getType()==Record::Type::LOSS)){
+        Record_String rec=pData->getRecord(i);
+        if((profit && rec.getType()==PROFIT) || (loss && rec.getType()==LOSS)){
             std::string category=rec.getCategory();
             bool isUnique=true;
             for(const auto& j:categories){
@@ -127,7 +106,7 @@ std::list<std::string> Report::getCategories(const bool profit,const bool loss) 
 std::list<std::string> Report::getDescriptions(const std::vector <std::string>& categories) const{
     std::list<std::string> descriptions;
     for(int i=0;i<static_cast<int>(filter.size());i++){
-        Record rec=pData->getRecord(i);
+        Record_String rec=pData->getRecord(i);
         for(const auto& j:categories){
             if(j==rec.getCategory()){
                 std::string description=rec.getDescription();
@@ -146,17 +125,17 @@ std::list<std::string> Report::getDescriptions(const std::vector <std::string>& 
 }
 
 std::pair<std::string,std::string> Report::dateMinMax() const{
-    Record recMin=pData->getRecord(0);
-    Record recMax=pData->getRecord(static_cast<int>(filter.size())-1);
+    Record_String recMin=pData->getRecord(0);
+    Record_String recMax=pData->getRecord(static_cast<int>(filter.size())-1);
     return {recMin.getDate(),recMax.getDate()};
 }
 
-std::pair<std::string,std::string> Report::sumMinMax() const{
-    float max;
-    float min;
-    for (unsigned int i=0;i<filter.size();i++){
-        Record rec=pData->getRecord(i);
-        float sum=rec.getSum();
+std::pair<double, double> Report::sumMinMax() const{
+    double max;
+    double min;
+    for(int i=0;i<static_cast<int>(filter.size());++i){
+        Record_String rec=pData->getRecord(i);
+        double sum=rec.getSum();
         if(i==0){
             max=sum;
             min=sum;
@@ -166,18 +145,10 @@ std::pair<std::string,std::string> Report::sumMinMax() const{
         if (min>sum)
             min=sum;
     }
-    std::stringstream ss;
-    ss<<min;
-    std::string strMin;
-    ss>>strMin;
-    ss.clear();
-    ss<<max;
-    std::string strMax;
-    ss>>strMax;
-    return {strMin,strMax};
+    return {min,max};
 }
 
-void Report::saveTxt(const std::string& fieName){
+void Report::saveTxt(const std::string& fileName){
     Report_Save txt(pData,filter);
-    txt.saveTxt(fieName);
+    txt.saveTxt(fileName);
 }

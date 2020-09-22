@@ -1,24 +1,5 @@
 #include "Data.h"
 
-Data::Data(){}
-
-std::istream& operator>>(std::istream& dataStream, Data& rhs){
-    while(!dataStream.eof()){
-        Record i;
-        dataStream>>i;
-        if(i.isNotEmpty())
-            rhs.data.push_back(i);
-    }
-    return dataStream;
-}
-
-std::ostream& operator<<(std::ostream& dataStream,const Data& rhs){
-    for(auto i:rhs.data){
-        dataStream<<i;
-    }
-    return dataStream;
-}
-
 void Data::clear(){
     data.clear();
 }
@@ -40,12 +21,21 @@ void Data::sort(){
     std::sort(data.begin(),data.end());
 }
 
-Record Data::getRecord(const int row){
-    return data[row];
+const Record_String Data::getRecord(const int row){
+    return data[row].convertToString();
 }
 
-void Data::setRecord(const int row,const Record& record){
+void Data::setRecord(const int row,const Record_String& record){
     if(row > static_cast<int>(data.size())-1)
         data.push_back(record);
     else data[row]=record;
+}
+std::list<std::string> Data::getAllCurrencies(){
+    Record rec;
+    return rec.getAllCurrencies();
+}
+
+std::list<std::string> Data::getAllTypes(){
+    Record rec;
+    return rec.getAllTypes();
 }

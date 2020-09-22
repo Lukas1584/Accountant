@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include <sstream>
-#include <iostream>
-
-constexpr int coloumnsCount=6;
-constexpr char separatorRecord='~';
+#include <list>
+#include "SRC/BusinessLogic/Record_String.h"
 
 class Record{
 
 public:
+    Record():sum(0){};
+    Record(const Record_String&);
 
     enum class Type{
         PROFIT=1, LOSS
@@ -18,33 +18,31 @@ public:
     };
 
     int columns() const;
-    void clear();
-    bool isNotEmpty() const;
-    bool operator<(const Record& rhs) const;
 
     std::string getDate()const;
     Type getType()const;
     std::string getCategory()const;
     std::string getDescription()const;
-    float getSum()const;
+    double getSum()const;
     Record::Currency getCurrency()const;
 
     void setDate(const std::string& d);
     void setType(const Record::Type t);
     void setCategory(const std::string& c);
     void setDescription(const std::string& d);
-    void setSum(const float s);
+    void setSum(const double s);
     void setCurrency(const Record::Currency c);
 
-    friend std::istream& operator>>(std::istream& dataStream, Record& rhs);
-    friend std::ostream& operator<<(std::ostream& dataStream, const Record& rhs);
-
+    bool operator<(const Record& rhs) const;
+    Record_String convertToString();
+    std::list<std::string> getAllCurrencies();
+    std::list<std::string> getAllTypes();
 private:
     std::string date;
     Type type;
     std::string category;
     std::string description;
-    float sum;
+    double sum;
     Currency currency;
 };
 

@@ -2,17 +2,13 @@
 #include <string>
 #include <iostream>
 
-constexpr char separator='~';
-
-class User
-{
+class User{
 public:
-    User();
+    User(){}
     User(const std::string& log,const std::string& pass);
     bool operator==(const User& rhs) const;
     bool operator!=(const User& rhs) const;
     bool operator<(const User& rhs)const;
-    void clear();
     bool isNotEmpty() const;
     std::string getLogin() const;
 
@@ -21,6 +17,7 @@ public:
 private:
     std::string login;
     std::string password;
+    void clear();
 };
 
 

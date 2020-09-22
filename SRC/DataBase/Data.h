@@ -1,27 +1,20 @@
 #pragma once
+#include "SRC/DataBase/AbstractData.h"
 #include <vector>
-#include "SRC/DataBase/Record.h"
-#include "SRC/BusinessLogic/Record_String.h"
-#include "SRC/DataBase/Record.h"
-#include <list>
-#include <iostream>
 #include <algorithm>
+#include "SRC/DataBase/Record.h"
 
-class Data
-{
+class Data:public AbstractData{
 public:
-    Data();
-    void clear();
-    int rows()const;
-    int columns()const;
-    void remove(const int row);
-    void sort();
-    Record getRecord(const int row);
-    void setRecord(const int row,const Record& record);
-
-    friend std::istream& operator>>(std::istream& dataStream, Data& rhs);
-    friend std::ostream& operator<<(std::ostream& dataStream,const Data& rhs);
-
+    int rows()const override;
+    int columns()const override;
+    void remove(const int row) override;
+    void sort() override;
+    const Record_String getRecord(const int row) override;
+    void setRecord(const int row,const Record_String& record) override;
+    void clear()override;
+    std::list<std::string> getAllCurrencies()override;
+    std::list<std::string> getAllTypes()override;
 private:
     std::vector<Record> data;
 };

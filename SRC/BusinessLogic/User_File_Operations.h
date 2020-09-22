@@ -1,7 +1,6 @@
 #pragma once
-#include <QObject>
 #include "SRC/DataBase/Data.h"
-#include "SRC/DataBase/Record.h"
+#include "SRC/DataBase/DataOperations.h"
 #include "SRC/BusinessLogic/User.h"
 #include <fstream>
 #include <iostream>
@@ -9,27 +8,23 @@
 #include <cstdio>
 
 
-class User_File_Operations : public QObject
-{
-    Q_OBJECT
-public:
-    explicit User_File_Operations(std::shared_ptr<Data> &d,QObject* pobj=nullptr);
-    void clearData();
-    void loadData(const std::string& login, const std::string& password);
-    bool isUserCreated(const std::string& login, const std::string& password);
-    std::list<std::string> getUsersNames()const;
-    void deleteUser(const std::string& login,const std::string& password);
-    bool changedPassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword);
+class User_File_Operations{
 
-private slots:
+public:
+    explicit User_File_Operations(std::shared_ptr<AbstractData> &d,std::shared_ptr<AbstractDataFileOperations> operations);
+
+    void clearData();
+    bool loadData(const std::string& login, const std::string& password);
     void saveData()const;
 
-signals:
-    void dataIsLoaded();
-    void wrongPassword();
+    bool isUserCreated(const std::string& login, const std::string& password);
+    std::list<std::string> getUsersNames()const;
+    bool deleteUser(const std::string& login,const std::string& password);
+    bool changedPassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword);
 
 private:
-    std::shared_ptr<Data> pData;
+    std::shared_ptr<AbstractData> pData;
+    std::shared_ptr<AbstractDataFileOperations> pOperations;
     std::string dataFileName;
     std::string settingsFileName="settings.ac";
     std::vector<User> users;
@@ -39,5 +34,3 @@ private:
     void loadUsers();
     void saveUsers();
 };
-
-

@@ -1,14 +1,13 @@
 #pragma once
 #include <QtWidgets>
 #include <QDate>
-#include "SRC/BusinessLogic/Records_Operations.h"
 #include "SRC/BusinessLogic/Record_String.h"
+#include "SRC/BusinessLogic/BusinessLogic.h"
 
-class Money_Repositary_Widget : public QWidget
-{
+class Money_Repositary_Widget : public QWidget{
     Q_OBJECT
 public:
-    explicit Money_Repositary_Widget(Records_Operations *model,QWidget* parent=nullptr);
+    Money_Repositary_Widget(std::shared_ptr<AbstractBusinessLogic> logic,QWidget* parent=nullptr);
     bool eventFilter(QObject*,QEvent* pEvent)override;
 
 private slots:
@@ -18,14 +17,13 @@ private slots:
     void cancelEditRecord();
     void categoryChanged();
     void dataIsLoaded();
-
-signals:
     void saveData();
-    void tableChaged();
-
+signals:
+    void tableChanged();
 private:
-    Records_Operations* pModel;
+    std::shared_ptr<AbstractBusinessLogic> pLogic;
     QTableWidget* pTable;
+    bool isEdit=false;
 
     QPushButton* pBtnSave;
     QPushButton* pBtnAdd;
@@ -41,11 +39,11 @@ private:
     QComboBox* pCbxCurrency;
 
     void updateTable();
-    bool isEdit=false;
     void setEditView();
     void setWorkView();
     void setTableDimensions();
     void setTableHeader();
+    QStringList convertToQList(const std::list<std::string>& list);
 };
 
 
