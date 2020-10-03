@@ -10,11 +10,11 @@ public:
     int columns()const override;
     void remove(const int row) override;
     void sort() override;
-    const Record_String getRecord(const int row) override;
-    void setRecord(const int row,const Record_String& record) override;
+    const RecordString getRecord(const int row)const override;
+    void setRecord(const int row,const RecordString& record) override;
     void clear()override;
-    std::list<std::string> getAllCurrencies()override;
-    std::list<std::string> getAllTypes()override;
+    std::list<std::string> getAllCurrencies()const override;
+    std::list<std::string> getAllTypes()const override;
 private:
     std::vector<Record> data;
 };

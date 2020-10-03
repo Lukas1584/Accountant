@@ -4,12 +4,12 @@ constexpr char PROFIT[]="Прибыль";
 
 Report::Report(std::shared_ptr<AbstractData>& data):pData(data){}
 
-Record_String Report::getRow(const int row) const{
+RecordString Report::getRow(const int row) const{
     int count=0;
     for(unsigned int i=0;i<filter.size();i++){
         if(filter[i]){
             if(count==row){
-                Record_String rec(pData->getRecord(i));
+                RecordString rec(pData->getRecord(i));
                 return rec;
             }
             count++;
@@ -35,16 +35,25 @@ void Report::sizeReport(){
             size++;
 }
 
-void Report::filterDB(const std::string& dateFrom,
-                      const std::string& dateTo,
-                      const std::pair<bool,bool>& type,
-                      const std::vector<std::string>& category,
-                      const std::vector<std::string>& description,
-                      const double& sumFrom,
-                      const double& sumTo,
-                      const std::vector<std::string>& currency){
+void Report::filterDB(const std::string& fDateFrom,
+                      const std::string& fDateTo,
+                      const std::pair<bool,bool>& fType,
+                      const std::vector<std::string>& fCategory,
+                      const std::vector<std::string>& fDescription,
+                      const double& fSumFrom,
+                      const double& fSumTo,
+                      const std::vector<std::string>& fCurrency){
+    dateFrom=fDateFrom;
+    dateTo=fDateTo;
+    type=fType;
+    category=fCategory;
+    description=fDescription;
+    sumFrom=fSumFrom;
+    sumTo=fSumTo;
+    currency=fCurrency;
+
     for(int i=0;i<pData->rows();i++){
-        Record_String rec=pData->getRecord(i);
+        RecordString rec=pData->getRecord(i);
         if(dateInRange(rec.getDate(),dateFrom,dateTo) &&
                 typeInRange(rec.getType(),type) &&
                 valueInRange(rec.getCategory(),category) &&
@@ -87,7 +96,7 @@ bool Report::dateInRange(const std::string& date,const std::string& dateFrom,con
 std::list<std::string> Report::getCategories(const bool profit,const bool loss) const{
     std::list<std::string> categories;
     for(int i=0;i<static_cast<int>(filter.size());i++){
-        Record_String rec=pData->getRecord(i);
+        RecordString rec=pData->getRecord(i);
         if((profit && rec.getType()==PROFIT) || (loss && rec.getType()==LOSS)){
             std::string category=rec.getCategory();
             bool isUnique=true;
@@ -106,7 +115,7 @@ std::list<std::string> Report::getCategories(const bool profit,const bool loss) 
 std::list<std::string> Report::getDescriptions(const std::vector <std::string>& categories) const{
     std::list<std::string> descriptions;
     for(int i=0;i<static_cast<int>(filter.size());i++){
-        Record_String rec=pData->getRecord(i);
+        RecordString rec=pData->getRecord(i);
         for(const auto& j:categories){
             if(j==rec.getCategory()){
                 std::string description=rec.getDescription();
@@ -125,8 +134,8 @@ std::list<std::string> Report::getDescriptions(const std::vector <std::string>& 
 }
 
 std::pair<std::string,std::string> Report::dateMinMax() const{
-    Record_String recMin=pData->getRecord(0);
-    Record_String recMax=pData->getRecord(static_cast<int>(filter.size())-1);
+    RecordString recMin=pData->getRecord(0);
+    RecordString recMax=pData->getRecord(static_cast<int>(filter.size())-1);
     return {recMin.getDate(),recMax.getDate()};
 }
 
@@ -134,7 +143,7 @@ std::pair<double, double> Report::sumMinMax() const{
     double max;
     double min;
     for(int i=0;i<static_cast<int>(filter.size());++i){
-        Record_String rec=pData->getRecord(i);
+        RecordString rec=pData->getRecord(i);
         double sum=rec.getSum();
         if(i==0){
             max=sum;
@@ -148,7 +157,27 @@ std::pair<double, double> Report::sumMinMax() const{
     return {min,max};
 }
 
-void Report::saveTxt(const std::string& fileName){
-    Report_Save txt(pData,filter);
-    txt.saveTxt(fileName);
+std::string Report::getDateFrom() const{
+    return dateFrom;
+}
+std::string Report::getDateTo() const{
+    return dateTo;
+}
+std::pair<bool,bool> Report::getType() const{
+    return type;
+}
+std::vector<std::string> Report::getCategory() const{
+    return category;
+}
+std::vector<std::string> Report::getDescription() const{
+    return description;
+}
+double Report::getSumFrom() const{
+    return sumFrom;
+}
+double Report::getSumTo() const{
+    return sumTo;
+}
+std::vector<std::string> Report::getCurrency() const{
+    return currency;
 }

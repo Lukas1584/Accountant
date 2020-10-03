@@ -2,22 +2,26 @@
 
 BusinessLogic::BusinessLogic(std::shared_ptr<AbstractData> data, std::shared_ptr<AbstractDataFileOperations> operations):
     pData(data),pDataOperations(operations){
-    pOperations=std::make_shared<Records_Operations>(data);
-    pCalculator=std::make_unique<Balance_Calculator>(data,pOperations);
-    pReport=std::make_unique<Report>(data);
-    pUserFileOperations=std::make_unique<User_File_Operations>(data,pDataOperations);
+    pOperations=std::make_shared<RecordsOperations>(data);
+    pCalculator=std::make_unique<BalanceCalculator>(data,pOperations);
+
+    pUserFileOperations=std::make_unique<UserFileOperations>(data,pDataOperations);
+
+    pReport=std::make_shared<Report>(data);
+    pReportSaveTxt=std::make_unique<ReportSaveTxt>(pReport);
+    pReportSavePdf=std::make_unique<ReportSavePdf>(pReport);
 }
 
-int BusinessLogic::rowsCount(){
+int BusinessLogic::rowsCount() const{
     return pData->rows();
 }
-int BusinessLogic::columnsCount(){
+int BusinessLogic::columnsCount() const{
     return pData->columns();
 }
-void BusinessLogic::setData(const int row, const Record_String& record){
+void BusinessLogic::setData(const int row, const RecordString& record){
     pData->setRecord(row,record);
 }
-Record_String BusinessLogic::getData(const int row){
+RecordString BusinessLogic::getData(const int row) const{
     return pData->getRecord(row);
 }
 void BusinessLogic::removeRow(const int row){
@@ -26,17 +30,17 @@ void BusinessLogic::removeRow(const int row){
 void BusinessLogic::sortData(){
     pData->sort();
 }
-std::list<std::string> BusinessLogic::getDataCategories(const std::string& type){
+std::list<std::string> BusinessLogic::getDataCategories(const std::string& type) const{
     return pOperations->getCategories(type);
 }
-std::list<std::string> BusinessLogic::getDataDescriptions(const std::string& category){
+std::list<std::string> BusinessLogic::getDataDescriptions(const std::string& category) const{
     return pOperations->getDescriptions(category);
 }
 
-int BusinessLogic::rowsCountReport(){
+int BusinessLogic::rowsCountReport() const{
     return pReport->rowsCount();
 }
-Record_String BusinessLogic::getReport(const int row){
+RecordString BusinessLogic::getReport(const int row) const{
     return pReport->getRow(row);
 }
 void BusinessLogic::filter(const std::string& dateFrom,
@@ -50,31 +54,35 @@ void BusinessLogic::filter(const std::string& dateFrom,
     pReport->filterDB(dateFrom,dateTo,type,category,description,sumFrom,sumTo,currency);
 }
 
-std::list<std::string> BusinessLogic::getReportCategories(const bool profit, const bool loss){
+std::list<std::string> BusinessLogic::getReportCategories(const bool profit, const bool loss)const{
     return pReport->getCategories(profit,loss);
 }
 
-std::list<std::string> BusinessLogic::getReportDescriptions(const std::vector<std::string> &categories){
+std::list<std::string> BusinessLogic::getReportDescriptions(const std::vector<std::string> &categories)const{
     return pReport->getDescriptions(categories);
 }
 
-std::pair<std::string,std::string> BusinessLogic::dateMinMax(){
+std::pair<std::string,std::string> BusinessLogic::dateMinMax()const{
     return pReport->dateMinMax();
 }
 
-std::pair<double,double> BusinessLogic::sumMinMax(){
+std::pair<double,double> BusinessLogic::sumMinMax()const{
     return pReport->sumMinMax();
 }
 
-void BusinessLogic::saveReportTxt(const std::string& fileName){
-    pReport->saveTxt(fileName);
+void BusinessLogic::saveReportTxt(const std::string& fileName,const std::string& currentDate) const{
+    pReportSaveTxt->saveTxt(fileName,pUserFileOperations->getUserName(),currentDate);
 }
 
-std::string BusinessLogic::getBalance(const std::string& currentDate){
+void BusinessLogic::saveReportPDF(const std::string& fileName,const std::string& currentDate) const{
+    pReportSavePdf->savePDF(fileName,pUserFileOperations->getUserName(),currentDate);
+}
+
+std::string BusinessLogic::getBalance(const std::string& currentDate)const{
     return pCalculator->getBalance(currentDate);
 }
 
-std::list<std::string> BusinessLogic::getUsersNames(){
+std::list<std::string> BusinessLogic::getUsersNames() const{
     return pUserFileOperations->getUsersNames();
 }
 bool BusinessLogic::isUserCreated(const std::string &login, const std::string &password){
@@ -94,18 +102,18 @@ bool BusinessLogic::changePassword(const std::string &login, const std::string &
     return pUserFileOperations->changedPassword(login,oldPassword,newPassword);
 }
 
-void BusinessLogic::saveData(){
+void BusinessLogic::saveData() const{
     pUserFileOperations->saveData();
 }
 
-std::list<std::string> BusinessLogic::getCurrencies(){
+std::list<std::string> BusinessLogic::getCurrencies() const{
     return pOperations->getCurrencies();
 }
 
-std::list<std::string> BusinessLogic::getAllCurrencies(){
+std::list<std::string> BusinessLogic::getAllCurrencies() const{
     return pData->getAllCurrencies();
 }
-std::list<std::string> BusinessLogic::getAllTypes(){
+std::list<std::string> BusinessLogic::getAllTypes() const{
     return pData->getAllTypes();
 }
 

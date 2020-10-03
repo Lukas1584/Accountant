@@ -1,7 +1,6 @@
 #include "DataOperations.h"
-constexpr char separatorRecord='~';
 
-void DataFileOperations::saveToFile(const std::string& fileName){
+void DataFileOperations::saveToFile(const std::string& fileName)const{
     std::ofstream file{fileName,std::ios_base::binary};
     for(int i=0;i<pData->rows();++i)
         save(file,pData->getRecord(i));
@@ -58,7 +57,7 @@ Record DataFileOperations::load(std::istream& dataStream){
     return record;
 }
 
-void DataFileOperations::save(std::ostream& dataStream,const Record& record){
+void DataFileOperations::save(std::ostream& dataStream,const Record& record)const{
     dataStream<<record.getDate()<<separatorRecord;
     dataStream<<static_cast<int>(record.getType())<<separatorRecord;
     dataStream<<record.getCategory()<<separatorRecord;

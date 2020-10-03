@@ -21,21 +21,21 @@ void Data::sort(){
     std::sort(data.begin(),data.end());
 }
 
-const Record_String Data::getRecord(const int row){
+const RecordString Data::getRecord(const int row)const{
     return data[row].convertToString();
 }
 
-void Data::setRecord(const int row,const Record_String& record){
+void Data::setRecord(const int row,const RecordString& record){
     if(row > static_cast<int>(data.size())-1)
         data.push_back(record);
     else data[row]=record;
 }
-std::list<std::string> Data::getAllCurrencies(){
+std::list<std::string> Data::getAllCurrencies() const{
     Record rec;
     return rec.getAllCurrencies();
 }
 
-std::list<std::string> Data::getAllTypes(){
+std::list<std::string> Data::getAllTypes()const{
     Record rec;
     return rec.getAllTypes();
 }

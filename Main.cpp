@@ -1,10 +1,10 @@
-#include "SRC/Application_Builder.h"
+#include "SRC/ApplicationBuilder.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Application_Builder* app=new  Application_Builder;
+    ApplicationBuilder* app=new  ApplicationBuilder;
     Q_UNUSED(app);
     return a.exec();
 }

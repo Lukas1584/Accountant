@@ -72,7 +72,7 @@ void Record::setCurrency(const Record::Currency c){
     currency=c;
 }
 
-Record::Record(const Record_String &record){
+Record::Record(const RecordString &record){
     date=record.getDate();
     std::string typeString=record.getType();
     if(typeString=="Прибыль")
@@ -93,7 +93,7 @@ Record::Record(const Record_String &record){
         currency=Record::Currency::EUR;
 }
 
-Record_String Record::convertToString(){
+RecordString Record::convertToString()const{
     std::string typeString;
     if(type==Record::Type::LOSS)
         typeString="Убыток";
@@ -111,9 +111,9 @@ Record_String Record::convertToString(){
     return {date,typeString,category,description,sum,currencyString};
 }
 
-std::list<std::string> Record::getAllCurrencies(){
+std::list<std::string> Record::getAllCurrencies() const{
     return {"USD","BYR","RUB","EUR"};
 }
-std::list<std::string> Record::getAllTypes(){
+std::list<std::string> Record::getAllTypes() const{
     return {"Прибыль","Убыток"};
 }

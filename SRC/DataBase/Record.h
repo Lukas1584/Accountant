@@ -2,13 +2,13 @@
 #include <string>
 #include <sstream>
 #include <list>
-#include "SRC/BusinessLogic/Record_String.h"
+#include "SRC/BusinessLogic/RecordString.h"
 
 class Record{
 
 public:
     Record():sum(0){};
-    Record(const Record_String&);
+    Record(const RecordString&);
 
     enum class Type{
         PROFIT=1, LOSS
@@ -17,7 +17,7 @@ public:
         USD=1, BYR, RUB, EUR
     };
 
-    int columns() const;
+    int columns()const;
 
     std::string getDate()const;
     Type getType()const;
@@ -34,9 +34,9 @@ public:
     void setCurrency(const Record::Currency c);
 
     bool operator<(const Record& rhs) const;
-    Record_String convertToString();
-    std::list<std::string> getAllCurrencies();
-    std::list<std::string> getAllTypes();
+    RecordString convertToString()const;
+    std::list<std::string> getAllCurrencies()const;
+    std::list<std::string> getAllTypes()const;
 private:
     std::string date;
     Type type;
