@@ -53,6 +53,7 @@ public:
     void clearData()override;
     bool deleteUser(const std::string& login,const std::string& password)override;
     bool changePassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword)override;
+    std::string getUserName()const override;
 
 private:
     std::shared_ptr<AbstractData> pData;

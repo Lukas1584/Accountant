@@ -120,3 +120,7 @@ std::list<std::string> BusinessLogic::getAllTypes() const{
 void BusinessLogic::updateReport(){
     pReport->update();
 }
+
+std::string BusinessLogic::getUserName()const{
+    return pUserFileOperations->getUserName();
+}

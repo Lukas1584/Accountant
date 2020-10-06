@@ -2,8 +2,9 @@
 #include <QtWidgets>
 #include <QObject>
 #include "SRC/BusinessLogic/BusinessLogic.h"
-#include <QPrintDialog>
 #include <QPrinter>
+#include <QPrintPreviewDialog>
+#include <QPageSize>
 
 class ReportWidget : public QWidget{
     Q_OBJECT
@@ -23,7 +24,8 @@ private slots:
     void resetFilter();
     void saveTxt();
     void savePDF();
-    void print();
+    void printReport();
+    void btnPrintClicked();
 
 private:
     std::shared_ptr<AbstractBusinessLogic> pLogic;
@@ -48,6 +50,8 @@ private:
     QComboBox* pCbxCurrency;
     QStandardItemModel* pModelCurrency;
 
+    std::unique_ptr<QPrinter> printer;
+
     std::pair<bool,bool> typeToReport()const;
     std::vector<std::string> getComboBoxCheckedList(const QComboBox *combobox)const;
     void setTableDimensions();
@@ -58,6 +62,20 @@ private:
     void checkControl(QStandardItemModel* model,QStandardItem* item);
     void setCheckAll(QStandardItemModel* model,Qt::CheckState state);
     void fillComboBox(QStandardItemModel* model,std::list<std::string>& list);
+    void printHeader(QPainter& painter, double &yPosition);
+    void printTable(QPainter& painter, double &yPosition);
+    void calculatePageParameters();
+    void printComboBoxCheckedList(const QComboBox* combobox,QPainter& painter,double& yPosition) const;
+    void nextRow(double& yPosition) const;
+    double leading;
+    const QString font="Arial";
+    const int fontSize=12;
+
+    double pageWidth;
+    double pageHeight;
+    double leftBorder;
+    double rightBorder;
+    double verticalBorder;
 };
 
 

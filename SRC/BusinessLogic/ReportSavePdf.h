@@ -4,6 +4,7 @@
 #include "SRC/BusinessLogic/RecordString.h"
 #include <sstream>
 #include <hpdf.h>
+#include <fstream>
 
 class ReportSavePdf{
 public:

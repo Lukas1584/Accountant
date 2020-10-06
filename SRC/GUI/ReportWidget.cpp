@@ -109,12 +109,10 @@ ReportWidget::ReportWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget
     QObject::connect(pModelDescription,SIGNAL(itemChanged(QStandardItem*)),SLOT(descriptionChecked(QStandardItem*)));
     QObject::connect(pModelCurrency,SIGNAL(itemChanged(QStandardItem*)),SLOT(currencyChecked(QStandardItem*)));
 
-
     QObject::connect(pBtnReset,SIGNAL(clicked()),SLOT(resetFilter()));
     QObject::connect(pBtnSaveTxt,SIGNAL(clicked()),SLOT(saveTxt()));
     QObject::connect(pBtnSavePDF,SIGNAL(clicked()),SLOT(savePDF()));
-    QObject::connect(pBtnPrint,SIGNAL(clicked()),SLOT(print()));
-
+    QObject::connect(pBtnPrint,SIGNAL(clicked()),SLOT(btnPrintClicked()));
 
     QObject::connect(pTimeEditFrom,SIGNAL(dateChanged(const QDate&)),SLOT(filter()));
     QObject::connect(pTimeEditTo,SIGNAL(dateChanged(const QDate&)),SLOT(filter()));
@@ -317,13 +315,130 @@ void ReportWidget::savePDF(){
     pLogic->saveReportPDF(fieName.toStdString(),QDate::currentDate().toString("yyyy-MM-dd").toStdString());
 }
 
+void ReportWidget::btnPrintClicked(){
+    printer=std::make_unique<QPrinter>(QPrinter::HighResolution);
+    std::unique_ptr<QPrintPreviewDialog> printDialog=std::make_unique<QPrintPreviewDialog>(printer.get());
+    QObject::connect(printDialog.get(),SIGNAL(paintRequested(QPrinter*)),SLOT(printReport()));
+    printDialog->showMaximized();
+    printDialog->exec();
+    printer.reset(nullptr);
+}
 
+void ReportWidget::printReport(){
+    QPainter painter(printer.get());
+    painter.setFont(QFont(font,fontSize));
+    calculatePageParameters();
+    double yPosition=0;
+    printHeader(painter,yPosition);
+    printTable(painter,yPosition);
+}
 
-void ReportWidget::print(){
-    QPrinter print;
-    QPrintDialog* printDialog=new QPrintDialog(&print);
-    if (printDialog->exec() == QDialog::Accepted) {
-        // print ...
+void ReportWidget::printHeader(QPainter& painter,double& yPosition){
+    yPosition=verticalBorder+leading;
+    painter.drawText(0.48*pageWidth,yPosition,"Отчет");
+    nextRow(yPosition);
+    QString str="Пользователь: "+ QString::fromStdString(pLogic->getUserName());
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    str="Дата отчета: "+QDate::currentDate().toString("yyyy-MM-dd");
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    str="Установки фильтра:";
+    painter.drawText(0.45*pageWidth,yPosition,str);
+    nextRow(yPosition);
+    str="Дата от: "+pTimeEditFrom->text()+"    Дата до: "+pTimeEditTo->text();
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    str="Тип: ";
+    if((pChbxTypeProfit->isChecked()==true)&&(pChbxTypeLoss->isChecked()==false)) str+="Прибыль";
+    if((pChbxTypeProfit->isChecked()==false)&&(pChbxTypeLoss->isChecked()==true)) str+="Убыток";
+    if((pChbxTypeProfit->isChecked()==true)&&(pChbxTypeLoss->isChecked()==true)) str+="все";
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    str="Сумма от: "+pLineEditSumFrom->text()+" Сумма до: "+pLineEditSumTo->text();
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    str="Валюты: ";
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    printComboBoxCheckedList(pCbxCurrency,painter,yPosition);
+    str="Категории: ";
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    printComboBoxCheckedList(pCbxCategory,painter,yPosition);
+    str="Описания: ";
+    painter.drawText(leftBorder,yPosition,str);
+    nextRow(yPosition);
+    printComboBoxCheckedList(pCbxDescription,painter,yPosition);
+}
+
+void ReportWidget::nextRow(double& yPosition)const{
+    yPosition+=leading;
+    if(yPosition>(pageHeight-verticalBorder)){
+        printer->newPage();
+        yPosition=verticalBorder+leading;
     }
 }
 
+void ReportWidget::printComboBoxCheckedList(const QComboBox* combobox,QPainter& painter,double& yPosition) const{
+    if(combobox->model()->index(0,0).data(Qt::CheckStateRole)==Qt::Checked){
+        painter.drawText(leftBorder,yPosition,"Все");
+        nextRow(yPosition);
+        return;
+    }
+    for(int i=1; i<combobox->count(); i++){
+        QModelIndex index = combobox->model()->index(i, 0);
+        if(index.data(Qt::CheckStateRole) == Qt::Checked){
+            painter.drawText(leftBorder,yPosition,index.data(Qt::DisplayRole).toString());
+            nextRow(yPosition);
+        }
+    }
+}
+
+void ReportWidget::printTable(QPainter& painter,double& yPosition){
+    const double pageWidthWithoutBorders=(pageWidth-leftBorder-rightBorder);
+    const double xType=0.15*pageWidthWithoutBorders;
+    const double xCategory=0.28*pageWidthWithoutBorders;
+    const double xDescription=0.54*pageWidthWithoutBorders;
+    const double xSum=0.8*pageWidthWithoutBorders;
+    const double xCurrency=0.92*pageWidthWithoutBorders;
+    /*print table header*/
+    painter.drawText(leftBorder,yPosition,pTable->horizontalHeaderItem(0)->data(Qt::DisplayRole).toString());
+    painter.drawText(leftBorder+xType,yPosition,pTable->horizontalHeaderItem(1)->data(Qt::DisplayRole).toString());
+    painter.drawText(leftBorder+xCategory,yPosition,pTable->horizontalHeaderItem(2)->data(Qt::DisplayRole).toString());
+    painter.drawText(leftBorder+xDescription,yPosition,pTable->horizontalHeaderItem(3)->data(Qt::DisplayRole).toString());
+    painter.drawText(leftBorder+xSum,yPosition,pTable->horizontalHeaderItem(4)->data(Qt::DisplayRole).toString());
+    painter.drawText(leftBorder+xCurrency,yPosition,pTable->horizontalHeaderItem(5)->data(Qt::DisplayRole).toString());
+    nextRow(yPosition);
+    /*print table*/
+    for(int row = 0;row<pTable->rowCount();++row){
+        painter.drawText(leftBorder,yPosition,pTable->item(row,0)->data(Qt::DisplayRole).toString());
+        painter.drawText(leftBorder+xType,yPosition,pTable->item(row,1)->data(Qt::DisplayRole).toString());
+        painter.drawText(leftBorder+xCategory,yPosition,pTable->item(row,2)->data(Qt::DisplayRole).toString());
+        painter.drawText(leftBorder+xDescription,yPosition,pTable->item(row,3)->data(Qt::DisplayRole).toString());
+        painter.drawText(leftBorder+xSum,yPosition,pTable->item(row,4)->data(Qt::DisplayRole).toString());
+        painter.drawText(leftBorder+xCurrency,yPosition,pTable->item(row,5)->data(Qt::DisplayRole).toString());
+        yPosition+=leading;
+        if(yPosition>(pageHeight-verticalBorder)&&(row!=(pTable->rowCount()-1))){
+            printer->newPage();
+            yPosition=verticalBorder+leading;
+            /*print table header*/
+            painter.drawText(leftBorder,yPosition,pTable->horizontalHeaderItem(0)->data(Qt::DisplayRole).toString());
+            painter.drawText(leftBorder+xType,yPosition,pTable->horizontalHeaderItem(1)->data(Qt::DisplayRole).toString());
+            painter.drawText(leftBorder+xCategory,yPosition,pTable->horizontalHeaderItem(2)->data(Qt::DisplayRole).toString());
+            painter.drawText(leftBorder+xDescription,yPosition,pTable->horizontalHeaderItem(3)->data(Qt::DisplayRole).toString());
+            painter.drawText(leftBorder+xSum,yPosition,pTable->horizontalHeaderItem(4)->data(Qt::DisplayRole).toString());
+            painter.drawText(leftBorder+xCurrency,yPosition,pTable->horizontalHeaderItem(5)->data(Qt::DisplayRole).toString());
+            yPosition+=leading;
+        }
+    }
+}
+
+void ReportWidget::calculatePageParameters(){
+    leading=4*QFont(font,fontSize).weight();
+    pageWidth=printer->pageRect().width();
+    pageHeight=printer->pageRect().height();
+    leftBorder=0.12*pageWidth;
+    rightBorder=0.024*pageWidth;
+    verticalBorder=0.017*pageHeight;
+}

@@ -45,4 +45,5 @@ public:
     virtual void clearData()=0;
     virtual bool deleteUser(const std::string& login,const std::string& password)=0;
     virtual bool changePassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword)=0;
+    virtual std::string getUserName()const=0;
 };

@@ -54,10 +54,3 @@ else:unix: LIBS += -L$$PWD/SRC/Libs/libharu-master/ -llibhpdf
 
 INCLUDEPATH += $$PWD/SRC/Libs/libharu-master
 DEPENDPATH += $$PWD/SRC/Libs/libharu-master
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/SRC/Libs/libharu-master/ -llibhpdfs
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/SRC/Libs/libharu-master/ -llibhpdfs
-else:unix: LIBS += -L$$PWD/SRC/Libs/libharu-master/ -llibhpdfs
-
-INCLUDEPATH += $$PWD/SRC/Libs/libharu-master
-DEPENDPATH += $$PWD/SRC/Libs/libharu-master
