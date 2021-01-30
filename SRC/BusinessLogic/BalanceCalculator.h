@@ -3,6 +3,7 @@
 #include "SRC/BusinessLogic/RecordString.h"
 #include "SRC/BusinessLogic/RecordsOperations.h"
 #include <list>
+#include <memory>
 
 class BalanceCalculator{
 
@@ -26,5 +27,3 @@ private:
     std::string minusMonth()const;
     std::string balanceCalculate(const std::string& dateFrom, const std::string &currency)const;
 };
-
-

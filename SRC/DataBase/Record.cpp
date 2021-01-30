@@ -1,7 +1,7 @@
 #include "Record.h"
-constexpr int coloumnsCount=6;
 
-int Record::columns()const{
+unsigned int Record::columns()const{
+    const unsigned int coloumnsCount=6;
     return coloumnsCount;
 }
 

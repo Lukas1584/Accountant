@@ -10,11 +10,8 @@ int ReportSaveTxt::stringLength(const std::string& str)const{
 }
 
 void ReportSaveTxt::maxLengthFields(){
-    fieldTypeLength=7; //size of "Прибыль"
-    fieldCategoryLength=9; //size of "Категория"
-    fieldDescriptionLength=8; //size of "Описание"
-    fieldSumLength=5; //size of "Сумма"
-    for(int i=0;i<pReport->rowsCount();i++){
+    unsigned int rows=pReport->rowsCount();
+    for(unsigned int i=0;i<rows;i++){
         RecordString recordString=pReport->getRow(i);
         int sizeType=stringLength(recordString.getType());
         int sizeCategory=stringLength(recordString.getCategory());
@@ -74,6 +71,7 @@ void ReportSaveTxt::saveTxt(const std::string& filename,
                           const std::string& userName,
                           const std::string& currentDate){
     std::ofstream file{filename};
+    if(!file) throw "File wasn't created!";
     file<<headerReport(userName,currentDate);
     maxLengthFields();
     for(int i=-1;i<pReport->rowsCount();i++)
@@ -98,10 +96,8 @@ std::string ReportSaveTxt::stringFromVector(const std::vector<std::string>& vec)
     std::string result;
     if(vec[0]=="Все") return vec[0]+"\n";
     else{
-        for(auto i:vec)
+        for(const auto& i:vec)
             result+=i+"\n";
         return result;
     }
 }
-
-

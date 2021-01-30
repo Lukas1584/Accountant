@@ -1,11 +1,15 @@
 #include "ChangePasswordWidget.h"
 
-ChangePasswordWidget::ChangePasswordWidget(QWidget *parent) : QWidget(parent){
+ChangePasswordWidget::ChangePasswordWidget(){
+    drawWindow();
+    QObject::connect(pBtnOK,SIGNAL(clicked()),SLOT(slotClickedOk()));
+    setModal(true);
+}
+
+void ChangePasswordWidget::drawWindow(){
     resize(400,150);
 
     pBtnOK=new QPushButton(tr("Ок"));
-    pBtnCancel=new QPushButton(tr("Отмена"));
-
     pLeOldPassword= new QLineEdit;
     pLeOldPassword->setEchoMode(QLineEdit::Password);
     pLePassword=new QLineEdit;
@@ -16,10 +20,6 @@ ChangePasswordWidget::ChangePasswordWidget(QWidget *parent) : QWidget(parent){
     QLabel* pLblName=new QLabel(tr("Текущий пароль"));
     QLabel* pLblPassword=new QLabel(tr("Новый пароль"));
     QLabel* pLblPasswordConfirmation=new QLabel(tr("Подтверждение пароля"));
-
-    QObject::connect(pBtnOK,SIGNAL(clicked()),SLOT(slotClickedOk()));
-    QObject::connect(pBtnCancel,SIGNAL(clicked()),SIGNAL(clickedCancel()));
-
     QGridLayout* pGrdMain=new QGridLayout;
     pGrdMain->addWidget(pLblName,0,0,Qt::AlignRight);
     pGrdMain->addWidget(pLblPassword,1,0,Qt::AlignRight);
@@ -28,21 +28,17 @@ ChangePasswordWidget::ChangePasswordWidget(QWidget *parent) : QWidget(parent){
     pGrdMain->addWidget(pLePassword,1,1);
     pGrdMain->addWidget(pLePasswordConfirmation,2,1);
     pGrdMain->addWidget(pBtnOK,0,2);
-    pGrdMain->addWidget(pBtnCancel,1,2);
 
     setLayout(pGrdMain);
 }
+
 void ChangePasswordWidget::slotClickedOk(){
     if(pLePassword->text()!=pLePasswordConfirmation->text()){
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::information(this,tr("Сообщение"),tr("Пароли не совпадают!"));
-        Q_UNUSED(reply);
+        QMessageBox::information(this,tr("Сообщение"),tr("Пароли не совпадают!"));
+        pLeOldPassword->clear();
+        pLePassword->clear();
+        pLePasswordConfirmation->clear();
         return;
     }
     emit clickedOk(pLeOldPassword->text(),pLePassword->text());
-}
-
-void ChangePasswordWidget::closeEvent(QCloseEvent* event){
-    emit close();
-    event->accept();
 }

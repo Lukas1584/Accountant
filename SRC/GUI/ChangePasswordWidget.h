@@ -1,26 +1,22 @@
-#include <QObject>
+#pragma once
 #include <QtWidgets>
 
-class ChangePasswordWidget : public QWidget
-{
+class ChangePasswordWidget : public QDialog{
     Q_OBJECT
 public:
-    explicit ChangePasswordWidget(QWidget *parent = nullptr);
+    ChangePasswordWidget();
 
 signals:
     void clickedOk(const QString&,const QString&);
-    void clickedCancel();
-    void close();
 
 private slots:
     void slotClickedOk();
 
 private:
     QPushButton* pBtnOK;
-    QPushButton* pBtnCancel;
     QLineEdit* pLeOldPassword;
     QLineEdit* pLePassword;
     QLineEdit* pLePasswordConfirmation;
-    void closeEvent(QCloseEvent* event);
+    void drawWindow();
 };
 

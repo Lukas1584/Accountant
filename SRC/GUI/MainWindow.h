@@ -1,6 +1,7 @@
 #pragma once
-#include <QObject>
 #include <QtWidgets>
+#include <memory>
+#include <QDate>
 #include "SRC/BusinessLogic/BusinessLogic.h"
 #include "SRC/GUI/MoneyRepositaryWidget.h"
 #include "SRC/GUI/ReportWidget.h"
@@ -16,8 +17,6 @@ private slots:
     void userShow()const;
     void reportShow();
     void dataIsLoaded();
-    void disableMainWindow();
-    void enableMainWindow();
     void exitUser()const;
     void balance();
 
@@ -30,10 +29,12 @@ private:
 
     QLabel* pLblBalance;
 
-    std::unique_ptr<MoneyRepositaryWidget> pWdgMoney;
-    std::unique_ptr<ReportWidget> pWdgReport;
-    std::unique_ptr<UserWidget> pWdgUser;
+    MoneyRepositaryWidget* pWdgMoney;
+    ReportWidget* pWdgReport;
+    UserWidget* pWdgUser;
 
     void createWindows();
+    void drawMainWindow();
+    void connectWindows();
 };
 

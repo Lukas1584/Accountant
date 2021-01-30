@@ -1,6 +1,9 @@
 #pragma once
 #include "SRC/DataBase/Data.h"
+#include "SRC/BusinessLogic/RecordString.h"
 #include <list>
+#include <memory>
+#include <string>
 
 class RecordsOperations{
 public:

@@ -1,11 +1,12 @@
 #pragma once
+#include <wchar.h>
 #include <string>
 #include <fstream>
 #include <codecvt>
 #include "SRC/BusinessLogic/Report.h"
 #include "SRC/BusinessLogic/RecordString.h"
 #include <sstream>
-#include <wchar.h>
+#include <locale>
 
 class ReportSaveTxt{
 public:
@@ -15,12 +16,11 @@ public:
                  const std::string& currentDate);
 
 private:
-
     std::shared_ptr<Report> pReport;
-    int fieldTypeLength=0;
-    int fieldCategoryLength=0;
-    int fieldDescriptionLength=0;
-    int fieldSumLength=0;
+    int fieldTypeLength=7; //size of "Прибыль"
+    int fieldCategoryLength=9; //size of "Категория"
+    int fieldDescriptionLength=8; //size of "Описание"
+    int fieldSumLength=5; //size of "Сумма"
 
     int stringLength(const std::string& str)const;
     std::string row(const int row)const;

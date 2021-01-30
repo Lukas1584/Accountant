@@ -17,12 +17,12 @@ bool User::operator<(const User& rhs)const{
 }
 
 void User::clear(){
-    login="";
-    password="";
+    login.clear();
+    password.clear();
 }
 
 bool User::isNotEmpty() const{
-    return (login!="")?true:false;
+    return (login.size()==0)?false:true;
 }
 
 std::string User::getLogin() const{

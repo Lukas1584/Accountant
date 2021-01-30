@@ -5,26 +5,28 @@ BusinessLogic::BusinessLogic(std::shared_ptr<AbstractData> data, std::shared_ptr
     pOperations=std::make_shared<RecordsOperations>(data);
     pCalculator=std::make_unique<BalanceCalculator>(data,pOperations);
 
-    pUserFileOperations=std::make_unique<UserFileOperations>(data,pDataOperations);
+    pUserFileOperations=std::make_unique<UserFileOperations>();
 
     pReport=std::make_shared<Report>(data);
     pReportSaveTxt=std::make_unique<ReportSaveTxt>(pReport);
-    pReportSavePdf=std::make_unique<ReportSavePdf>(pReport);
+    //pReportSavePdf=std::make_unique<ReportSavePdf>(pReport);
+
+    pGraphicBuilder=std::make_unique<GraphicBuilder>(pReport);
 }
 
-int BusinessLogic::rowsCount() const{
+unsigned int BusinessLogic::rowsCount() const{
     return pData->rows();
 }
-int BusinessLogic::columnsCount() const{
+unsigned int BusinessLogic::columnsCount() const{
     return pData->columns();
 }
-void BusinessLogic::setData(const int row, const RecordString& record){
+void BusinessLogic::setData(const unsigned int row, const RecordString& record){
     pData->setRecord(row,record);
 }
-RecordString BusinessLogic::getData(const int row) const{
+RecordString BusinessLogic::getData(const unsigned int row) const{
     return pData->getRecord(row);
 }
-void BusinessLogic::removeRow(const int row){
+void BusinessLogic::removeRow(const unsigned int row){
     pData->remove(row);
 }
 void BusinessLogic::sortData(){
@@ -37,10 +39,10 @@ std::list<std::string> BusinessLogic::getDataDescriptions(const std::string& cat
     return pOperations->getDescriptions(category);
 }
 
-int BusinessLogic::rowsCountReport() const{
+unsigned int BusinessLogic::rowsCountReport() const{
     return pReport->rowsCount();
 }
-RecordString BusinessLogic::getReport(const int row) const{
+RecordString BusinessLogic::getReport(const unsigned int row) const{
     return pReport->getRow(row);
 }
 void BusinessLogic::filter(const std::string& dateFrom,
@@ -75,7 +77,7 @@ void BusinessLogic::saveReportTxt(const std::string& fileName,const std::string&
 }
 
 void BusinessLogic::saveReportPDF(const std::string& fileName,const std::string& currentDate) const{
-    pReportSavePdf->savePDF(fileName,pUserFileOperations->getUserName(),currentDate);
+    //pReportSavePdf->savePDF(fileName,pUserFileOperations->getUserName(),currentDate);
 }
 
 std::string BusinessLogic::getBalance(const std::string& currentDate)const{
@@ -86,24 +88,30 @@ std::list<std::string> BusinessLogic::getUsersNames() const{
     return pUserFileOperations->getUsersNames();
 }
 bool BusinessLogic::isUserCreated(const std::string &login, const std::string &password){
-    return pUserFileOperations->isUserCreated(login,password);
+    bool result=pUserFileOperations->isUserCreated(login,password);
+    if(result) pDataOperations->saveToFile(pUserFileOperations->getUserName());
+    return result;
 }
 
 bool BusinessLogic::loadData(const std::string& login, const std::string& password){
-    return pUserFileOperations->loadData(login,password);
+    bool result=pUserFileOperations->checkPassword({login,password});
+    if(result) pDataOperations->loadFromFile(pUserFileOperations->getUserName());
+    return result;
 }
 void BusinessLogic::clearData(){
-    pUserFileOperations->clearData();
+    pData->clear();
 }
 bool BusinessLogic::deleteUser(const std::string &login, const std::string &password){
-    return pUserFileOperations->deleteUser(login,password);
+    bool result=pUserFileOperations->deleteUser(login,password);
+    if(result) pDataOperations->deleteFile(pUserFileOperations->getUserName());
+    return result;
 }
 bool BusinessLogic::changePassword(const std::string &login, const std::string &oldPassword, const std::string &newPassword){
     return pUserFileOperations->changedPassword(login,oldPassword,newPassword);
 }
 
 void BusinessLogic::saveData() const{
-    pUserFileOperations->saveData();
+    pDataOperations->saveToFile(pUserFileOperations->getUserName());
 }
 
 std::list<std::string> BusinessLogic::getCurrencies() const{
@@ -123,4 +131,16 @@ void BusinessLogic::updateReport(){
 
 std::string BusinessLogic::getUserName()const{
     return pUserFileOperations->getUserName();
+}
+
+std::pair<double,double> BusinessLogic::getMinMaxSum(){
+    return pGraphicBuilder->getMinMaxSum();
+}
+std::vector<std::pair<std::string,double>> BusinessLogic::getPoints(){
+    return pGraphicBuilder->getPoints();
+}
+
+void BusinessLogic::printReport(const std::string& currentDate){
+    ReportPrint report(pReport);
+    report.printReport(pUserFileOperations->getUserName(),currentDate);
 }

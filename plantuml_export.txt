@@ -18,7 +18,8 @@ class AbstractBusinessLogic{}
 class Business_Logic{}
 class User_File_Operations{}
 class User{}
-class Report_Save{}
+class Report_SaveTxt{}
+class Report_SavePdf{}
 class Report{}
 class Records_Operations{}
 class Balance_Calculator{}
@@ -60,7 +61,8 @@ Business_Logic *--down- Report
 Business_Logic *-down- Balance_Calculator
 Business_Logic *-down- User_File_Operations
 Business_Logic *-down- User
-Business_Logic *-down- Report_Save
+Business_Logic *-down- Report_SaveTxt
+Business_Logic *-down- Report_SavePdf
 
 DataFileOperations o-left-AbstractData
 

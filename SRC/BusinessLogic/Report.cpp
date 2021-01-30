@@ -52,7 +52,8 @@ void Report::filterDB(const std::string& fDateFrom,
     sumTo=fSumTo;
     currency=fCurrency;
 
-    for(int i=0;i<pData->rows();i++){
+    unsigned int rows=pData->rows();
+    for(unsigned int i=0;i<rows;i++){
         RecordString rec=pData->getRecord(i);
         if(dateInRange(rec.getDate(),dateFrom,dateTo) &&
                 typeInRange(rec.getType(),type) &&

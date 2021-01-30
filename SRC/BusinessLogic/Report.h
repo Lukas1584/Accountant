@@ -2,6 +2,7 @@
 #include "SRC/DataBase/Data.h"
 #include "SRC/BusinessLogic/RecordString.h"
 #include <list>
+#include <memory>
 
 class Report{
 public:

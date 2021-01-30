@@ -30,7 +30,8 @@ std::string BalanceCalculator::minusYear() const{
 
 std::string BalanceCalculator::balanceCalculate(const std::string& dateFrom,const std::string& currency)const{
     double balanceDouble=0;
-    for(int i=0;i<pData->rows();i++){
+    unsigned int rows=pData->rows();
+    for(unsigned int i=0;i<rows;i++){
         RecordString rec=pData->getRecord(i);
         std::string date=rec.getDate();
         if((dateFrom<=date && date<=currentDate)&&(currency==rec.getCurrency())){

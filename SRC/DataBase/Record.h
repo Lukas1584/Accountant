@@ -17,7 +17,7 @@ public:
         USD=1, BYR, RUB, EUR
     };
 
-    int columns()const;
+    unsigned int columns()const;
 
     std::string getDate()const;
     Type getType()const;

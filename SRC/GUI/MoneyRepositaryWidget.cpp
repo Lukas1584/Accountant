@@ -2,6 +2,12 @@
 
 MoneyRepositaryWidget::MoneyRepositaryWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget* parent):
     QWidget(parent),pLogic(logic){
+    drawWindow();
+    connectButtons();
+    setWorkView();
+}
+
+void MoneyRepositaryWidget::drawWindow(){
     pTable=new QTableWidget;
     pTable->installEventFilter(this);
 
@@ -10,12 +16,6 @@ MoneyRepositaryWidget::MoneyRepositaryWidget(std::shared_ptr<AbstractBusinessLog
     pBtnEdit=new QPushButton(tr("Редактировать запись"));
     pBtnDelete=new QPushButton(tr("Удалить запись"));
     pBtnCnacel=new QPushButton(tr("Отмена"));
-
-    QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(saveData()));
-    QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
-    QObject::connect(pBtnDelete,SIGNAL(clicked()),SLOT(deleteRecord()));
-    QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
-    QObject::connect(pBtnCnacel,SIGNAL(clicked()),SLOT(cancelEditRecord()));
 
     pTimeEdit=new QDateEdit(QDate::currentDate());
     pCbxType=new QComboBox;
@@ -27,9 +27,6 @@ MoneyRepositaryWidget::MoneyRepositaryWidget(std::shared_ptr<AbstractBusinessLog
     pLineEditSum=new QLineEdit;
     pCbxCurrency=new QComboBox;
     pCbxCurrency->addItems(convertToQList(pLogic->getAllCurrencies()));
-
-    QObject::connect(pCbxType,SIGNAL(textActivated(const QString&)),SLOT(updateCbxCategory()));
-    QObject::connect(pCbxCategory,SIGNAL(textActivated(const QString&)),SLOT(categoryChanged()));
 
     QHBoxLayout* pHbxEdit=new QHBoxLayout;
     pHbxEdit->addWidget(pTimeEdit,1);
@@ -58,7 +55,16 @@ MoneyRepositaryWidget::MoneyRepositaryWidget(std::shared_ptr<AbstractBusinessLog
     pHbxMain->addLayout(pVbxButtons);
 
     setLayout(pHbxMain);
-    setWorkView();
+}
+
+void MoneyRepositaryWidget::connectButtons(){
+    QObject::connect(pBtnSave,SIGNAL(clicked()),SLOT(saveData()));
+    QObject::connect(pBtnAdd,SIGNAL(clicked()),SLOT(addRecord()));
+    QObject::connect(pBtnDelete,SIGNAL(clicked()),SLOT(deleteRecord()));
+    QObject::connect(pBtnEdit,SIGNAL(clicked()),SLOT(editRecord()));
+    QObject::connect(pBtnCnacel,SIGNAL(clicked()),SLOT(cancelEditRecord()));
+    QObject::connect(pCbxType,SIGNAL(textActivated(const QString&)),SLOT(updateCbxCategory()));
+    QObject::connect(pCbxCategory,SIGNAL(textActivated(const QString&)),SLOT(categoryChanged()));
 }
 
 bool MoneyRepositaryWidget::eventFilter(QObject*, QEvent *pEvent){
@@ -68,7 +74,7 @@ bool MoneyRepositaryWidget::eventFilter(QObject*, QEvent *pEvent){
 }
 
 void MoneyRepositaryWidget::addRecord(){
-    int row=-1;
+    unsigned int row=0;
     if(isEdit)
         row=pTable->selectionModel()->currentIndex().row();
     else
@@ -103,7 +109,8 @@ void MoneyRepositaryWidget::setEditView(){
     pBtnEdit->setEnabled(false);
     pBtnDelete->setEnabled(false);
     pBtnAdd->setText(tr("Сохранить изменения"));
-    int row=pTable->selectionModel()->currentIndex().row();
+    unsigned int row=0;
+    if(pTable->selectionModel()->hasSelection()) row=pTable->selectionModel()->currentIndex().row();
     RecordString rec=pLogic->getData(row);
     pTimeEdit->setDate(QDate::fromString(QString::fromStdString(rec.getDate()),"yyyy-MM-dd"));
     pCbxType->setCurrentText(QString::fromStdString(rec.getType()));
@@ -152,11 +159,10 @@ void MoneyRepositaryWidget::categoryChanged(){
 }
 
 void MoneyRepositaryWidget::updateTable(){
-    int rows=pLogic->rowsCount();
-    int columns=pLogic->columnsCount();
+    unsigned int rows=pLogic->rowsCount();
     pTable->setRowCount(rows);
-    pTable->setColumnCount(columns);
-    for(int row = 0;row<rows;row++){
+    pTable->setColumnCount(pLogic->columnsCount());
+    for(unsigned int row = 0; row<rows; row++){
         RecordString rec=pLogic->getData(row);
         QTableWidgetItem* item0 = new QTableWidgetItem(QString::fromStdString(rec.getDate()));
         pTable->setItem(row,0,item0);
@@ -177,7 +183,8 @@ void MoneyRepositaryWidget::updateTable(){
 
 void MoneyRepositaryWidget::setTableHeader(){
     std::vector<std::string> header{"Дата","Тип","Категория","Описание","Сумма","Валюта"};
-    for(int i=0;i< pLogic->columnsCount();i++){
+    int columnsCount=header.size();
+    for(int i=0;i<columnsCount;i++){
         QTableWidgetItem* item=new QTableWidgetItem(header[i].c_str());
         pTable->setHorizontalHeaderItem(i,item);
     }

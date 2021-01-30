@@ -1,15 +1,17 @@
 #pragma once
 #include <list>
 #include <vector>
+#include <string>
 #include "SRC/BusinessLogic/RecordString.h"
 
 class AbstractBusinessLogic{
 public:
-    virtual int rowsCount()const=0;
-    virtual int columnsCount()const=0;
-    virtual void setData(const int, const RecordString&)=0;
-    virtual RecordString getData(const int)const=0;
-    virtual void removeRow(const int)=0;
+    //Data Base
+    virtual unsigned int rowsCount()const=0;
+    virtual unsigned int columnsCount()const=0;
+    virtual void setData(const unsigned int, const RecordString&)=0;
+    virtual RecordString getData(const unsigned int)const=0;
+    virtual void removeRow(const unsigned int)=0;
     virtual void sortData()=0;
     virtual std::list<std::string> getAllCurrencies()const=0;
     virtual std::list<std::string> getAllTypes()const=0;
@@ -17,9 +19,9 @@ public:
     virtual std::list<std::string> getDataCategories(const std::string&)const=0;
     virtual std::list<std::string> getDataDescriptions(const std::string&)const=0;
     virtual std::list<std::string> getCurrencies()const=0;
-
-    virtual int rowsCountReport()const=0;
-    virtual RecordString getReport(const int)const=0;
+    //Report
+    virtual unsigned int rowsCountReport()const=0;
+    virtual RecordString getReport(const unsigned int)const=0;
     virtual void filter(const std::string& dateFrom,
                         const std::string& dateTo,
                         const std::pair<bool,bool>& type,
@@ -35,9 +37,9 @@ public:
     virtual void saveReportTxt(const std::string&,const std::string&)const=0;
     virtual void saveReportPDF(const std::string&, const std::string &currentDate)const=0;
     virtual void updateReport()=0;
-
+    //Balance
     virtual std::string getBalance(const std::string&)const=0;
-
+    //User operations
     virtual std::list<std::string> getUsersNames()const=0;
     virtual bool isUserCreated(const std::string& login, const std::string& password)=0;
     virtual bool loadData(const std::string& login, const std::string& password)=0;
@@ -46,4 +48,8 @@ public:
     virtual bool deleteUser(const std::string& login,const std::string& password)=0;
     virtual bool changePassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword)=0;
     virtual std::string getUserName()const=0;
+    //Graphic
+    virtual std::pair<double,double> getMinMaxSum()=0;
+    virtual std::vector<std::pair<std::string,double>> getPoints()=0;
+    virtual void printReport(const std::string& currentDate)=0;
 };

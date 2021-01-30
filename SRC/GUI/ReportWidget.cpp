@@ -1,6 +1,14 @@
 #include "ReportWidget.h"
 
 ReportWidget::ReportWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget *parent) : QWidget(parent),pLogic(logic){
+    drawWindow();
+    connectButtons();
+}
+
+void ReportWidget::drawWindow(){
+    pGraphicWidget=new GraphicWidget(pLogic,this);
+    pGraphicWidget->hide();
+
     pTable=new QTableWidget(this);
     pTable->installEventFilter(this);
 
@@ -97,9 +105,12 @@ ReportWidget::ReportWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget
 
     QVBoxLayout* pVbxMain=new QVBoxLayout;
     pVbxMain->addLayout(pHbxButtonsAndFilter,1);
+    pVbxMain->addWidget(pGraphicWidget,6);
     pVbxMain->addWidget(pTable,6);
     setLayout(pVbxMain);
+}
 
+void ReportWidget::connectButtons(){
     QObject::connect(pChbxTypeProfit,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
     QObject::connect(pChbxTypeLoss,SIGNAL(clicked()),SLOT(fillComboBoxCategory()));
 
@@ -113,6 +124,7 @@ ReportWidget::ReportWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget
     QObject::connect(pBtnSaveTxt,SIGNAL(clicked()),SLOT(saveTxt()));
     QObject::connect(pBtnSavePDF,SIGNAL(clicked()),SLOT(savePDF()));
     QObject::connect(pBtnPrint,SIGNAL(clicked()),SLOT(btnPrintClicked()));
+    QObject::connect(pBtnChart,SIGNAL(clicked()),SLOT(btnChartClicked()));
 
     QObject::connect(pTimeEditFrom,SIGNAL(dateChanged(const QDate&)),SLOT(filter()));
     QObject::connect(pTimeEditTo,SIGNAL(dateChanged(const QDate&)),SLOT(filter()));
@@ -126,11 +138,10 @@ ReportWidget::ReportWidget(std::shared_ptr<AbstractBusinessLogic> logic, QWidget
 }
 
 void ReportWidget::updateTable(){
-    int rows=pLogic->rowsCountReport();
-    int columns=pLogic->columnsCount();
+    unsigned int rows=pLogic->rowsCountReport();
     pTable->setRowCount(rows);
-    pTable->setColumnCount(columns);
-    for(int row = 0;row<rows;row++){
+    pTable->setColumnCount(pLogic->columnsCount());
+    for(unsigned int row = 0;row<rows;row++){
         RecordString rec=pLogic->getReport(row);
         QTableWidgetItem* item0 = new QTableWidgetItem(rec.getDate().c_str());
         pTable->setItem(row,0,item0);
@@ -151,7 +162,8 @@ void ReportWidget::updateTable(){
 
 void ReportWidget::setTableHeader(){
     std::vector<std::string> header{"Дата","Тип","Категория","Описание","Сумма","Валюта"};
-    for(int i=0;i< pLogic->columnsCount();i++){
+    unsigned int columnsCount=header.size();
+    for(unsigned int i=0;i<columnsCount;i++){
         QTableWidgetItem* item=new QTableWidgetItem(header[i].c_str());
         pTable->setHorizontalHeaderItem(i,item);
     }
@@ -251,7 +263,8 @@ void ReportWidget::fillComboBox(QStandardItemModel* model,std::list<std::string>
 
 std::vector<std::string> ReportWidget::getComboBoxCheckedList(const QComboBox* combobox) const{
     std::vector<std::string> list;
-    for(int i=0; i<combobox->count(); i++){
+    int count=combobox->count();
+    for(int i=0; i<count; i++){
         QModelIndex index = combobox->model()->index(i, 0);
         if(index.data(Qt::CheckStateRole) == Qt::Checked)
             list.push_back(index.data(Qt::DisplayRole).toString().toStdString());
@@ -294,7 +307,8 @@ void ReportWidget::checkControl(QStandardItemModel* model,QStandardItem* item){
 }
 
 void ReportWidget::setCheckAll(QStandardItemModel* model,Qt::CheckState state){
-    for(int i=0; i<model->rowCount(); i++){
+    int rowCount=model->rowCount();
+    for(int i=0; i<rowCount; i++){
         QModelIndex index = model->index(i, 0);
         model->setData(index,state, Qt::CheckStateRole);
     }
@@ -316,12 +330,13 @@ void ReportWidget::savePDF(){
 }
 
 void ReportWidget::btnPrintClicked(){
-    printer=std::make_unique<QPrinter>(QPrinter::HighResolution);
-    std::unique_ptr<QPrintPreviewDialog> printDialog=std::make_unique<QPrintPreviewDialog>(printer.get());
-    QObject::connect(printDialog.get(),SIGNAL(paintRequested(QPrinter*)),SLOT(printReport()));
-    printDialog->showMaximized();
-    printDialog->exec();
-    printer.reset(nullptr);
+      pLogic->printReport(QDate::currentDate().toString("yyyy-MM-dd").toStdString());
+//    printer=std::make_unique<QPrinter>(QPrinter::PrinterResolution);
+//    QPrintPreviewDialog printDialog(printer.get());
+//    QObject::connect(&printDialog,SIGNAL(paintRequested(QPrinter*)),SLOT(printReport()));
+//    printDialog.showMaximized();
+//    printDialog.exec();
+//    printer.reset(nullptr);
 }
 
 void ReportWidget::printReport(){
@@ -435,10 +450,23 @@ void ReportWidget::printTable(QPainter& painter,double& yPosition){
 }
 
 void ReportWidget::calculatePageParameters(){
-    leading=4*QFont(font,fontSize).weight();
-    pageWidth=printer->pageRect().width();
-    pageHeight=printer->pageRect().height();
+    leading=2*QFont(font,fontSize).pointSize();
+    pageWidth=printer->pageLayout().paintRect().width();
+    pageHeight=printer->pageLayout().paintRect().height();
     leftBorder=0.12*pageWidth;
     rightBorder=0.024*pageWidth;
     verticalBorder=0.017*pageHeight;
+}
+
+void ReportWidget::btnChartClicked(){
+    if(pTable->isHidden()==false){
+        pTable->hide();
+        pGraphicWidget->show();
+        pBtnChart->setText("Таблица");
+    }
+    else {
+        pTable->show();
+        pGraphicWidget->hide();
+        pBtnChart->setText("График");
+    }
 }

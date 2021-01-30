@@ -5,7 +5,8 @@ RecordsOperations::RecordsOperations(std::shared_ptr<AbstractData>& data) : pDat
 
 std::list<std::string> RecordsOperations::getCategories(const std::string& type) const{
     std::list<std::string> list;
-    for(int i=0;i<pData->rows();i++){
+    unsigned int rows=pData->rows();
+    for(unsigned int i=0;i<rows;i++){
         RecordString rec=pData->getRecord(i);
         if(type==rec.getType()){
             std::string category=rec.getCategory();
@@ -24,7 +25,8 @@ std::list<std::string> RecordsOperations::getCategories(const std::string& type)
 
 std::list<std::string> RecordsOperations::getDescriptions(const std::string& category) const{
     std::list<std::string> list;
-    for(int i=0;i<pData->rows();i++){
+    unsigned int rows=pData->rows();
+    for(unsigned int i=0;i<rows;i++){
         RecordString rec=pData->getRecord(i);
         if(category==rec.getCategory()){
             std::string description=rec.getDescription();
@@ -43,7 +45,8 @@ std::list<std::string> RecordsOperations::getDescriptions(const std::string& cat
 
 std::list<std::string> RecordsOperations::getCurrencies()const {
     std::list<std::string> list;
-    for(int i=0;i<pData->rows();i++){
+    unsigned int rows=pData->rows();
+    for(unsigned int i=0;i<rows;i++){
         RecordString rec=pData->getRecord(i);
         std::string currency=rec.getCurrency();
         bool isUnique=true;

@@ -4,11 +4,11 @@ void Data::clear(){
     data.clear();
 }
 
-int Data::rows()const{
-    return static_cast<int> (data.size());
+unsigned int Data::rows()const{
+    return data.size();
 }
 
-int Data::columns()const{
+unsigned int Data::columns()const{
     Record temp;
     return temp.columns();
 }
@@ -21,16 +21,17 @@ void Data::sort(){
     std::sort(data.begin(),data.end());
 }
 
-const RecordString Data::getRecord(const int row)const{
+const RecordString Data::getRecord(const unsigned int row)const{
     return data[row].convertToString();
 }
 
-void Data::setRecord(const int row,const RecordString& record){
-    if(row > static_cast<int>(data.size())-1)
+void Data::setRecord(const unsigned int row,const RecordString& record){
+    if((row+1)>data.size())
         data.push_back(record);
     else data[row]=record;
 }
-std::list<std::string> Data::getAllCurrencies() const{
+
+std::list<std::string> Data::getAllCurrencies()const{
     Record rec;
     return rec.getAllCurrencies();
 }

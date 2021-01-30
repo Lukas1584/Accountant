@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "SRC/BusinessLogic/AbstractBusinessLogic.h"
 #include "SRC/DataBase/Data.h"
 #include "SRC/DataBase/DataOperations.h"
@@ -8,17 +9,19 @@
 #include "SRC/BusinessLogic/ReportSaveTxt.h"
 #include "SRC/BusinessLogic/UserFileOperations.h"
 #include "SRC/BusinessLogic/ReportSaveTxt.h"
-#include "SRC/BusinessLogic/ReportSavePdf.h"
+//#include "SRC/BusinessLogic/ReportSavePdf.h"
+#include "SRC/BusinessLogic/GraphicBuilder.h"
+#include "SRC/BusinessLogic/ReportPrint.h"
 
 class BusinessLogic:public AbstractBusinessLogic{
 public:
     BusinessLogic(std::shared_ptr<AbstractData> data,std::shared_ptr<AbstractDataFileOperations> operations);
 
-    int rowsCount()const override;
-    int columnsCount()const override;
-    void setData(const int, const RecordString&)override;
-    RecordString getData(const int)const override;
-    void removeRow(const int)override;
+    unsigned int rowsCount()const override;
+    unsigned int columnsCount()const override;
+    void setData(const unsigned int, const RecordString&)override;
+    RecordString getData(const unsigned int)const override;
+    void removeRow(const unsigned int)override;
     void sortData()override;
     std::list<std::string> getAllCurrencies()const override;
     std::list<std::string> getAllTypes()const override;
@@ -27,8 +30,8 @@ public:
     std::list<std::string> getDataDescriptions(const std::string&)const override;
     std::list<std::string> getCurrencies()const override;
 
-    int rowsCountReport()const override;
-    RecordString getReport(const int)const override;
+    unsigned int rowsCountReport()const override;
+    RecordString getReport(const unsigned int)const override;
     void filter(const std::string &dateFrom,
                 const std::string &dateTo,
                 const std::pair<bool, bool> &type,
@@ -55,6 +58,11 @@ public:
     bool changePassword(const std::string& login,const std::string& oldPassword,const std::string& newPassword)override;
     std::string getUserName()const override;
 
+    std::pair<double,double> getMinMaxSum() override;
+    std::vector<std::pair<std::string,double>> getPoints() override;
+
+    void printReport(const std::string& currentDate) override;
+
 private:
     std::shared_ptr<AbstractData> pData;
     std::shared_ptr<AbstractDataFileOperations> pDataOperations;
@@ -65,5 +73,7 @@ private:
     std::unique_ptr<UserFileOperations> pUserFileOperations;
 
     std::unique_ptr<ReportSaveTxt> pReportSaveTxt;
-    std::unique_ptr<ReportSavePdf> pReportSavePdf;
+    //std::unique_ptr<ReportSavePdf> pReportSavePdf;
+
+    std::unique_ptr<GraphicBuilder> pGraphicBuilder;
 };
