@@ -6,9 +6,3 @@ int main(int argc, char *argv[]){
     ApplicationBuilder ab;
     return a.exec();
 }
-/*
-rtryret
-rth
-erth
-rth
-*/
