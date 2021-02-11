@@ -41,7 +41,7 @@ void UserFileOperations::loadUsers(){
                 users.push_back(userRead);
         }
     }
-    else throw "File doesn't exist";
+    //else throw "File doesn't exist";
 }
 
 std::list<std::string> UserFileOperations::getUsersNames() const{
