@@ -15,6 +15,14 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
 
+#INCLUDE_DIRECTORIES(usr/local/lib)
+#find_package(libHaru REQUIRED)
+#find_package(libhpdf REQUIRED)
+#INCLUDE_DIRECTORIES(${LIBHPDF_INCLUDE_DIRS})
+#target_link_libraries(Accountant ${LIBHPDF_LIBRARIES})
+
+
+
 add_executable(Accountant
       main.cpp
       SRC/ApplicationBuilder.cpp
@@ -37,6 +45,7 @@ add_executable(Accountant
       SRC/BusinessLogic/RecordsOperations.cpp
       SRC/BusinessLogic/RecordString.cpp
       SRC/BusinessLogic/Report.cpp
+      #SRC/BusinessLogic/ReportSavePdf.cpp
       SRC/BusinessLogic/ReportSaveTxt.cpp
       SRC/BusinessLogic/UserFileOperations.cpp
       SRC/BusinessLogic/ReportSaveTxt.cpp
@@ -45,5 +54,8 @@ add_executable(Accountant
       SRC/BusinessLogic/User.cpp
   )
 
+
 target_link_libraries(Accountant PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)
+
+
 
